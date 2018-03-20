@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">MIDemo</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="show_location_item_title">Show Location Demo</string>
+    <string name="show_location_details_item_title">Location Details Demo</string>
+    <string name="show_multiple_locations_item_title">Show Multiple Locations Demo</string>
+    <string name="show_route_item_title">Show Route Demo</string>
+    <string name="show_venue_item_title">Show Venue Demo</string>
+    <string name="show_building_item_title">Show building Demo</string>
+    <string name="show_floor_item_title">Show floor Demo</string>
+
+    <string name="change_displ_sett_item_title">Change Display Setting Demo</string>
+
+    <string name="custom_floor_selector_item_title">Custom Floor Selector Demo</string>
+
+    <string name="show_my_location_item_title">Show My Location Demo</string>
+    <string name="multiple_dataset_item_title">Multiple Datasets Demo</string>
+
+    <string name="Search_Map_item_title">Search Map Demo</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
+
+
