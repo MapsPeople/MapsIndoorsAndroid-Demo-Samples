@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import com.mapspeople.LocationQuery;
 
 import mapsindoors.com.midemo.showlocationdemo.ShowLocationFragment;
+import mapsindoors.com.midemo.showmultiplelocations.ShowMultipleLocationsFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -88,6 +89,10 @@ public class MainActivity extends AppCompatActivity
         switch(item.getItemId()) {
             case R.id.show_location_item:
                 fragmentClass = ShowLocationFragment.class;
+                break;
+
+            case R.id.show_multiple_locations_item:
+                fragmentClass = ShowMultipleLocationsFragment.class;
                 break;
 
             default:
