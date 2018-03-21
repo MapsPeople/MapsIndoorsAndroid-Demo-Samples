@@ -1,0 +1,14 @@
+<resources>
+	<string name="mapsindoors_api_key" translatable="false">57e4e4992e74800ef8b69718</string>
+
+
+	<!-- Offline data switches -->
+	<bool name="mapsindoors_offlinemode_enabled">false</bool>
+
+	<!-- If true, graph data will be pulled from the backend server -->
+	<bool name="mapsindoors_offlinemode_routing_enabled">false</bool>
+
+	<!-- If true, ALL the solution tiles will be included -->
+	<bool name="mapsindoors_offlinemode_tiles_enabled">false</bool>
+</resources>
+
