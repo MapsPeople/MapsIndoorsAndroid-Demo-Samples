@@ -1,4 +1,4 @@
-package mapsindoors.com.midemo.showbuildingdemo;
+package mapsindoors.com.midemo.showvenuedemo;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,14 +14,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-
 import com.mapspeople.LocationQuery;
 import com.mapspeople.MapControl;
+import com.mapspeople.MapsIndoors;
 import com.mapspeople.OnLoadingDataReadyListener;
 import com.mapspeople.errors.MIError;
-import com.mapspeople.models.Building;
-
-
+import com.mapspeople.models.Venue;
 
 import mapsindoors.com.midemo.R;
 
@@ -29,10 +27,10 @@ import mapsindoors.com.midemo.R;
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
- * Use the {@link ShowBuildingFragment#newInstance} factory method to
+ * Use the {@link ShowVenueFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ShowBuildingFragment extends Fragment {
+public class ShowVenueFragment extends Fragment {
 
 
     MapControl mMapControl;
@@ -42,13 +40,13 @@ public class ShowBuildingFragment extends Fragment {
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
 
 
-    public ShowBuildingFragment() {
+    public ShowVenueFragment() {
         // Required empty public constructor
     }
 
 
-    public static ShowBuildingFragment newInstance(String param1, String param2) {
-        ShowBuildingFragment fragment = new ShowBuildingFragment();
+    public static ShowVenueFragment newInstance(String param1, String param2) {
+        ShowVenueFragment fragment = new ShowVenueFragment();
 
         return fragment;
     }
@@ -113,12 +111,13 @@ public class ShowBuildingFragment extends Fragment {
 
                     mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 18f ) );
 
-                    Building currentBuilding = mMapControl.getCurrentBuilding();
+                    Venue currentVenue = MapsIndoors.getVenues().getCurrentVenue();
 
-                    mMapControl.setMapPosition( currentBuilding.getLatLngBoundingBox(), true, 10 );
+                    mMapControl.setMapPosition( currentVenue.getLatLngBoundingBox(), true, 10 );
 
 
                     });
+
             }
         });
     }

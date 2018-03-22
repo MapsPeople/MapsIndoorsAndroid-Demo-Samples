@@ -18,13 +18,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.mapspeople.Location;
 import com.mapspeople.LocationPropertyNames;
-import com.mapspeople.LocationQuery;
 import com.mapspeople.MapControl;
-import com.mapspeople.OnLoadingDataReadyListener;
-import com.mapspeople.errors.MIError;
 
-import mapsindoors.com.midemo.BuildConfig;
 import mapsindoors.com.midemo.R;
+
 
 /**
  * A simple {@link Fragment} subclass.

@@ -17,6 +17,7 @@ import mapsindoors.com.midemo.locationdetailsdemo.LocationDetailsFragment;
 import mapsindoors.com.midemo.showbuildingdemo.ShowBuildingFragment;
 import mapsindoors.com.midemo.showlocationdemo.ShowLocationFragment;
 import mapsindoors.com.midemo.showmultiplelocations.ShowMultipleLocationsFragment;
+import mapsindoors.com.midemo.showvenuedemo.ShowVenueFragment;
 
 import static android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
 
@@ -106,6 +107,10 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.show_building_item:
                 fragmentClass = ShowBuildingFragment.class;
+                break;
+
+            case R.id.show_venue_item:
+                fragmentClass = ShowVenueFragment.class;
                 break;
 
             default:
