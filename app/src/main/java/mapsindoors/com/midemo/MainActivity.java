@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mapspeople.LocationQuery;
+import com.mapspeople.MapsIndoors;
 
 import mapsindoors.com.midemo.locationdetailsdemo.LocationDetailsFragment;
 import mapsindoors.com.midemo.showlocationdemo.ShowLocationFragment;
@@ -122,5 +123,13 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer =  findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        MapsIndoors.onApplicationTerminate();
+
+        super.onDestroy();
     }
 }

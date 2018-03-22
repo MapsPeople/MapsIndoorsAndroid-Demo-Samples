@@ -1,7 +1,6 @@
 package mapsindoors.com.midemo.showlocationdemo;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,14 +19,12 @@ import com.mapspeople.Location;
 import com.mapspeople.LocationQuery;
 import com.mapspeople.MPLocationsProvider;
 import com.mapspeople.MapControl;
-import com.mapspeople.MapsIndoors;
 import com.mapspeople.OnLoadingDataReadyListener;
 import com.mapspeople.OnLocationsReadyListener;
 import com.mapspeople.errors.MIError;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import mapsindoors.com.midemo.R;
 
@@ -46,8 +43,8 @@ public class ShowLocationFragment extends Fragment {
     GoogleMap mGoogleMap;
 
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
-    //querry objects
-    LocationQuery mLocationQuerry;
+    //query objects
+    LocationQuery         mLocationQuery;
     LocationQuery.Builder mLocationQueryBuilder;
 
     public ShowLocationFragment() {
@@ -62,7 +59,7 @@ public class ShowLocationFragment extends Fragment {
     }
 
 
-    //region FRAGMENT
+    //region FRAGMENT LIFECYCLE
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +83,19 @@ public class ShowLocationFragment extends Fragment {
         setupView( view );
     }
 
+    @Override
+    public void onDestroyView()
+    {
+        if( mMapControl != null )
+        {
+            mMapControl.onDestroy();
+        }
+
+        super.onDestroyView();
+    }
+    //endregion
+
+
     private void setupView( View rootView) {
 
         FragmentManager fm = getChildFragmentManager();
@@ -105,51 +115,28 @@ public class ShowLocationFragment extends Fragment {
 
         }
     };
-    //endregion
 
 
     void  setupMapsIndoors() {
 
         mMapControl = new MapControl(getActivity(), mMapFragment, mGoogleMap);
 
-        mMapControl.init(new OnLoadingDataReadyListener() {
-            @Override
-            public void onLoadingDataReady(@Nullable MIError miError) {
-                // after the map control is initialized we can
-                queryLocation();
+        mMapControl.init( miError -> {
+            // after the map control is initialized we can
+            queryLocation();
 
-                getActivity().runOnUiThread(() -> {
+            if( getActivity() != null )
+            {
+                getActivity().runOnUiThread( () -> {
                     mMapControl.selectFloor( 1 );
                     mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 18f ) );
 
-                });
-
+                } );
             }
         });
     }
 
-
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
     MPLocationsProvider mLocationsProvider;
-
 
     void queryLocation(){
 
@@ -157,33 +144,30 @@ public class ShowLocationFragment extends Fragment {
 
         mLocationQueryBuilder =     new LocationQuery.Builder();
 
-        // init the querry builder, in this case we will querry the coffee machine in our office
+        // init the query builder, in this case we will query the coffee machine in our office
         mLocationQueryBuilder.
                 setQuery("coffee machine").
                 setOrderBy( LocationQuery.NO_ORDER ).
                 setFloor(1).
                 setMaxResults(1);
-        // Build the querry
-        mLocationQuerry = mLocationQueryBuilder.build();
-        // Querry the data
-        mLocationsProvider.getLocationsAsync( mLocationQuerry, mSearchLocationsReadyListener );
-
-
+        // Build the query
+        mLocationQuery = mLocationQueryBuilder.build();
+        // Query the data
+        mLocationsProvider.getLocationsAsync( mLocationQuery, mSearchLocationsReadyListener );
     }
 
 
-    OnLocationsReadyListener mSearchLocationsReadyListener = new OnLocationsReadyListener() {
-
-
+    OnLocationsReadyListener mSearchLocationsReadyListener = new OnLocationsReadyListener()
+    {
         @Override
-        public void onLocationsReady(@Nullable List<Location> locations, @Nullable MIError error) {
+        public void onLocationsReady( @Nullable List< Location > locations, @Nullable MIError error )
+        {
 
-            if(locations != null && locations.size() != 0){
-                mMapControl.displaySearchResults(Collections.singletonList( locations.get(0) ) ,true);
+            if( locations != null && locations.size() != 0 )
+            {
+                mMapControl.displaySearchResults( Collections.singletonList( locations.get( 0 ) ), true );
             }
         }
 
-        };
-
-
-    }
+    };
+}

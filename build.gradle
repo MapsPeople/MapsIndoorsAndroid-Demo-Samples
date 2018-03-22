@@ -23,7 +23,6 @@ allprojects {
         maven {
             url 'http://maven.mapsindoors.com/'
         }
-
     }
 }
 

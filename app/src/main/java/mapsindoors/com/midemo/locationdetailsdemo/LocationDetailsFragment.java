@@ -23,6 +23,7 @@ import com.mapspeople.MapControl;
 import com.mapspeople.OnLoadingDataReadyListener;
 import com.mapspeople.errors.MIError;
 
+import mapsindoors.com.midemo.BuildConfig;
 import mapsindoors.com.midemo.R;
 
 /**
@@ -41,21 +42,22 @@ public class LocationDetailsFragment extends Fragment {
     TextView detailsTextView;
 
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
-    //querry objects
-    LocationQuery mLocationQuerry;
+    //query objects
+    LocationQuery mLocationQuery;
     LocationQuery.Builder mLocationQueryBuilder;
 
     public LocationDetailsFragment() {
         // Required empty public constructor
     }
 
-
-    public static LocationDetailsFragment newInstance(String param1, String param2) {
+    public static LocationDetailsFragment newInstance( String param1, String param2) {
         LocationDetailsFragment fragment = new LocationDetailsFragment();
 
         return fragment;
     }
 
+
+    //region FRAGMENT LIFECYCLE
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +81,18 @@ public class LocationDetailsFragment extends Fragment {
         setupView( view );
     }
 
+    @Override
+    public void onDestroyView()
+    {
+        if( mMapControl != null )
+        {
+            mMapControl.onDestroy();
+        }
+
+        super.onDestroyView();
+    }
+    //endregion
+
     private void setupView( View rootView) {
 
         FragmentManager fm = getChildFragmentManager();
@@ -95,7 +109,6 @@ public class LocationDetailsFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             mGoogleMap = googleMap;
-
             mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 13.0f ) );
 
             setupMapsIndoors();
@@ -103,60 +116,32 @@ public class LocationDetailsFragment extends Fragment {
         }
     };
 
-
-
     void  setupMapsIndoors() {
 
-        mMapControl = new MapControl(getActivity(), mMapFragment, mGoogleMap);
+        mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
 
-            mMapControl.setOnMarkerClickListener( marker -> {
+        mMapControl.setOnMarkerClickListener( marker -> {
 
             final Location loc = mMapControl.getLocation( marker );
             if( loc != null )
             {
                 marker.showInfoWindow();
-                detailsTextView.setText("Name: "+loc.getName() +
-                        "\nDescription: " + loc.getStringProperty(LocationPropertyNames.DESCRIPTION));
+                detailsTextView.setText( "Name: " + loc.getName() + "\nDescription: " + loc.getStringProperty( LocationPropertyNames.DESCRIPTION ) );
             }
 
             return true;
-        });
+        } );
 
+        mMapControl.init( miError -> {
 
-        mMapControl.init(new OnLoadingDataReadyListener() {
-            @Override
-            public void onLoadingDataReady(@Nullable MIError miError) {
-
-
+            if( getActivity() != null )
+            {
                 getActivity().runOnUiThread(() -> {
                     mMapControl.selectFloor( 1 );
                     mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 18f ) );
 
                 });
-
-
             }
-        });
+      });
     }
-
-
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-    }
-
-
-
-
-
-
-    }
+}
