@@ -7,4 +7,4 @@ include ':app'
 //    return ""
 //}
 //include ':MapsIndoorsSDK'
-//project(':MapsIndoorsSDK').projectDir = new File(settingsDir, ((getDevUserName() == "jjv") || (getDevUserName() == "jose")) ? '../../SDK/MISDKAND_SDK_v2_MWC/MapsIndoorsSDK' : '../MISDKANDV2/MapsIndoorsSDK')
+//project(':MapsIndoorsSDK').projectDir = new File(settingsDir, ((getDevUserName() == "jjv") || (getDevUserName() == "jose")) ? '../../SDK/MISDKAND/MapsIndoorsSDK' : '../MISDKANDV2/MapsIndoorsSDK')

@@ -124,12 +124,4 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-    @Override
-    protected void onDestroy()
-    {
-        MapsIndoors.onApplicationTerminate();
-
-        super.onDestroy();
-    }
 }
