@@ -1,7 +1,6 @@
 package mapsindoors.com.midemo.showlocationdemo;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,14 +19,12 @@ import com.mapspeople.Location;
 import com.mapspeople.LocationQuery;
 import com.mapspeople.MPLocationsProvider;
 import com.mapspeople.MapControl;
-import com.mapspeople.MapsIndoors;
 import com.mapspeople.OnLoadingDataReadyListener;
 import com.mapspeople.OnLocationsReadyListener;
 import com.mapspeople.errors.MIError;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import mapsindoors.com.midemo.R;
 

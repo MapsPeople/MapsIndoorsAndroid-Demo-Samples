@@ -156,7 +156,4 @@ public class LocationDetailsFragment extends Fragment {
 
 
 
-
-
-
     }

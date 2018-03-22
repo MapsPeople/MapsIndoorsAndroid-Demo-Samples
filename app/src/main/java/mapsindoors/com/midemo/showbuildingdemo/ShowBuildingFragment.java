@@ -14,13 +14,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.mapspeople.Location;
+
 import com.mapspeople.LocationQuery;
-import com.mapspeople.MPLocationsProvider;
 import com.mapspeople.MapControl;
 import com.mapspeople.OnLoadingDataReadyListener;
-import com.mapspeople.OnLocationsReadyListener;
 import com.mapspeople.errors.MIError;
+import com.mapspeople.models.Building;
 
 import java.util.Collections;
 import java.util.List;
@@ -112,8 +111,16 @@ public class ShowBuildingFragment extends Fragment {
                 // after the map control is initialized we can
 
                 getActivity().runOnUiThread(() -> {
+
                     mMapControl.selectFloor( 1 );
+
                     mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 18f ) );
+
+                    Building currentBuilding = mMapControl.getCurrentBuilding();
+
+                    mMapControl.setMapPosition( currentBuilding.getLatLngBoundingBox(), true, 10 );
+
+
 
                 });
 
