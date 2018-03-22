@@ -18,6 +18,8 @@ import mapsindoors.com.midemo.locationdetailsdemo.LocationDetailsFragment;
 import mapsindoors.com.midemo.showlocationdemo.ShowLocationFragment;
 import mapsindoors.com.midemo.showmultiplelocations.ShowMultipleLocationsFragment;
 
+import static android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -113,7 +115,7 @@ public class MainActivity extends AppCompatActivity
 
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).setTransition( TRANSIT_FRAGMENT_FADE ).commit();
 
         // Set action bar title
         setTitle(item.getTitle());
