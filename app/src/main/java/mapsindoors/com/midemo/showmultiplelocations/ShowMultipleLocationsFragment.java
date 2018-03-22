@@ -19,7 +19,6 @@ import com.mapspeople.Location;
 import com.mapspeople.LocationQuery;
 import com.mapspeople.MPLocationsProvider;
 import com.mapspeople.MapControl;
-import com.mapspeople.OnLoadingDataReadyListener;
 import com.mapspeople.OnLocationsReadyListener;
 import com.mapspeople.errors.MIError;
 
@@ -42,8 +41,8 @@ public class ShowMultipleLocationsFragment extends Fragment {
     GoogleMap mGoogleMap;
 
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
-    //querry objects
-    LocationQuery mLocationQuerry;
+    //query objects
+    LocationQuery mLocationQuery;
     LocationQuery.Builder mLocationQueryBuilder;
 
     public ShowMultipleLocationsFragment() {
@@ -57,6 +56,8 @@ public class ShowMultipleLocationsFragment extends Fragment {
         return fragment;
     }
 
+
+    //region FRAGMENT LIFECYCLE
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +80,19 @@ public class ShowMultipleLocationsFragment extends Fragment {
 
         setupView( view );
     }
+
+    @Override
+    public void onDestroyView()
+    {
+        if( mMapControl != null )
+        {
+            mMapControl.onDestroy();
+        }
+
+        super.onDestroyView();
+    }
+    //endregion
+
 
     private void setupView( View rootView) {
 
@@ -106,25 +120,60 @@ public class ShowMultipleLocationsFragment extends Fragment {
 
         mMapControl = new MapControl(getActivity(), mMapFragment, mGoogleMap);
 
-        mMapControl.init(new OnLoadingDataReadyListener() {
-            @Override
-            public void onLoadingDataReady(@Nullable MIError miError) {
-                // after the map control is initialized we can
-                queryLocation();
+        mMapControl.init( miError -> {
+            // after the map control is initialized we can
+            queryLocation();
 
-                getActivity().runOnUiThread(() -> {
+            if( getActivity() != null )
+            {
+                getActivity().runOnUiThread( () -> {
                     mMapControl.selectFloor( 1 );
                     mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 18f ) );
 
-                });
-
-
+                } );
             }
-        });
+        } );
     }
 
 
+    MPLocationsProvider mLocationsProvider;
 
+
+    void queryLocation(){
+
+        mLocationsProvider = new MPLocationsProvider();
+
+        mLocationQueryBuilder =     new LocationQuery.Builder();
+
+        // init the query builder, in this case we will query the coffee machine in our office
+        mLocationQueryBuilder.
+                setQuery("Toilet").
+                setOrderBy( LocationQuery.NO_ORDER ).
+                setFloor(1).
+                setMaxResults(50);
+        // Build the query
+        mLocationQuery = mLocationQueryBuilder.build();
+        // Query the data
+        mLocationsProvider.getLocationsAsync( mLocationQuery, mSearchLocationsReadyListener );
+
+
+    }
+
+    OnLocationsReadyListener mSearchLocationsReadyListener = new OnLocationsReadyListener()
+    {
+        @Override
+        public void onLocationsReady( @Nullable List< Location > locations, @Nullable MIError error )
+        {
+
+            if( locations != null && locations.size() != 0 )
+            {
+
+                mMapControl.displaySearchResults( locations, true );
+
+            }
+        }
+
+    };
 
     @Override
     public void onAttach(Context context) {
@@ -137,47 +186,4 @@ public class ShowMultipleLocationsFragment extends Fragment {
         super.onDetach();
 
     }
-
-
-
-    MPLocationsProvider mLocationsProvider;
-
-
-    void queryLocation(){
-
-        mLocationsProvider = new MPLocationsProvider();
-
-        mLocationQueryBuilder =     new LocationQuery.Builder();
-
-        // init the querry builder, in this case we will querry the coffee machine in our office
-        mLocationQueryBuilder.
-                setQuery("Toilet").
-                setOrderBy( LocationQuery.NO_ORDER ).
-                setFloor(1).
-                setMaxResults(50);
-        // Build the querry
-        mLocationQuerry = mLocationQueryBuilder.build();
-        // Querry the data
-        mLocationsProvider.getLocationsAsync( mLocationQuerry, mSearchLocationsReadyListener );
-
-
-    }
-
-
-    OnLocationsReadyListener mSearchLocationsReadyListener = new OnLocationsReadyListener() {
-
-
-        @Override
-        public void onLocationsReady(@Nullable List<Location> locations, @Nullable MIError error) {
-
-            if(locations != null && locations.size() != 0){
-
-                mMapControl.displaySearchResults( locations ,true);
-
-            }
-        }
-
-        };
-
-
-    }
+}

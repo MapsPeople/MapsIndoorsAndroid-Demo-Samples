@@ -2,9 +2,12 @@ package mapsindoors.com.midemo;
 
 import android.app.Application;
 import android.content.res.Configuration;
+import android.support.annotation.Nullable;
 
 import com.mapspeople.MapsIndoors;
+import com.mapspeople.OnSyncDataReadyListener;
 import com.mapspeople.dbglog;
+import com.mapspeople.errors.MIError;
 
 public class DemoApplication extends Application
 {
@@ -25,6 +28,8 @@ public class DemoApplication extends Application
                 getString( R.string.mapsindoors_api_key),
                 getString( R.string.google_maps_key )
         );
+
+        //MapsIndoors.synchronizeContent( null );
     }
 
     // This is called when the overall system is running low on memory,
@@ -44,13 +49,4 @@ public class DemoApplication extends Application
 
         MapsIndoors.onApplicationConfigurationChanged( newConfig );
     }
-
-    @Override
-    public void onTerminate()
-    {
-        MapsIndoors.onApplicationTerminate();
-
-        super.onTerminate();
-    }
-
 }

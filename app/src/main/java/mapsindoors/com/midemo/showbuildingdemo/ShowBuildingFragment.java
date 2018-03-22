@@ -21,8 +21,7 @@ import com.mapspeople.OnLoadingDataReadyListener;
 import com.mapspeople.errors.MIError;
 import com.mapspeople.models.Building;
 
-import java.util.Collections;
-import java.util.List;
+
 
 import mapsindoors.com.midemo.R;
 
