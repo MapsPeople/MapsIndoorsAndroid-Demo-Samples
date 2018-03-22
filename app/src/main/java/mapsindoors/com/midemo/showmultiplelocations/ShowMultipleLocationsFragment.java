@@ -92,6 +92,7 @@ public class ShowMultipleLocationsFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             mGoogleMap = googleMap;
+            mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 13.0f ) );
 
             setupMapsIndoors();
 
@@ -145,11 +146,7 @@ public class ShowMultipleLocationsFragment extends Fragment {
 
         mLocationsProvider = new MPLocationsProvider();
 
-        mLocationQueryBuilder =     new LocationQuery.Builder(
-                getContext(),
-                new Locale(MapsIndoors.getLanguage()),
-                getString( R.string.mapsindoors_api_key)
-        );
+        mLocationQueryBuilder =     new LocationQuery.Builder();
 
         // init the querry builder, in this case we will querry the coffee machine in our office
         mLocationQueryBuilder.

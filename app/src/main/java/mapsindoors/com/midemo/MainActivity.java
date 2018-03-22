@@ -14,6 +14,7 @@ import android.view.MenuItem;
 
 import com.mapspeople.LocationQuery;
 
+import mapsindoors.com.midemo.locationdetailsdemo.LocationDetailsFragment;
 import mapsindoors.com.midemo.showlocationdemo.ShowLocationFragment;
 import mapsindoors.com.midemo.showmultiplelocations.ShowMultipleLocationsFragment;
 
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity
         mNavigationView.setNavigationItemSelectedListener(this);
 
         // showing the first demo
-        onNavigationItemSelected(mNavigationView.getMenu().getItem(0));
+        onNavigationItemSelected(mNavigationView.getMenu().getItem(1));
 
     }
 
@@ -93,6 +94,11 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.show_multiple_locations_item:
                 fragmentClass = ShowMultipleLocationsFragment.class;
+                break;
+
+
+            case R.id.show_location_details_item:
+                fragmentClass = LocationDetailsFragment.class;
                 break;
 
             default:

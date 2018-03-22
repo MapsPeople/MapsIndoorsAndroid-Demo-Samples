@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.res.Configuration;
 
 import com.mapspeople.MapsIndoors;
+import com.mapspeople.dbglog;
 
 public class DemoApplication extends Application {
     // Called when the application is starting, before any other application objects have been created.
@@ -19,6 +20,7 @@ public class DemoApplication extends Application {
                 getString( R.string.google_maps_key )
         );
 
+        dbglog.useDebug( true );
     }
 
     // Called by the system when the device configuration changes while your component is running.
