@@ -7,5 +7,4 @@ static def getDevUserName() {
     return ""
 }
 include ':MapsIndoorsSDK'
-project(':MapsIndoorsSDK').projectDir = new File(settingsDir, ((getDevUserName() == "jjv") || (getDevUserName() == "jose")) ? '../../MapsIndoors/SDK/MISDKAND_SDK_v2_MWC/MapsIndoorsSDK' : '../MISDKANDV2/MapsIndoorsSDK')
-//implementation project(':MapsIndoorsSDK')
+project(':MapsIndoorsSDK').projectDir = new File(settingsDir, ((getDevUserName() == "jjv") || (getDevUserName() == "jose")) ? '../../SDK/MISDKAND_SDK_v2_MWC/MapsIndoorsSDK' : '../MISDKANDV2/MapsIndoorsSDK')
