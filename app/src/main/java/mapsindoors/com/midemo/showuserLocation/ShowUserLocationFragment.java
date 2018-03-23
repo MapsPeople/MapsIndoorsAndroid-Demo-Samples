@@ -1,4 +1,4 @@
-package mapsindoors.com.midemo.locationdetailsdemo;
+package mapsindoors.com.midemo.showuserLocation;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -19,6 +19,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.mapspeople.Location;
 import com.mapspeople.LocationPropertyNames;
 import com.mapspeople.MapControl;
+import com.mapspeople.MapsIndoors;
 
 import mapsindoors.com.midemo.R;
 
@@ -27,27 +28,26 @@ import mapsindoors.com.midemo.R;
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
- * Use the {@link LocationDetailsFragment#newInstance} factory method to
+ * Use the {@link ShowUserLocationFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LocationDetailsFragment extends Fragment {
+public class ShowUserLocationFragment extends Fragment {
 
 
     MapControl mMapControl;
     SupportMapFragment mMapFragment;
     GoogleMap mGoogleMap;
-    TextView detailsTextView;
 
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     //query objects
 
 
-    public LocationDetailsFragment() {
+    public ShowUserLocationFragment() {
         // Required empty public constructor
     }
 
-    public static LocationDetailsFragment newInstance( String param1, String param2) {
-        LocationDetailsFragment fragment = new LocationDetailsFragment();
+    public static ShowUserLocationFragment newInstance(String param1, String param2) {
+        ShowUserLocationFragment fragment = new ShowUserLocationFragment();
 
         return fragment;
     }
@@ -66,7 +66,7 @@ public class LocationDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_show_location_details, container, false);
+        return inflater.inflate(R.layout.fragment_show_location, container, false);
     }
 
     @Override
@@ -85,6 +85,8 @@ public class LocationDetailsFragment extends Fragment {
             mMapControl.onDestroy();
         }
 
+        // free the MapsIndoorsPositionProvider
+        MapsIndoors.setPositionProvider(null);
         super.onDestroyView();
     }
     //endregion
@@ -92,9 +94,6 @@ public class LocationDetailsFragment extends Fragment {
     private void setupView( View rootView) {
 
         FragmentManager fm = getChildFragmentManager();
-
-
-        detailsTextView = rootView.findViewById(R.id.details_text_view);
 
         mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
 
@@ -114,19 +113,12 @@ public class LocationDetailsFragment extends Fragment {
 
     void  setupMapsIndoors() {
 
+        DemoPositionProvider demoPositionProvider = new DemoPositionProvider();
+        MapsIndoors.setPositionProvider(demoPositionProvider);
+        demoPositionProvider.startPositioning(null);
+
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
-
-        mMapControl.setOnMarkerClickListener( marker -> {
-
-            final Location loc = mMapControl.getLocation( marker );
-            if( loc != null )
-            {
-                marker.showInfoWindow();
-                detailsTextView.setText( "Name: " + loc.getName() + "\nDescription: " + loc.getStringProperty( LocationPropertyNames.DESCRIPTION ) );
-            }
-
-            return true;
-        } );
+        mMapControl.showUserPosition(true);
 
         mMapControl.init( miError -> {
 
