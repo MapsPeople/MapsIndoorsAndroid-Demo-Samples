@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
+import mapsindoors.com.midemo.changedisplaysettingdemo.ChangeDisplaySettingsFragment;
 import mapsindoors.com.midemo.customfloorselectordemo.CustomFloorSelectorFragment;
 import mapsindoors.com.midemo.locationdetailsdemo.LocationDetailsFragment;
 import mapsindoors.com.midemo.changefloordemo.ChangeFloorFragment;
@@ -131,6 +132,10 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.custom_floor_selector_item:
                 fragmentClass = CustomFloorSelectorFragment.class;
+                break;
+
+            case R.id.change_display_setting_item:
+                fragmentClass = ChangeDisplaySettingsFragment.class;
                 break;
 
             default:
