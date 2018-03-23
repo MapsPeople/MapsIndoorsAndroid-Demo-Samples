@@ -34,9 +34,13 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'com.google.code.gson:gson:2.8.2'
 
+<<<<<<< HEAD
     implementation "com.google.android.gms:play-services-maps:12.0.0"
 
 
     //implementation 'com.mapspeople.mapsindoors:mapsindoorssdk:2.0.0-alpha15@aar'
+=======
+>>>>>>> 39dc5098fb0a6a51486ca02907491901f3dc7c9e
     implementation project(':MapsIndoorsSDK')
+    implementation 'com.mapspeople.mapsindoors:mapsindoorssdk:2.0.0-beta01@aar'
 }
