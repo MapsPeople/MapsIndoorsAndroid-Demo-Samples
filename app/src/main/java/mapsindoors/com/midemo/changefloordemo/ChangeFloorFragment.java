@@ -1,4 +1,4 @@
-package mapsindoors.com.midemo.showuserLocation;
+package mapsindoors.com.midemo.changefloordemo;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -16,7 +16,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.mapspeople.MapControl;
-import com.mapspeople.MapsIndoors;
 
 import mapsindoors.com.midemo.R;
 
@@ -25,10 +24,10 @@ import mapsindoors.com.midemo.R;
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
- * Use the {@link ShowUserLocationFragment#newInstance} factory method to
+ * Use the {@link ChangeFloorFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ShowUserLocationFragment extends Fragment {
+public class ChangeFloorFragment extends Fragment {
 
 
     MapControl mMapControl;
@@ -39,12 +38,12 @@ public class ShowUserLocationFragment extends Fragment {
     //query objects
 
 
-    public ShowUserLocationFragment() {
+    public ChangeFloorFragment() {
         // Required empty public constructor
     }
 
-    public static ShowUserLocationFragment newInstance(String param1, String param2) {
-        ShowUserLocationFragment fragment = new ShowUserLocationFragment();
+    public static ChangeFloorFragment newInstance(String param1, String param2) {
+        ChangeFloorFragment fragment = new ChangeFloorFragment();
 
         return fragment;
     }
@@ -82,8 +81,6 @@ public class ShowUserLocationFragment extends Fragment {
             mMapControl.onDestroy();
         }
 
-        // free the MapsIndoorsPositionProvider
-        MapsIndoors.setPositionProvider(null);
         super.onDestroyView();
     }
     //endregion
@@ -91,6 +88,7 @@ public class ShowUserLocationFragment extends Fragment {
     private void setupView( View rootView) {
 
         FragmentManager fm = getChildFragmentManager();
+
 
         mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
 
@@ -110,19 +108,16 @@ public class ShowUserLocationFragment extends Fragment {
 
     void  setupMapsIndoors() {
 
-        DemoPositionProvider demoPositionProvider = new DemoPositionProvider();
-        MapsIndoors.setPositionProvider(demoPositionProvider);
-        demoPositionProvider.startPositioning(null);
-
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
-        mMapControl.showUserPosition(true);
 
         mMapControl.init( miError -> {
 
             if( getActivity() != null )
             {
                 getActivity().runOnUiThread(() -> {
+                    //setting the floor level programatically
                     mMapControl.selectFloor( 1 );
+
                     mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
 
                 });

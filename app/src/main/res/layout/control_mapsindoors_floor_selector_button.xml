@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	>
+
+	<TextView
+		android:id="@+id/mapspeople_floor_selector_btn"
+		android:layout_width="40dp"
+		android:layout_height="40dp"
+		android:background="@android:color/transparent"
+		android:gravity="center"
+		android:maxLines="1"
+		android:textColor="@android:color/black"
+		tools:text="G"
+		/>
+</FrameLayout>

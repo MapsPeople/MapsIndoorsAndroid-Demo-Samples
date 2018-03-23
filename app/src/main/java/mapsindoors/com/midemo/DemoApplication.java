@@ -12,6 +12,7 @@ import com.mapspeople.errors.MIError;
 public class DemoApplication extends Application
 {
     public static final String TAG = DemoApplication.class.getSimpleName();
+    private static Application sInstance;
 
     // Called when the application is starting, before any other application objects have been created.
     // Overriding this method is totally optional!
@@ -28,6 +29,7 @@ public class DemoApplication extends Application
                 getString( R.string.mapsindoors_api_key),
                 getString( R.string.google_maps_key )
         );
+        sInstance = this;
 
         //MapsIndoors.synchronizeContent( null );
     }
@@ -49,4 +51,9 @@ public class DemoApplication extends Application
 
         MapsIndoors.onApplicationConfigurationChanged( newConfig );
     }
+
+    public static Application getInstance() {
+        return sInstance;
+    }
+
 }

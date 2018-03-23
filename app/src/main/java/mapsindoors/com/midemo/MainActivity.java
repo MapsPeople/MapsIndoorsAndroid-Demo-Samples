@@ -13,10 +13,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
+import mapsindoors.com.midemo.customfloorselectordemo.CustomFloorSelectorFragment;
 import mapsindoors.com.midemo.locationdetailsdemo.LocationDetailsFragment;
+import mapsindoors.com.midemo.changefloordemo.ChangeFloorFragment;
 import mapsindoors.com.midemo.showbuildingdemo.ShowBuildingFragment;
 import mapsindoors.com.midemo.showlocationdemo.ShowLocationFragment;
 import mapsindoors.com.midemo.showmultiplelocations.ShowMultipleLocationsFragment;
+import mapsindoors.com.midemo.showroutedemo.ShowRouteFragment;
 import mapsindoors.com.midemo.showuserLocation.ShowUserLocationFragment;
 import mapsindoors.com.midemo.showvenuedemo.ShowVenueFragment;
 
@@ -116,6 +119,18 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.show_my_location_item:
                 fragmentClass = ShowUserLocationFragment.class;
+                break;
+
+            case R.id.show_floor_item:
+                fragmentClass = ChangeFloorFragment.class;
+                break;
+
+            case R.id.show_route_demo_item:
+                fragmentClass = ShowRouteFragment.class;
+                break;
+
+            case R.id.custom_floor_selector_item:
+                fragmentClass = CustomFloorSelectorFragment.class;
                 break;
 
             default:

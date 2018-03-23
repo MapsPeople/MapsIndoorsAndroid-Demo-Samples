@@ -15,7 +15,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
-import com.mapspeople.LocationQuery;
 import com.mapspeople.MapControl;
 import com.mapspeople.OnLoadingDataReadyListener;
 import com.mapspeople.errors.MIError;
@@ -70,7 +69,7 @@ public class ShowBuildingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_show_location, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         setupView(rootView);
 
         return rootView;

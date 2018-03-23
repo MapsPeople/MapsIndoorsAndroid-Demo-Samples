@@ -3,4 +3,13 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="blueGray">#43aaa0</color>
+
+    <color name="light_grey">#ededed</color>
+
+    <color name="grey">#89000000</color>
+    <color name="white">@android:color/white</color>
+    <color name="secondaryButtonColor">#d1d1d1</color>
+
 </resources>

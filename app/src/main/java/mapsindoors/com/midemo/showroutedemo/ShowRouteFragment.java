@@ -1,4 +1,4 @@
-package mapsindoors.com.midemo.showuserLocation;
+package mapsindoors.com.midemo.showroutedemo;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,8 +15,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.mapspeople.MPDirectionsRenderer;
+import com.mapspeople.MPRoutingProvider;
 import com.mapspeople.MapControl;
 import com.mapspeople.MapsIndoors;
+import com.mapspeople.OnRouteResultListener;
+import com.mapspeople.RoutingProvider;
+import com.mapspeople.errors.MIError;
+import com.mapspeople.models.Point;
+import com.mapspeople.models.Route;
 
 import mapsindoors.com.midemo.R;
 
@@ -25,26 +32,27 @@ import mapsindoors.com.midemo.R;
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
- * Use the {@link ShowUserLocationFragment#newInstance} factory method to
+ * Use the {@link ShowRouteFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ShowUserLocationFragment extends Fragment {
+public class ShowRouteFragment extends Fragment {
 
 
     MapControl mMapControl;
     SupportMapFragment mMapFragment;
     GoogleMap mGoogleMap;
-
+    RoutingProvider mRoutingProvider ;
+    MPDirectionsRenderer mRoutingRenderer;
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     //query objects
 
 
-    public ShowUserLocationFragment() {
+    public ShowRouteFragment() {
         // Required empty public constructor
     }
 
-    public static ShowUserLocationFragment newInstance(String param1, String param2) {
-        ShowUserLocationFragment fragment = new ShowUserLocationFragment();
+    public static ShowRouteFragment newInstance(String param1, String param2) {
+        ShowRouteFragment fragment = new ShowRouteFragment();
 
         return fragment;
     }
@@ -82,8 +90,6 @@ public class ShowUserLocationFragment extends Fragment {
             mMapControl.onDestroy();
         }
 
-        // free the MapsIndoorsPositionProvider
-        MapsIndoors.setPositionProvider(null);
         super.onDestroyView();
     }
     //endregion
@@ -91,6 +97,7 @@ public class ShowUserLocationFragment extends Fragment {
     private void setupView( View rootView) {
 
         FragmentManager fm = getChildFragmentManager();
+
 
         mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
 
@@ -109,25 +116,31 @@ public class ShowUserLocationFragment extends Fragment {
     };
 
     void  setupMapsIndoors() {
-
-        DemoPositionProvider demoPositionProvider = new DemoPositionProvider();
-        MapsIndoors.setPositionProvider(demoPositionProvider);
-        demoPositionProvider.startPositioning(null);
+        mRoutingProvider  = new MPRoutingProvider();
 
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
-        mMapControl.showUserPosition(true);
+
+        mRoutingRenderer = new MPDirectionsRenderer(getContext(),null,mGoogleMap);
+
 
         mMapControl.init( miError -> {
 
             if( getActivity() != null )
             {
                 getActivity().runOnUiThread(() -> {
+                    //setting the floor level programatically
                     mMapControl.selectFloor( 1 );
-                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
+
+                    // make the route
+                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 19f ) );
 
                 });
             }
         });
+
+
+        routing();
+
     }
 
 
@@ -147,6 +160,27 @@ public class ShowUserLocationFragment extends Fragment {
 
 
 
+    void routing(){
+        mRoutingProvider.setOnRouteResultListener(new OnRouteResultListener() {
+            @Override
+            public void onRouteResult(@Nullable Route route, @Nullable MIError error) {
+                mRoutingRenderer.setRoute(route);
+               // mRoutingRenderer.setAlpha(255);
+                getActivity().runOnUiThread(() -> {
+                    mRoutingRenderer.setRouteLegIndex(0);
+                });
+
+            }
+        });
+
+        Point origin = new Point(57.057917,9.950361 );
+        Point destination = new Point(57.058038,9.950509 ) ;
+
+
+        mRoutingProvider.query( origin, destination);
+
+
+    }
 
 
 }
