@@ -56,14 +56,14 @@
 
 
         <item
-            android:id="@+id/multiple_dataset"
+            android:id="@+id/multiple_dataset_item"
             android:icon="@drawable/ic_whatshot_black_24dp"
             android:title="@string/multiple_dataset_item_title" />
 
 
 
         <item
-            android:id="@+id/search_map"
+            android:id="@+id/search_map_item"
             android:icon="@drawable/ic_whatshot_black_24dp"
             android:title="@string/Search_Map_item_title" />
 

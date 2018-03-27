@@ -50,7 +50,7 @@ public class ShowMultipleLocationsFragment extends Fragment {
     }
 
 
-    public static ShowMultipleLocationsFragment newInstance(String param1, String param2) {
+    public static ShowMultipleLocationsFragment newInstance() {
         ShowMultipleLocationsFragment fragment = new ShowMultipleLocationsFragment();
 
         return fragment;

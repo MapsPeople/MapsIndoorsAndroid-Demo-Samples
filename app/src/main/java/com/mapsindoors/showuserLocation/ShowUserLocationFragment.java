@@ -43,7 +43,7 @@ public class ShowUserLocationFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static ShowUserLocationFragment newInstance(String param1, String param2) {
+    public static ShowUserLocationFragment newInstance() {
         ShowUserLocationFragment fragment = new ShowUserLocationFragment();
 
         return fragment;

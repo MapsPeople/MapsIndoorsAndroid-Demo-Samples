@@ -11,5 +11,9 @@
     <color name="grey">#89000000</color>
     <color name="white">@android:color/white</color>
     <color name="secondaryButtonColor">#d1d1d1</color>
+    <color name="black">@android:color/black</color>
+
+
+    <color name="search_edittext_hint">#BDBDBD</color>
 
 </resources>

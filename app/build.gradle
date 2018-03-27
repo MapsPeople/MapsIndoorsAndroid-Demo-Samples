@@ -38,4 +38,3 @@ dependencies {
     //implementation 'com.mapspeople.mapsindoors:mapsindoorssdk:2.0.0-beta04@aar'
     implementation project(':MapsIndoorsSDK')
 }
-

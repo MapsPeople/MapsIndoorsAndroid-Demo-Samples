@@ -1,6 +1,7 @@
-package com.mapsindoors.changedisplaysettingdemo;
+package com.mapsindoors.searchmapdemo;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,46 +10,47 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.mapspeople.Location;
-import com.mapspeople.LocationDisplayRule;
-import com.mapspeople.LocationDisplayRules;
-import com.mapspeople.LocationPropertyNames;
-import com.mapspeople.MapControl;
-
 import com.mapsindoors.R;
+import com.mapspeople.Location;
+import com.mapspeople.MapControl;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
- * Use the {@link ChangeDisplaySettingsFragment#newInstance} factory method to
+ * Use the {@link SearchMapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ChangeDisplaySettingsFragment extends Fragment {
+public class SearchMapFragment extends Fragment {
 
 
     MapControl mMapControl;
     SupportMapFragment mMapFragment;
     GoogleMap mGoogleMap;
+    Button searchButton;
+    Location locationToSelect = null;
+
+    private OnFragmentInteractionListener mListener;
 
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     //query objects
 
 
-    public ChangeDisplaySettingsFragment() {
+    public SearchMapFragment() {
         // Required empty public constructor
     }
 
-    public static ChangeDisplaySettingsFragment newInstance() {
-        ChangeDisplaySettingsFragment fragment = new ChangeDisplaySettingsFragment();
+    public static SearchMapFragment newInstance() {
+
+        SearchMapFragment fragment = new SearchMapFragment();
 
         return fragment;
     }
@@ -67,7 +69,7 @@ public class ChangeDisplaySettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        return inflater.inflate(R.layout.fragment_search_map, container, false);
     }
 
     @Override
@@ -93,8 +95,14 @@ public class ChangeDisplaySettingsFragment extends Fragment {
     private void setupView( View rootView) {
 
         FragmentManager fm = getChildFragmentManager();
+        searchButton = rootView.findViewById(R.id.search_button);
 
-
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onSearchButtonClick();
+            }
+        });
 
         mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
 
@@ -116,59 +124,32 @@ public class ChangeDisplaySettingsFragment extends Fragment {
 
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
 
-        LocationDisplayRules displayRules = new LocationDisplayRules();
-        LocationDisplayRule.Builder builder = new LocationDisplayRule.Builder("MeetingRoom").
-                setVectorDrawableIcon( R.drawable.ic_flight_takeoff_black_24dp, 20, 20 ).
-                setZOn(16).
-                setShowLabel(false).
-                setTint( 0x7Fef0055 ).
-                setVisible(true);
 
-        displayRules.add(builder.build());
-
-        mMapControl.addDisplayRules(displayRules);
-
-        mMapControl.setOnMarkerClickListener( marker -> {
-
-            final Location loc = mMapControl.getLocation( marker );
-            if( loc != null )
-            {
-                marker.showInfoWindow();
-
-                //LocationDisplayRule cafeDispRule = myMapControl.getDisplayRules().getRule( "<cafe>" );
-                LocationDisplayRule cafeDispRule = mMapControl.getDisplayRules().getRule( "MeetingRoom" );
-
-
-                loc.setDisplayRule( cafeDispRule );
-                loc.setVisible( true );
-            }
-
-            return true;
-        });
 
         mMapControl.init( miError -> {
 
             if( getActivity() != null )
             {
                 getActivity().runOnUiThread(() -> {
-                    mMapControl.selectFloor( 1 );
+
                     mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
 
-
+                    if(locationToSelect != null){
+                        mMapControl.selectLocation(locationToSelect);
+                        locationToSelect = null;
+                    } else {
+                        mMapControl.selectFloor( 1 );
+                    }
 
                 });
             }
+
         });
     }
 
 
 
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
 
     @Override
     public void onDetach() {
@@ -177,7 +158,21 @@ public class ChangeDisplaySettingsFragment extends Fragment {
     }
 
 
+    public interface OnFragmentInteractionListener {
+        void onSearchButtonClick();
+    }
 
+    public void selectLocation(Location loc){
 
+        locationToSelect = loc;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        }
+    }
 
 }

@@ -46,7 +46,7 @@ public class ShowBuildingFragment extends Fragment {
     }
 
 
-    public static ShowBuildingFragment newInstance(String param1, String param2) {
+    public static ShowBuildingFragment newInstance() {
         ShowBuildingFragment fragment = new ShowBuildingFragment();
 
         return fragment;

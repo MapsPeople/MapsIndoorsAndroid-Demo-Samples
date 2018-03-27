@@ -42,7 +42,7 @@ public class ChangeFloorFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static ChangeFloorFragment newInstance(String param1, String param2) {
+    public static ChangeFloorFragment newInstance() {
         ChangeFloorFragment fragment = new ChangeFloorFragment();
 
         return fragment;

@@ -46,7 +46,7 @@ public class LocationDetailsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static LocationDetailsFragment newInstance( String param1, String param2) {
+    public static LocationDetailsFragment newInstance( ) {
         LocationDetailsFragment fragment = new LocationDetailsFragment();
 
         return fragment;

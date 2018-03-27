@@ -46,7 +46,7 @@ public class CustomFloorSelectorFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static CustomFloorSelectorFragment newInstance(String param1, String param2) {
+    public static CustomFloorSelectorFragment newInstance() {
         CustomFloorSelectorFragment fragment = new CustomFloorSelectorFragment();
 
         return fragment;

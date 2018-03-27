@@ -51,7 +51,7 @@ public class ShowLocationFragment extends Fragment {
     }
 
 
-    public static ShowLocationFragment newInstance(String param1, String param2) {
+    public static ShowLocationFragment newInstance() {
         ShowLocationFragment fragment = new ShowLocationFragment();
 
         return fragment;

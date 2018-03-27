@@ -17,20 +17,25 @@ import com.mapsindoors.changedisplaysettingdemo.ChangeDisplaySettingsFragment;
 import com.mapsindoors.customfloorselectordemo.CustomFloorSelectorFragment;
 import com.mapsindoors.locationdetailsdemo.LocationDetailsFragment;
 import com.mapsindoors.changefloordemo.ChangeFloorFragment;
+import com.mapsindoors.searchmapdemo.SearchFragment;
+import com.mapsindoors.searchmapdemo.SearchMapFragment;
 import com.mapsindoors.showbuildingdemo.ShowBuildingFragment;
 import com.mapsindoors.showlocationdemo.ShowLocationFragment;
 import com.mapsindoors.showmultiplelocations.ShowMultipleLocationsFragment;
 import com.mapsindoors.showroutedemo.ShowRouteFragment;
 import com.mapsindoors.showuserLocation.ShowUserLocationFragment;
 import com.mapsindoors.showvenuedemo.ShowVenueFragment;
+import com.mapspeople.Location;
 
 import static android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SearchFragment.OnFragmentInteractionListener,SearchMapFragment.OnFragmentInteractionListener {
 
 
     NavigationView mNavigationView;
+    SearchMapFragment mSearchMapFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,62 +96,60 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         Fragment fragment = null;
-        int id = item.getItemId();
         Class fragmentClass;
 
 
         switch(item.getItemId()) {
             case R.id.show_location_item:
-                fragmentClass = ShowLocationFragment.class;
+                fragment = ShowLocationFragment.newInstance();
                 break;
 
             case R.id.show_multiple_locations_item:
-                fragmentClass = ShowMultipleLocationsFragment.class;
+                fragment = ShowMultipleLocationsFragment.newInstance();
                 break;
 
 
             case R.id.show_location_details_item:
-                fragmentClass = LocationDetailsFragment.class;
+                fragment = LocationDetailsFragment.newInstance();
                 break;
 
 
             case R.id.show_building_item:
-                fragmentClass = ShowBuildingFragment.class;
+                fragment = ShowBuildingFragment.newInstance();
                 break;
 
             case R.id.show_venue_item:
-                fragmentClass = ShowVenueFragment.class;
+                fragment = ShowVenueFragment.newInstance();
                 break;
 
             case R.id.show_my_location_item:
-                fragmentClass = ShowUserLocationFragment.class;
+                fragment = ShowUserLocationFragment.newInstance();
                 break;
 
             case R.id.show_floor_item:
-                fragmentClass = ChangeFloorFragment.class;
+                fragment = ChangeFloorFragment.newInstance();
                 break;
 
             case R.id.show_route_demo_item:
-                fragmentClass = ShowRouteFragment.class;
+                fragment = ShowRouteFragment.newInstance();
                 break;
 
             case R.id.custom_floor_selector_item:
-                fragmentClass = CustomFloorSelectorFragment.class;
+                fragment = CustomFloorSelectorFragment.newInstance();
                 break;
 
             case R.id.change_display_setting_item:
-                fragmentClass = ChangeDisplaySettingsFragment.class;
+                fragment = ChangeDisplaySettingsFragment.newInstance();
+                break;
+            case R.id.search_map_item :
+               fragment =  mSearchMapFragment = SearchMapFragment.newInstance();
                 break;
 
             default:
-                fragmentClass = ShowLocationFragment.class;
+                fragment = ShowLocationFragment.newInstance();
         }
 
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -157,5 +160,29 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer =  findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+     void openSearchFragment(){
+        Fragment fragment = new SearchFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).setTransition( TRANSIT_FRAGMENT_FADE ).commit();
+
+    }
+
+    @Override
+    public void onUserSelectedLocation(Location loc) {
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, mSearchMapFragment).setTransition( TRANSIT_FRAGMENT_FADE ).commit();
+
+        mSearchMapFragment.selectLocation(loc);
+    }
+
+    @Override
+    public void onSearchButtonClick() {
+
+        openSearchFragment();
     }
 }

@@ -51,7 +51,7 @@ public class ShowRouteFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static ShowRouteFragment newInstance(String param1, String param2) {
+    public static ShowRouteFragment newInstance() {
         ShowRouteFragment fragment = new ShowRouteFragment();
 
         return fragment;

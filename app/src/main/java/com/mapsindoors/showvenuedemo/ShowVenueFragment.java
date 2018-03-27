@@ -44,7 +44,7 @@ public class ShowVenueFragment extends Fragment {
     }
 
 
-    public static ShowVenueFragment newInstance(String param1, String param2) {
+    public static ShowVenueFragment newInstance() {
         ShowVenueFragment fragment = new ShowVenueFragment();
 
         return fragment;
