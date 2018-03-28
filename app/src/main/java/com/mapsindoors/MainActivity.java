@@ -17,6 +17,8 @@ import com.mapsindoors.changedisplaysettingdemo.ChangeDisplaySettingsFragment;
 import com.mapsindoors.customfloorselectordemo.CustomFloorSelectorFragment;
 import com.mapsindoors.locationdetailsdemo.LocationDetailsFragment;
 import com.mapsindoors.changefloordemo.ChangeFloorFragment;
+import com.mapsindoors.multipledatasets.MultiSolutionsFragment;
+import com.mapsindoors.multipledatasets.SolutionSelectorFragment;
 import com.mapsindoors.searchmapdemo.SearchFragment;
 import com.mapsindoors.searchmapdemo.SearchMapFragment;
 import com.mapsindoors.showbuildingdemo.ShowBuildingFragment;
@@ -30,7 +32,10 @@ import com.mapspeople.Location;
 import static android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, SearchFragment.OnFragmentInteractionListener,SearchMapFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        SearchFragment.OnFragmentInteractionListener,
+        SearchMapFragment.OnFragmentInteractionListener,
+        SolutionSelectorFragment.OnFragmentInteractionListener{
 
 
     NavigationView mNavigationView;
@@ -145,15 +150,15 @@ public class MainActivity extends AppCompatActivity
                fragment =  mSearchMapFragment = SearchMapFragment.newInstance();
                 break;
 
+            case R.id.multiple_dataset_item :
+                fragment  = SolutionSelectorFragment.newInstance();
+                break;
+
             default:
                 fragment = ShowLocationFragment.newInstance();
         }
 
-
-
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).setTransition( TRANSIT_FRAGMENT_FADE ).commit();
+        attachFragmentToActivity(fragment);
 
         // Set action bar title
         setTitle(item.getTitle());
@@ -163,12 +168,13 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-     void openSearchFragment(){
-        Fragment fragment = new SearchFragment();
+
+
+    void attachFragmentToActivity(Fragment fragment){
+
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).setTransition( TRANSIT_FRAGMENT_FADE ).commit();
-
     }
 
     @Override
@@ -183,6 +189,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onSearchButtonClick() {
 
-        openSearchFragment();
+        attachFragmentToActivity(SearchFragment.newInstance());
+    }
+
+    @Override
+    public void onSolutionChoosen() {
+       Fragment multisolutionFrag = MultiSolutionsFragment.newInstance();
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, multisolutionFrag).setTransition( TRANSIT_FRAGMENT_FADE ).commit();
     }
 }

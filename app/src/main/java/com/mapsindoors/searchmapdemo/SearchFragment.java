@@ -23,6 +23,7 @@ import android.widget.ViewFlipper;
 
 import com.mapsindoors.R;
 
+import com.mapsindoors.locationdetailsdemo.LocationDetailsFragment;
 import com.mapsindoors.searchmapdemo.adapter.IconTextListAdapter;
 import com.mapspeople.Location;
 import com.mapspeople.LocationQuery;
@@ -88,7 +89,6 @@ public class SearchFragment extends Fragment {
         // Clear search button
         mSearchClearBtn = view.findViewById(R.id.directionsfullmenu_search_clear_btn);
 
-
         mBackButton = view.findViewById(R.id.directionsfullmenusearch_back_button);
 
         init();
@@ -98,7 +98,6 @@ public class SearchFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
     @Override
@@ -455,6 +454,13 @@ public class SearchFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         void onUserSelectedLocation(Location loc);
+    }
+
+
+    public static SearchFragment newInstance( ) {
+        SearchFragment fragment = new SearchFragment();
+
+        return fragment;
     }
 
 }
