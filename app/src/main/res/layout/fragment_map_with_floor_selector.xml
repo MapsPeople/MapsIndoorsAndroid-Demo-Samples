@@ -15,13 +15,16 @@
         android:clickable="true"
         tools:context=".ui.activitymain.MapsIndoorsActivity"/>
 
-    <mapsindoors.com.midemo.customfloorselectordemo.floorselectorcomponent.MapFloorSelector
+
+
+    <com.mapsindoors.customfloorselectordemo.floorselectorcomponent.MapFloorSelector
         android:id="@+id/mp_floor_selector"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginStart="6dp"
         android:elevation="2dp"
-        />
 
+        />
 </RelativeLayout>
