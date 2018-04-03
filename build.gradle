@@ -21,7 +21,7 @@ allprojects {
         jcenter()
 
         maven {
-            url 'http://maven.mapsindoors.com/'
+            url 'https://maven.mapsindoors.com/'
         }
     }
 }
