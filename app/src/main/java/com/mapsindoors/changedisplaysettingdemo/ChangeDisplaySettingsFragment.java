@@ -9,20 +9,16 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.mapspeople.Location;
-import com.mapspeople.LocationDisplayRule;
-import com.mapspeople.LocationDisplayRules;
-import com.mapspeople.LocationPropertyNames;
-import com.mapspeople.MapControl;
-
 import com.mapsindoors.R;
+import com.mapsindoors.mapssdk.Location;
+import com.mapsindoors.mapssdk.LocationDisplayRule;
+import com.mapsindoors.mapssdk.MapControl;
 
 
 /**
@@ -34,12 +30,14 @@ import com.mapsindoors.R;
  */
 public class ChangeDisplaySettingsFragment extends Fragment {
 
+    static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
 
     MapControl mMapControl;
     SupportMapFragment mMapFragment;
     GoogleMap mGoogleMap;
 
-    static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
+    LocationDisplayRule myCustomMeetingRoomDisplayRule;
+
     //query objects
 
 
@@ -112,21 +110,19 @@ public class ChangeDisplaySettingsFragment extends Fragment {
         }
     };
 
-    void  setupMapsIndoors() {
+    void setupMapsIndoors() {
 
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
 
-        LocationDisplayRules displayRules = new LocationDisplayRules();
-        LocationDisplayRule.Builder builder = new LocationDisplayRule.Builder("MeetingRoom").
-                setVectorDrawableIcon( R.drawable.ic_flight_takeoff_black_24dp, 20, 20 ).
-                setZOn(16).
-                setShowLabel(false).
+        myCustomMeetingRoomDisplayRule = new LocationDisplayRule.Builder("MeetingRoom").
+                setIcon( R.drawable.ic_flight_takeoff_black_24dp, 20, 20 ).
+                setZoomLevelOn( 16 ).
+                setShowLabel( false ).
                 setTint( 0x7Fef0055 ).
-                setVisible(true);
+                setVisible( true ).
+                build();
 
-        displayRules.add(builder.build());
-
-        mMapControl.addDisplayRules(displayRules);
+        mMapControl.addDisplayRule( myCustomMeetingRoomDisplayRule );
 
         mMapControl.setOnMarkerClickListener( marker -> {
 
@@ -135,12 +131,7 @@ public class ChangeDisplaySettingsFragment extends Fragment {
             {
                 marker.showInfoWindow();
 
-                //LocationDisplayRule cafeDispRule = myMapControl.getDisplayRules().getRule( "<cafe>" );
-                LocationDisplayRule cafeDispRule = mMapControl.getDisplayRules().getRule( "MeetingRoom" );
-
-
-                loc.setDisplayRule( cafeDispRule );
-                loc.setVisible( true );
+                loc.setDisplayRule( myCustomMeetingRoomDisplayRule );
             }
 
             return true;

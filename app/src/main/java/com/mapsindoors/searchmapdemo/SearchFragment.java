@@ -22,15 +22,12 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.mapsindoors.R;
-
-import com.mapsindoors.locationdetailsdemo.LocationDetailsFragment;
+import com.mapsindoors.mapssdk.Location;
+import com.mapsindoors.mapssdk.LocationQuery;
+import com.mapsindoors.mapssdk.MPLocationsProvider;
+import com.mapsindoors.mapssdk.OnLocationsReadyListener;
+import com.mapsindoors.mapssdk.errors.MIError;
 import com.mapsindoors.searchmapdemo.adapter.IconTextListAdapter;
-import com.mapspeople.Location;
-import com.mapspeople.LocationQuery;
-import com.mapspeople.MPLocationsProvider;
-
-import com.mapspeople.OnLocationsReadyListener;
-import com.mapspeople.errors.MIError;
 
 import java.util.ArrayList;
 import java.util.List;

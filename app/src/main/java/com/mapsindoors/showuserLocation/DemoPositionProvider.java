@@ -3,13 +3,13 @@ package com.mapsindoors.showuserLocation;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.mapspeople.MPPositionResult;
-import com.mapspeople.OnPositionUpdateListener;
-import com.mapspeople.OnStateChangedListener;
-import com.mapspeople.PermissionsAndPSListener;
-import com.mapspeople.PositionProvider;
-import com.mapspeople.PositionResult;
-import com.mapspeople.models.Point;
+import com.mapsindoors.mapssdk.MPPositionResult;
+import com.mapsindoors.mapssdk.OnPositionUpdateListener;
+import com.mapsindoors.mapssdk.OnStateChangedListener;
+import com.mapsindoors.mapssdk.PermissionsAndPSListener;
+import com.mapsindoors.mapssdk.PositionProvider;
+import com.mapsindoors.mapssdk.PositionResult;
+import com.mapsindoors.mapssdk.models.Point;
 
 import java.util.Timer;
 import java.util.TimerTask;

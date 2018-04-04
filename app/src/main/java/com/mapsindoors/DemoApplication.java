@@ -2,12 +2,9 @@ package com.mapsindoors;
 
 import android.app.Application;
 import android.content.res.Configuration;
-import android.support.annotation.Nullable;
 
-import com.mapspeople.MapsIndoors;
-import com.mapspeople.OnSyncDataReadyListener;
-import com.mapspeople.dbglog;
-import com.mapspeople.errors.MIError;
+import com.mapsindoors.mapssdk.MapsIndoors;
+import com.mapsindoors.mapssdk.dbglog;
 
 public class DemoApplication extends Application
 {

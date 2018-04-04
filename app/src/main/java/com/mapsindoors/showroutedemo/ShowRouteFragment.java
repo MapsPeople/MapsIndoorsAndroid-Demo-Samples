@@ -15,17 +15,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.mapspeople.MPDirectionsRenderer;
-import com.mapspeople.MPRoutingProvider;
-import com.mapspeople.MapControl;
-import com.mapspeople.MapsIndoors;
-import com.mapspeople.OnRouteResultListener;
-import com.mapspeople.RoutingProvider;
-import com.mapspeople.errors.MIError;
-import com.mapspeople.models.Point;
-import com.mapspeople.models.Route;
-
 import com.mapsindoors.R;
+import com.mapsindoors.mapssdk.MPDirectionsRenderer;
+import com.mapsindoors.mapssdk.MPRoutingProvider;
+import com.mapsindoors.mapssdk.MapControl;
+import com.mapsindoors.mapssdk.OnRouteResultListener;
+import com.mapsindoors.mapssdk.RoutingProvider;
+import com.mapsindoors.mapssdk.errors.MIError;
+import com.mapsindoors.mapssdk.models.Point;
+import com.mapsindoors.mapssdk.models.Route;
 
 
 /**

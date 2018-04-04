@@ -1,9 +1,9 @@
 package com.mapsindoors;
 
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,11 +12,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
 import com.mapsindoors.changedisplaysettingdemo.ChangeDisplaySettingsFragment;
+import com.mapsindoors.changefloordemo.ChangeFloorFragment;
 import com.mapsindoors.customfloorselectordemo.CustomFloorSelectorFragment;
 import com.mapsindoors.locationdetailsdemo.LocationDetailsFragment;
-import com.mapsindoors.changefloordemo.ChangeFloorFragment;
+import com.mapsindoors.mapssdk.Location;
 import com.mapsindoors.multipledatasets.MultiSolutionsFragment;
 import com.mapsindoors.multipledatasets.SolutionSelectorFragment;
 import com.mapsindoors.searchmapdemo.SearchFragment;
@@ -27,7 +27,6 @@ import com.mapsindoors.showmultiplelocations.ShowMultipleLocationsFragment;
 import com.mapsindoors.showroutedemo.ShowRouteFragment;
 import com.mapsindoors.showuserLocation.ShowUserLocationFragment;
 import com.mapsindoors.showvenuedemo.ShowVenueFragment;
-import com.mapspeople.Location;
 
 import static android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
 

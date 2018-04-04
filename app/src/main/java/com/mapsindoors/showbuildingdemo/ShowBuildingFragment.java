@@ -14,15 +14,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-
-import com.mapspeople.MapControl;
-import com.mapspeople.OnLoadingDataReadyListener;
-import com.mapspeople.errors.MIError;
-import com.mapspeople.models.Building;
-
-
-
 import com.mapsindoors.R;
+import com.mapsindoors.mapssdk.MapControl;
+import com.mapsindoors.mapssdk.OnLoadingDataReadyListener;
+import com.mapsindoors.mapssdk.errors.MIError;
+import com.mapsindoors.mapssdk.models.Building;
 
 /**
  * A simple {@link Fragment} subclass.

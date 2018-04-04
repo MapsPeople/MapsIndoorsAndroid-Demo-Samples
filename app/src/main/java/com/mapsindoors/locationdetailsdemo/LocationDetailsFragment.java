@@ -16,11 +16,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.mapspeople.Location;
-import com.mapspeople.LocationPropertyNames;
-import com.mapspeople.MapControl;
-
 import com.mapsindoors.R;
+import com.mapsindoors.mapssdk.Location;
+import com.mapsindoors.mapssdk.LocationPropertyNames;
+import com.mapsindoors.mapssdk.MapControl;
 
 
 /**

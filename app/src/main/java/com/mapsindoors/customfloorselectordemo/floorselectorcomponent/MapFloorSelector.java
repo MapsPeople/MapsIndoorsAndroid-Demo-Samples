@@ -15,21 +15,18 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
-
-import com.mapspeople.IFloorSelector;
-import com.mapspeople.OnFloorSelectedListener;
-import com.mapspeople.dbglog;
-import com.mapspeople.models.Building;
-import com.mapspeople.models.Floor;
-import com.mapspeople.models.FloorBase;
-
+import com.mapsindoors.BuildConfig;
+import com.mapsindoors.R;
+import com.mapsindoors.mapssdk.IFloorSelector;
+import com.mapsindoors.mapssdk.OnFloorSelectedListener;
+import com.mapsindoors.mapssdk.dbglog;
+import com.mapsindoors.mapssdk.models.Building;
+import com.mapsindoors.mapssdk.models.Floor;
+import com.mapsindoors.mapssdk.models.FloorBase;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import com.mapsindoors.BuildConfig;
-import com.mapsindoors.R;
 
 
 /**

@@ -16,11 +16,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.mapspeople.FloorSelectorType;
-import com.mapspeople.MapControl;
-
 import com.mapsindoors.R;
 import com.mapsindoors.customfloorselectordemo.floorselectorcomponent.MapFloorSelector;
+import com.mapsindoors.mapssdk.FloorSelectorType;
+import com.mapsindoors.mapssdk.MapControl;
 
 
 /**
