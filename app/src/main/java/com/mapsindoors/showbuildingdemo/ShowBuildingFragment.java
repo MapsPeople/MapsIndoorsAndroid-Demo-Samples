@@ -97,25 +97,22 @@ public class ShowBuildingFragment extends Fragment {
 
         mMapControl = new MapControl(getActivity(), mMapFragment, mGoogleMap);
 
-        mMapControl.init(new OnLoadingDataReadyListener() {
-            @Override
-            public void onLoadingDataReady(@Nullable MIError miError) {
-                // after the map control is initialized we can
+        mMapControl.init( miError -> {
+            // after the map control is initialized we can
 
-                getActivity().runOnUiThread(() -> {
+            getActivity().runOnUiThread(() -> {
 
-                    mMapControl.selectFloor( 1 );
+                mMapControl.selectFloor( 1 );
 
-                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 18f ) );
+                mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 18f ) );
 
-                    Building currentBuilding = mMapControl.getCurrentBuilding();
+                Building currentBuilding = mMapControl.getCurrentBuilding();
 
-                    mMapControl.setMapPosition( currentBuilding.getLatLngBoundingBox(), true, 10 );
+                mMapControl.setMapPosition( currentBuilding.getLatLngBoundingBox(), true, 10 );
 
 
-                    });
-            }
-        });
+                });
+        } );
     }
 
 

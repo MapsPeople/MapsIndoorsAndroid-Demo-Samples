@@ -159,17 +159,14 @@ public class ShowRouteFragment extends Fragment {
 
 
     void routing(){
-        mRoutingProvider.setOnRouteResultListener(new OnRouteResultListener() {
-            @Override
-            public void onRouteResult(@Nullable Route route, @Nullable MIError error) {
-                mRoutingRenderer.setRoute(route);
-               // mRoutingRenderer.setAlpha(255);
-                getActivity().runOnUiThread(() -> {
-                    mRoutingRenderer.setRouteLegIndex(0);
-                });
+        mRoutingProvider.setOnRouteResultListener( ( route, error ) -> {
+            mRoutingRenderer.setRoute(route);
+           // mRoutingRenderer.setAlpha(255);
+            getActivity().runOnUiThread(() -> {
+                mRoutingRenderer.setRouteLegIndex(0);
+            });
 
-            }
-        });
+        } );
 
         Point origin = new Point(57.057917,9.950361 );
         Point destination = new Point(57.058038,9.950509 ) ;

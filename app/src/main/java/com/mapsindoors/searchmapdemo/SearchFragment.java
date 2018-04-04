@@ -135,11 +135,8 @@ public class SearchFragment extends Fragment {
         mSearchClearBtn.setOnClickListener(mClearSearchButtonClickListener);
         mSearchClearBtn.setOnFocusChangeListener(mClearSearchButtonFocusChangeListener);
 
-        mBackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            }
-        });
+        mBackButton.setOnClickListener( view -> {
+        } );
 
         mCSearchLocationsProvider = new MPLocationsProvider();
 
@@ -253,13 +250,11 @@ public class SearchFragment extends Fragment {
     };
 
     private void setFocusOnSearchBox() {
-        mSearchEditTextView.post(new Runnable() {
-            public void run() {
-                mSearchEditTextView.requestFocusFromTouch();
-                InputMethodManager lManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                lManager.showSoftInput(mSearchEditTextView, 0);
-            }
-        });
+        mSearchEditTextView.post( () -> {
+            mSearchEditTextView.requestFocusFromTouch();
+            InputMethodManager lManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            lManager.showSoftInput(mSearchEditTextView, 0);
+        } );
     }
 
     //endregion
@@ -403,17 +398,11 @@ public class SearchFragment extends Fragment {
 
             if(locations != null){
 
-                new Handler(getContext().getMainLooper()).post(new Runnable() {
+                getActivity().runOnUiThread( () -> {
+                    mViewFlipper.setDisplayedChild(0);
 
-                    @Override
-                    public void run() {
-                        mViewFlipper.setDisplayedChild(0);
-
-                        mListAdapter.setList(locations);
-
-                    }
-                });
-
+                    mListAdapter.setList(locations);
+                } );
             }
         }
 

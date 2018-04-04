@@ -99,20 +99,15 @@ public class SolutionSelectorFragment extends Fragment {
     void dataSyncDone(MIError error) {
 
 
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
+        new Handler(Looper.getMainLooper()).post( () -> {
 
-                // if(error == null){
-                mListener.onSolutionChoosen();
-               /* }else {
-                    Toast.makeText(getContext() , "An error occured with the message: " + error.message, Toast.LENGTH_SHORT).show();
-                }*/
+            // if(error == null){
+            mListener.onSolutionChoosen();
+           /* }else {
+                Toast.makeText(getContext() , "An error occured with the message: " + error.message, Toast.LENGTH_SHORT).show();
+            }*/
 
-            }
-
-            }
-            );
+        } );
 
 
 

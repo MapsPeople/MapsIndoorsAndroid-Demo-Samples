@@ -122,22 +122,17 @@ public class MapFloorSelector extends FrameLayout
 
 			int a= 1;
 
-			observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			observer.addOnGlobalLayoutListener( () -> {
+				if (willMyListScroll()) {
+					bottomScrollGradient.setVisibility(VISIBLE);
+					topScrollGradient.setVisibility(VISIBLE);
 
-				@Override
-				public void onGlobalLayout() {
-					if (willMyListScroll()) {
-						bottomScrollGradient.setVisibility(VISIBLE);
-						topScrollGradient.setVisibility(VISIBLE);
-
-					} else{
-						bottomScrollGradient.setVisibility(INVISIBLE);
-						topScrollGradient.setVisibility(INVISIBLE);
-					}
-
+				} else{
+					bottomScrollGradient.setVisibility(INVISIBLE);
+					topScrollGradient.setVisibility(INVISIBLE);
 				}
 
-			});
+			} );
 
 
 			mFloorSelectorListView.setOnItemClickListener( ( parent, view, position, id ) -> {
@@ -469,11 +464,7 @@ public class MapFloorSelector extends FrameLayout
 			int realSizeOfListView  = mFloorSelectorListView.getChildAt(0).getHeight() * mListAdapter.getCount();
 			int currentSizeOfListView = mFloorSelectorListView.getHeight();
 
-			if (realSizeOfListView > currentSizeOfListView) {
-				return true;
-			} else {
-				return false;
-			}
+			return realSizeOfListView > currentSizeOfListView;
 		}
 
 		return false;

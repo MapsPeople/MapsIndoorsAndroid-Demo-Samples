@@ -96,12 +96,7 @@ public class SearchMapFragment extends Fragment {
         FragmentManager fm = getChildFragmentManager();
         searchButton = rootView.findViewById(R.id.search_button);
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onSearchButtonClick();
-            }
-        });
+        searchButton.setOnClickListener( v -> mListener.onSearchButtonClick() );
 
         mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
 
