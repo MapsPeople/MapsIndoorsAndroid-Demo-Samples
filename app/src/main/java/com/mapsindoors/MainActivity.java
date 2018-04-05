@@ -1,6 +1,7 @@
 package com.mapsindoors;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -167,35 +168,36 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-
-    void attachFragmentToActivity(Fragment fragment){
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).setTransition( TRANSIT_FRAGMENT_FADE ).commit();
-    }
-
     @Override
-    public void onUserSelectedLocation(Location loc) {
+    public void onUserSelectedLocation( Location loc )
+    {
         // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, mSearchMapFragment).setTransition( TRANSIT_FRAGMENT_FADE ).commit();
+        attachFragmentToActivity( mSearchMapFragment );
 
-        mSearchMapFragment.selectLocation(loc);
+        mSearchMapFragment.selectLocation( loc );
     }
 
     @Override
-    public void onSearchButtonClick() {
-
-        attachFragmentToActivity(SearchFragment.newInstance());
+    public void onSearchButtonClick()
+    {
+        attachFragmentToActivity( SearchFragment.newInstance() );
     }
 
     @Override
-    public void onSolutionChoosen() {
-       Fragment multisolutionFrag = MultiSolutionsFragment.newInstance();
+    public void onSolutionChoosen()
+    {
+        final Fragment multisolutionFrag = MultiSolutionsFragment.newInstance();
 
+        attachFragmentToActivity( multisolutionFrag );
+    }
+
+    void attachFragmentToActivity( @NonNull Fragment fragment )
+    {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, multisolutionFrag).setTransition( TRANSIT_FRAGMENT_FADE ).commit();
+
+        fragmentManager.beginTransaction().
+                replace( R.id.flContent, fragment ).
+                setTransition( TRANSIT_FRAGMENT_FADE ).
+                commit();
     }
 }
