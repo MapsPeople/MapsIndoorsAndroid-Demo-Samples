@@ -9,20 +9,18 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.mapspeople.Location;
-import com.mapspeople.LocationDisplayRule;
-import com.mapspeople.LocationDisplayRules;
-import com.mapspeople.LocationPropertyNames;
-import com.mapspeople.MapControl;
+
 
 import com.mapsindoors.R;
+import com.mapsindoors.mapssdk.Location;
+import com.mapsindoors.mapssdk.LocationDisplayRule;
+import com.mapsindoors.mapssdk.MapControl;
 
 
 /**
@@ -116,17 +114,7 @@ public class ChangeDisplaySettingsFragment extends Fragment {
 
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
 
-        LocationDisplayRules displayRules = new LocationDisplayRules();
-        LocationDisplayRule.Builder builder = new LocationDisplayRule.Builder("MeetingRoom").
-                setVectorDrawableIcon( R.drawable.ic_flight_takeoff_black_24dp, 20, 20 ).
-                setZOn(16).
-                setShowLabel(false).
-                setTint( 0x7Fef0055 ).
-                setVisible(true);
-
-        displayRules.add(builder.build());
-
-        mMapControl.addDisplayRules(displayRules);
+        changeDisplayRules();
 
         mMapControl.setOnMarkerClickListener( marker -> {
 
@@ -135,12 +123,6 @@ public class ChangeDisplaySettingsFragment extends Fragment {
             {
                 marker.showInfoWindow();
 
-                //LocationDisplayRule cafeDispRule = myMapControl.getDisplayRules().getRule( "<cafe>" );
-                LocationDisplayRule cafeDispRule = mMapControl.getDisplayRules().getRule( "MeetingRoom" );
-
-
-                loc.setDisplayRule( cafeDispRule );
-                loc.setVisible( true );
             }
 
             return true;
@@ -162,7 +144,17 @@ public class ChangeDisplaySettingsFragment extends Fragment {
     }
 
 
+    void changeDisplayRules() {
+        final LocationDisplayRule rule = new LocationDisplayRule.Builder("MeetingRoom").
+                setIcon(R.drawable.archive, 20, 20).
+                setZoomLevelOn(16).
+                setVisible(true).
+                build();
 
+
+        mMapControl.addDisplayRule(rule);
+
+    }
 
     @Override
     public void onAttach(Context context) {
