@@ -14,13 +14,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.mapspeople.MapControl;
-import com.mapspeople.MapsIndoors;
-import com.mapspeople.OnLoadingDataReadyListener;
-import com.mapspeople.errors.MIError;
-import com.mapspeople.models.Venue;
-
 import com.mapsindoors.R;
+import com.mapsindoors.mapssdk.MapControl;
+import com.mapsindoors.mapssdk.MapsIndoors;
+import com.mapsindoors.mapssdk.OnLoadingDataReadyListener;
+import com.mapsindoors.mapssdk.errors.MIError;
+import com.mapsindoors.mapssdk.models.Venue;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -99,26 +98,23 @@ public class ShowVenueFragment extends Fragment {
 
         mMapControl = new MapControl(getActivity(), mMapFragment, mGoogleMap);
 
-        mMapControl.init(new OnLoadingDataReadyListener() {
-            @Override
-            public void onLoadingDataReady(@Nullable MIError miError) {
-                // after the map control is initialized we can
+        mMapControl.init( miError -> {
+            // after the map control is initialized we can
 
-                getActivity().runOnUiThread(() -> {
+            getActivity().runOnUiThread(() -> {
 
-                    mMapControl.selectFloor( 1 );
+                mMapControl.selectFloor( 1 );
 
-                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 18f ) );
+                mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 18f ) );
 
-                    Venue currentVenue = MapsIndoors.getVenues().getCurrentVenue();
+                Venue currentVenue = MapsIndoors.getVenues().getCurrentVenue();
 
-                    mMapControl.setMapPosition( currentVenue.getLatLngBoundingBox(), true, 10 );
+                mMapControl.setMapPosition( currentVenue.getLatLngBoundingBox(), true, 10 );
 
 
-                    });
+                });
 
-            }
-        });
+        } );
     }
 
 

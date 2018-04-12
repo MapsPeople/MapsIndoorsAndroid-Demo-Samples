@@ -14,13 +14,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-
-import com.mapspeople.models.FloorBase;
-
-import java.util.ArrayList;
-
 import com.mapsindoors.DemoApplication;
 import com.mapsindoors.R;
+import com.mapsindoors.mapssdk.models.FloorBase;
+
+import java.util.ArrayList;
 
 /**
  * Created by Jose J Varó (jjv@mapspeople.com) on 2/28/2017.

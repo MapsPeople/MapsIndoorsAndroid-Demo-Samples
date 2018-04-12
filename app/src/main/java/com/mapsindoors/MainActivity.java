@@ -1,9 +1,10 @@
 package com.mapsindoors;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,11 +13,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
 import com.mapsindoors.changedisplaysettingdemo.ChangeDisplaySettingsFragment;
+import com.mapsindoors.changefloordemo.ChangeFloorFragment;
 import com.mapsindoors.customfloorselectordemo.CustomFloorSelectorFragment;
 import com.mapsindoors.locationdetailsdemo.LocationDetailsFragment;
-import com.mapsindoors.changefloordemo.ChangeFloorFragment;
+import com.mapsindoors.mapssdk.Location;
 import com.mapsindoors.multipledatasets.MultiSolutionsFragment;
 import com.mapsindoors.multipledatasets.SolutionSelectorFragment;
 import com.mapsindoors.searchmapdemo.SearchFragment;
@@ -27,7 +28,6 @@ import com.mapsindoors.showmultiplelocations.ShowMultipleLocationsFragment;
 import com.mapsindoors.showroutedemo.ShowRouteFragment;
 import com.mapsindoors.showuserLocation.ShowUserLocationFragment;
 import com.mapsindoors.showvenuedemo.ShowVenueFragment;
-import com.mapspeople.Location;
 
 import static android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
 
@@ -46,16 +46,16 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        mNavigationView = (NavigationView) findViewById(R.id.nav_view);
+        mNavigationView = findViewById(R.id.nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
 
         // showing the first demo
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -168,35 +168,36 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-
-    void attachFragmentToActivity(Fragment fragment){
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).setTransition( TRANSIT_FRAGMENT_FADE ).commit();
-    }
-
     @Override
-    public void onUserSelectedLocation(Location loc) {
+    public void onUserSelectedLocation( Location loc )
+    {
         // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, mSearchMapFragment).setTransition( TRANSIT_FRAGMENT_FADE ).commit();
+        attachFragmentToActivity( mSearchMapFragment );
 
-        mSearchMapFragment.selectLocation(loc);
+        mSearchMapFragment.selectLocation( loc );
     }
 
     @Override
-    public void onSearchButtonClick() {
-
-        attachFragmentToActivity(SearchFragment.newInstance());
+    public void onSearchButtonClick()
+    {
+        attachFragmentToActivity( SearchFragment.newInstance() );
     }
 
     @Override
-    public void onSolutionChoosen() {
-       Fragment multisolutionFrag = MultiSolutionsFragment.newInstance();
+    public void onSolutionChoosen()
+    {
+        final Fragment multisolutionFrag = MultiSolutionsFragment.newInstance();
 
+        attachFragmentToActivity( multisolutionFrag );
+    }
+
+    void attachFragmentToActivity( @NonNull Fragment fragment )
+    {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, multisolutionFrag).setTransition( TRANSIT_FRAGMENT_FADE ).commit();
+
+        fragmentManager.beginTransaction().
+                replace( R.id.flContent, fragment ).
+                setTransition( TRANSIT_FRAGMENT_FADE ).
+                commit();
     }
 }

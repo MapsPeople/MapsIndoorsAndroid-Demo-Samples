@@ -9,11 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.mapsindoors.R;
-import com.mapspeople.MapsIndoors;
-import com.mapspeople.errors.MIError;
+import com.mapsindoors.mapssdk.MapsIndoors;
+import com.mapsindoors.mapssdk.errors.MIError;
 
 
 /**
@@ -100,20 +99,15 @@ public class SolutionSelectorFragment extends Fragment {
     void dataSyncDone(MIError error) {
 
 
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
+        new Handler(Looper.getMainLooper()).post( () -> {
 
-                // if(error == null){
-                mListener.onSolutionChoosen();
-               /* }else {
-                    Toast.makeText(getContext() , "An error occured with the message: " + error.message, Toast.LENGTH_SHORT).show();
-                }*/
+            // if(error == null){
+            mListener.onSolutionChoosen();
+           /* }else {
+                Toast.makeText(getContext() , "An error occured with the message: " + error.message, Toast.LENGTH_SHORT).show();
+            }*/
 
-            }
-
-            }
-            );
+        } );
 
 
 

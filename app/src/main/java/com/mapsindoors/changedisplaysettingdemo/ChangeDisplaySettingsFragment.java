@@ -16,7 +16,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
-
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.Location;
 import com.mapsindoors.mapssdk.LocationDisplayRule;
@@ -32,12 +31,14 @@ import com.mapsindoors.mapssdk.MapControl;
  */
 public class ChangeDisplaySettingsFragment extends Fragment {
 
+    static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
 
     MapControl mMapControl;
     SupportMapFragment mMapFragment;
     GoogleMap mGoogleMap;
 
-    static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
+    LocationDisplayRule myCustomMeetingRoomDisplayRule;
+
     //query objects
 
 
@@ -110,11 +111,22 @@ public class ChangeDisplaySettingsFragment extends Fragment {
         }
     };
 
-    void  setupMapsIndoors() {
+    void setupMapsIndoors() {
 
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
 
         changeDisplayRules();
+
+        myCustomMeetingRoomDisplayRule = new LocationDisplayRule.Builder("MeetingRoom").
+                setIcon( R.drawable.ic_flight_takeoff_black_24dp, 20, 20 ).
+                setZoomLevelOn( 16 ).
+                setShowLabel( false ).
+                setTint( 0x7Fef0055 ).
+                setVisible( true ).
+                build();
+
+      //  mMapControl.addDisplayRule( myCustomMeetingRoomDisplayRule );
+
 
         mMapControl.setOnMarkerClickListener( marker -> {
 
@@ -123,6 +135,8 @@ public class ChangeDisplaySettingsFragment extends Fragment {
             {
                 marker.showInfoWindow();
 
+
+                loc.setDisplayRule( myCustomMeetingRoomDisplayRule );
             }
 
             return true;

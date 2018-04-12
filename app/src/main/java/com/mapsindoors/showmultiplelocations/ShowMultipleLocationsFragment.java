@@ -15,16 +15,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.mapspeople.Location;
-import com.mapspeople.LocationQuery;
-import com.mapspeople.MPLocationsProvider;
-import com.mapspeople.MapControl;
-import com.mapspeople.OnLocationsReadyListener;
-import com.mapspeople.errors.MIError;
+import com.mapsindoors.R;
+import com.mapsindoors.mapssdk.Location;
+import com.mapsindoors.mapssdk.LocationQuery;
+import com.mapsindoors.mapssdk.MPLocationsProvider;
+import com.mapsindoors.mapssdk.MapControl;
+import com.mapsindoors.mapssdk.OnLocationsReadyListener;
+import com.mapsindoors.mapssdk.errors.MIError;
 
 import java.util.List;
-
-import com.mapsindoors.R;
 
 /**
  * A simple {@link Fragment} subclass.

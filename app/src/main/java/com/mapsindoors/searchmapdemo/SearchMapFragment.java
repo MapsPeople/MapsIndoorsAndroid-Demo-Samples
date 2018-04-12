@@ -1,7 +1,6 @@
 package com.mapsindoors.searchmapdemo;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,8 +17,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.mapsindoors.R;
-import com.mapspeople.Location;
-import com.mapspeople.MapControl;
+import com.mapsindoors.mapssdk.Location;
+import com.mapsindoors.mapssdk.MapControl;
 
 
 /**
@@ -97,12 +96,7 @@ public class SearchMapFragment extends Fragment {
         FragmentManager fm = getChildFragmentManager();
         searchButton = rootView.findViewById(R.id.search_button);
 
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onSearchButtonClick();
-            }
-        });
+        searchButton.setOnClickListener( v -> mListener.onSearchButtonClick() );
 
         mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
 
