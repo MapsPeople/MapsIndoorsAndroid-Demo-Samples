@@ -23,7 +23,7 @@ public class DemoApplication extends Application
 
         MapsIndoors.initialize(
                 getApplicationContext(),
-                getString( R.string.mapsindoors_api_key),
+                getString( R.string.mi_api_key),
                 getString( R.string.google_maps_key )
         );
         sInstance = this;

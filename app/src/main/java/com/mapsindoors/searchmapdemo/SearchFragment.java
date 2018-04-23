@@ -32,17 +32,31 @@ import com.mapsindoors.searchmapdemo.adapter.IconTextListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+/***
+ ---
+ title: Create a Search Experience with MapsIndoors - Part 1
+ ---
 
+ This is an example of creating a simple search experience using MapsIndoors. We will create a map with a search button that leads to another view controller that handles the search and selection. On selection of a location, we go back to the map and shows the selected location on the map.
+
+ We will start by creating a simple search controller that handles search and selection of MapsIndoors locations
+
+ Declare a protocol for our location selection with a `didSelectLocation` method
+ ***/
 public class SearchFragment extends Fragment {
 
+    /***
+     Setup member variables for `SearchFragment`:
 
-    private Handler searchHandler;
-
-
-    private OnFragmentInteractionListener mListener;
-
+     * An instance of type `LocationQuery`
+     * The selection listener
+     * A List View
+     * Some view components
+     ***/
     LocationQuery.Builder iLocsQueryBuilder;
     LocationQuery mSearchQuery;
+    private OnFragmentInteractionListener mListener;
+    ListView mMainMenuList;
 
 
     View mMainView;
@@ -50,18 +64,15 @@ public class SearchFragment extends Fragment {
     ImageButton mSearchClearBtn;
     IconTextListAdapter mListAdapter;
     ViewFlipper mViewFlipper;
-
-
-    ListView mMainMenuList;
     ImageButton mBackButton;
-
+    //
 
     boolean mIsMenuCleared = false;
 
     String mLastSearchText;
+    private Handler searchHandler;
 
 
-    //region Fragment lifecycle events
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,10 +91,8 @@ public class SearchFragment extends Fragment {
         mMainMenuList = view.findViewById(R.id.directionsfullmenu_itemlist);
 
 
-        // Search box text
         mSearchEditTextView = view.findViewById(R.id.search_fragment_edittext_search);
 
-        // Clear search button
         mSearchClearBtn = view.findViewById(R.id.directionsfullmenu_search_clear_btn);
 
         mBackButton = view.findViewById(R.id.directionsfullmenusearch_back_button);
@@ -110,8 +119,9 @@ public class SearchFragment extends Fragment {
 
 
     public void init() {
-
-      //  mMainView.setVisibility(View.GONE);
+        /***
+         Init and setup the listView.
+         ***/
 
         mListAdapter = new IconTextListAdapter(getContext(),new ArrayList<>());
 
@@ -120,7 +130,9 @@ public class SearchFragment extends Fragment {
         mMainMenuList.setOnItemClickListener(mAdapterViewOnItemClickListener);
         mMainMenuList.invalidate();
 
-
+        /***
+         Init and setup the view components for a better search experience.
+         ***/
         //Note: Creating a textwatcher as it's needed for software keyboard support.
         mSearchEditTextView.addTextChangedListener(mEditTextViewTextWatcher);
         mSearchEditTextView.setOnFocusChangeListener(mEditTextViewOnFocusChangeListener);
@@ -135,9 +147,6 @@ public class SearchFragment extends Fragment {
         mSearchClearBtn.setOnClickListener(mClearSearchButtonClickListener);
         mSearchClearBtn.setOnFocusChangeListener(mClearSearchButtonFocusChangeListener);
 
-        mBackButton.setOnClickListener( view -> {
-        } );
-
         mCSearchLocationsProvider = new MPLocationsProvider();
 
         // Setup the query; the search string will be set where needed
@@ -148,9 +157,7 @@ public class SearchFragment extends Fragment {
     }
 
 
-    /**
-     *
-     */
+
     TextWatcher mEditTextViewTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -181,9 +188,7 @@ public class SearchFragment extends Fragment {
         }
     };
 
-    /**
-     *
-     */
+
     View.OnFocusChangeListener mEditTextViewOnFocusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View view, boolean hasFocus) {
@@ -195,9 +200,8 @@ public class SearchFragment extends Fragment {
         }
     };
 
-    /**
-     * Close keyboard and search when user presses search on the keyboard
-     */
+
+    // Close keyboard and search when user presses search on the keyboard
     TextView.OnEditorActionListener mEditTextViewOnEditorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -210,9 +214,7 @@ public class SearchFragment extends Fragment {
         }
     };
 
-    /**
-     * Close keyboard and search when user presses enter
-     */
+    //Close keyboard and search when user presses enter
     View.OnKeyListener mEditTextOnKeyListener = new View.OnKeyListener() {
         @Override
         public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
@@ -228,22 +230,8 @@ public class SearchFragment extends Fragment {
                         break;
                     }
                     default:
-//						String str = mSearchEditTextView.getText().toString().trim();
-//						if( str.isEmpty() ) {
-//							// hint is not visible after this call...
-//							mSearchEditTextView.getText().clear();
-//						}
-//						else {
                         startSearchTimer();
-//						}
-                        break;
                 }
-
-//                if (BuildConfig.DEBUG) {
-//                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-//                        dbglog.Log("");
-//                    }
-//                }
             }
             return false;
         }
@@ -258,7 +246,6 @@ public class SearchFragment extends Fragment {
     }
 
     //endregion
-
 
     public void setSearchClearBtnActive(boolean exitActive) {
         mSearchClearBtn.setVisibility(exitActive ? View.VISIBLE : View.INVISIBLE);
@@ -368,7 +355,6 @@ public class SearchFragment extends Fragment {
                 {
                     // Show as busy
                     mViewFlipper.setDisplayedChild(1);
-                    //noResultsFoundFeedback( -1 );
 
                             iLocsQueryBuilder.
                                     setCategories( null ).
@@ -409,7 +395,9 @@ public class SearchFragment extends Fragment {
     };
 
 
-
+    /***
+     Whenever a user clicks a search result the 'onUserSelectedLocation' of the FragmentInteractionListener is called .
+     ***/
     AdapterView.OnItemClickListener mAdapterViewOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -418,13 +406,9 @@ public class SearchFragment extends Fragment {
 
             mListener.onUserSelectedLocation((Location) mListAdapter.getItem(position));
 
-
             }
 
     };
-
-
-
 
 
     @Override
@@ -436,8 +420,9 @@ public class SearchFragment extends Fragment {
     }
 
 
-
-
+    /***
+     Declare an interface that will handle the communication between the fragment and the activity.
+     ***/
     public interface OnFragmentInteractionListener {
         void onUserSelectedLocation(Location loc);
     }

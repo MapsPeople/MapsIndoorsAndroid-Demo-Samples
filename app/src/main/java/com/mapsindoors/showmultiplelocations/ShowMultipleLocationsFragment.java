@@ -20,29 +20,31 @@ import com.mapsindoors.mapssdk.Location;
 import com.mapsindoors.mapssdk.LocationQuery;
 import com.mapsindoors.mapssdk.MPLocationsProvider;
 import com.mapsindoors.mapssdk.MapControl;
+import com.mapsindoors.mapssdk.MapsIndoors;
 import com.mapsindoors.mapssdk.OnLocationsReadyListener;
 import com.mapsindoors.mapssdk.errors.MIError;
 
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- * Use the {@link ShowMultipleLocationsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ShowMultipleLocationsFragment extends Fragment {
 
-
+    /***
+     Add a `GoogleMap` and a `MapControl` to the class
+     ***/
     MapControl mMapControl;
-    SupportMapFragment mMapFragment;
     GoogleMap mGoogleMap;
 
+    /***
+     The lat lng of the Venue
+     ***/
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
-    //query objects
+    /***
+     The query object and the querry builder
+     ***/
     LocationQuery mLocationQuery;
     LocationQuery.Builder mLocationQueryBuilder;
+
+    SupportMapFragment mMapFragment;
 
     public ShowMultipleLocationsFragment() {
         // Required empty public constructor
@@ -117,6 +119,12 @@ public class ShowMultipleLocationsFragment extends Fragment {
 
     void  setupMapsIndoors() {
 
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+        {
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
+
+        }
+
         mMapControl = new MapControl(getActivity(), mMapFragment, mGoogleMap);
 
         mMapControl.init( miError -> {
@@ -142,22 +150,25 @@ public class ShowMultipleLocationsFragment extends Fragment {
 
         mLocationsProvider = new MPLocationsProvider();
 
-        mLocationQueryBuilder =     new LocationQuery.Builder();
+        mLocationQueryBuilder = new LocationQuery.Builder();
 
-        // init the query builder, in this case we will query the coffee machine in our office
+        /*** init the query builder, in this case we will query for all to toilets ***/
         mLocationQueryBuilder.
                 setQuery("Toilet").
                 setOrderBy( LocationQuery.NO_ORDER ).
                 setFloor(1).
                 setMaxResults(50);
-        // Build the query
-        mLocationQuery = mLocationQueryBuilder.build();
-        // Query the data
-        mLocationsProvider.getLocationsAsync( mLocationQuery, mSearchLocationsReadyListener );
 
+        /*** Build the query ***/
+        mLocationQuery = mLocationQueryBuilder.build();
+
+        /*** Query the data ***/
+        mLocationsProvider.getLocationsAsync( mLocationQuery, mSearchLocationsReadyListener );
+        //
 
     }
 
+    /*** Show search on map When the 'OnLocationsReadyListener' is called ***/
     OnLocationsReadyListener mSearchLocationsReadyListener = new OnLocationsReadyListener()
     {
         @Override
@@ -166,14 +177,14 @@ public class ShowMultipleLocationsFragment extends Fragment {
 
             if( locations != null && locations.size() != 0 )
             {
-
+                /* display the locations on the map*/
                 mMapControl.displaySearchResults( locations, true );
 
             }
         }
 
     };
-
+    //
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

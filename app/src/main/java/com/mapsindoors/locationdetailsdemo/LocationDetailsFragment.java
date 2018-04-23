@@ -20,29 +20,41 @@ import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.Location;
 import com.mapsindoors.mapssdk.LocationPropertyNames;
 import com.mapsindoors.mapssdk.MapControl;
+import com.mapsindoors.mapssdk.MapsIndoors;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- * Use the {@link LocationDetailsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+/***
+ ---
+ title: Show Location Details
+ ---
+
+ This is an example of displaying some details of a MapsIndoors location
+
+ Start by creating a `Fragment or an Activity` class that contains the google map fragment
+ ***/
+
 public class LocationDetailsFragment extends Fragment {
 
-
+    /***
+     Add a `GoogleMap` and a `MapControl` to the class
+     ***/
     MapControl mMapControl;
-    SupportMapFragment mMapFragment;
     GoogleMap mGoogleMap;
+
+    /***
+     Add other needed views for this example
+     ***/
+
+    SupportMapFragment mMapFragment;
     TextView detailsTextView;
 
+    /***
+     The lat lng of the Venue
+     ***/
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
-    //query objects
-
+    //
 
     public LocationDetailsFragment() {
-        // Required empty public constructor
     }
 
     public static LocationDetailsFragment newInstance( ) {
@@ -52,7 +64,7 @@ public class LocationDetailsFragment extends Fragment {
     }
 
 
-    //region FRAGMENT LIFECYCLE
+    //Region FRAGMENT LIFECYCLE
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +100,9 @@ public class LocationDetailsFragment extends Fragment {
     }
     //endregion
 
+    /***
+     Setup the needed views for this example
+     ***/
     private void setupView( View rootView) {
 
         FragmentManager fm = getChildFragmentManager();
@@ -107,39 +122,68 @@ public class LocationDetailsFragment extends Fragment {
             mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 13.0f ) );
 
             setupMapsIndoors();
-
         }
     };
 
+    /***
+     Setup MapsIndoors
+     ***/
     void  setupMapsIndoors() {
+
+        /***
+         Setting the API key to the desired solution
+         ***/
+
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+        {
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
+
+        }
+
 
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
 
+        /***
+         When a marker is clicked, get related MapsIndoors location object and set label text, based on the name and description of the location
+         ***/
         mMapControl.setOnMarkerClickListener( marker -> {
 
             final Location loc = mMapControl.getLocation( marker );
             if( loc != null )
             {
                 marker.showInfoWindow();
+
+               if(detailsTextView.getVisibility() != View.VISIBLE){
+                   detailsTextView.setVisibility(View.VISIBLE);
+               }
+
+                /***
+                 Show the Name and the description of a POI in a label
+                 ***/
                 detailsTextView.setText( "Name: " + loc.getName() + "\nDescription: " + loc.getStringProperty( LocationPropertyNames.DESCRIPTION ) );
             }
 
             return true;
         } );
 
+        /***
+         Init the MapControl object which will sync data
+         ***/
         mMapControl.init( miError -> {
 
             if( getActivity() != null )
             {
                 getActivity().runOnUiThread(() -> {
+                    /***
+                     Select a floor and animate the camera to the venue position
+                     ***/
                     mMapControl.selectFloor( 1 );
                     mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
-
+                    //
                 });
             }
         });
     }
-
 
 
 

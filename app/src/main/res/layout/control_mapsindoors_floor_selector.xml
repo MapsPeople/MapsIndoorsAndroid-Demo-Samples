@@ -2,48 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="48dp"
-                android:layout_height="300dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 tools:context=".customfloorselectordemo.floorselectorcomponent.MapFloorSelector">
-	<!--
-		TODO: use recyclerview and set the item add/remove to animate
 
-		Hopefully, this will make the switch between buildings less abrupt
-	 -->
-
-	<LinearLayout
-		android:id="@+id/list_img_layout"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignParentBottom="true"
-		android:layout_margin="4dp"
-		android:gravity="center"
-		android:orientation="vertical"
-
-		android:elevation="2dp"
-		android:outlineProvider="bounds"
-		>
-
-
-		<ImageView
-			android:id="@+id/mapspeople_floor_selector_dbg_btn"
-			android:layout_width="40dp"
-			android:layout_height="25dp"
-			android:layout_gravity="center"
-			android:background="@android:color/white"
-			android:paddingLeft="5dp"
-			android:paddingTop="6dp"
-			android:scaleType="fitXY"
-			app:srcCompat="@drawable/ic_map_floorselector_top"
-			tools:background="#f0f"
-
-			/>
 
 		<ListView
 
 			android:id="@+id/mapspeople_floor_selector_list"
-			android:layout_width="match_parent"
+			android:layout_width="40dp"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center_horizontal"
 			android:animateLayoutChanges="true"
@@ -53,27 +21,6 @@
 			tools:listitem="@layout/control_mapsindoors_floor_selector_button"
 
 			/>
-	</LinearLayout>
 
-	<View
-		android:layout_centerHorizontal="true"
-		android:elevation="2dp"
 
-		android:layout_marginTop="25dp"
-		android:id="@+id/top_gradient"
-		android:layout_width="40dp"
-		android:layout_height="40dp"
-		android:layout_alignTop="@+id/list_img_layout"
-		android:background="@drawable/floor_selector_grad_up_down"
-		/>
-
-	<View
-		android:elevation="2dp"
-		android:layout_centerHorizontal="true"
-		android:id="@+id/bottom_gradient"
-		android:layout_width="40dp"
-		android:layout_height="40dp"
-		android:layout_alignBottom="@+id/list_img_layout"
-		android:layout_alignStart="@+id/list_img_layout"
-		android:background="@drawable/floor_selector_grad_bt" />
 </RelativeLayout>

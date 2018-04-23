@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
         mNavigationView.setNavigationItemSelectedListener(this);
 
         // showing the first demo
-        onNavigationItemSelected(mNavigationView.getMenu().getItem(1));
+        onNavigationItemSelected(mNavigationView.getMenu().getItem(0));
 
     }
 
@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         Fragment fragment = null;
-        Class fragmentClass;
 
 
         switch(item.getItemId()) {

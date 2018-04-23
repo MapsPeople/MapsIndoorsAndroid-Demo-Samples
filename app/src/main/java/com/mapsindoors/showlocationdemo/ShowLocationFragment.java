@@ -20,19 +20,13 @@ import com.mapsindoors.mapssdk.Location;
 import com.mapsindoors.mapssdk.LocationQuery;
 import com.mapsindoors.mapssdk.MPLocationsProvider;
 import com.mapsindoors.mapssdk.MapControl;
+import com.mapsindoors.mapssdk.MapsIndoors;
 import com.mapsindoors.mapssdk.OnLocationsReadyListener;
 import com.mapsindoors.mapssdk.errors.MIError;
 
 import java.util.Collections;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- * Use the {@link ShowLocationFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ShowLocationFragment extends Fragment {
 
 
@@ -95,6 +89,11 @@ public class ShowLocationFragment extends Fragment {
 
 
     private void setupView( View rootView) {
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+        {
+
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
+        }
 
         FragmentManager fm = getChildFragmentManager();
 

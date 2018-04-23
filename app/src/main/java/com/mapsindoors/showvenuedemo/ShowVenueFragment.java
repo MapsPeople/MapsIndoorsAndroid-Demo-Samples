@@ -95,6 +95,11 @@ public class ShowVenueFragment extends Fragment {
 
 
     void  setupMapsIndoors() {
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+        {
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
+
+        }
 
         mMapControl = new MapControl(getActivity(), mMapFragment, mGoogleMap);
 

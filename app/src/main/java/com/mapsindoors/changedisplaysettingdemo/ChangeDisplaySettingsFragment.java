@@ -20,15 +20,9 @@ import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.Location;
 import com.mapsindoors.mapssdk.LocationDisplayRule;
 import com.mapsindoors.mapssdk.MapControl;
+import com.mapsindoors.mapssdk.MapsIndoors;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- * Use the {@link ChangeDisplaySettingsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ChangeDisplaySettingsFragment extends Fragment {
 
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
@@ -36,10 +30,6 @@ public class ChangeDisplaySettingsFragment extends Fragment {
     MapControl mMapControl;
     SupportMapFragment mMapFragment;
     GoogleMap mGoogleMap;
-
-    LocationDisplayRule myCustomMeetingRoomDisplayRule;
-
-    //query objects
 
 
     public ChangeDisplaySettingsFragment() {
@@ -93,8 +83,6 @@ public class ChangeDisplaySettingsFragment extends Fragment {
 
         FragmentManager fm = getChildFragmentManager();
 
-
-
         mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
 
         mMapFragment.getMapAsync( mOnMapReadyCallback );
@@ -112,35 +100,14 @@ public class ChangeDisplaySettingsFragment extends Fragment {
     };
 
     void setupMapsIndoors() {
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+        {
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
+        }
 
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
 
         changeDisplayRules();
-
-        myCustomMeetingRoomDisplayRule = new LocationDisplayRule.Builder("MeetingRoom").
-                setIcon( R.drawable.ic_flight_takeoff_black_24dp, 20, 20 ).
-                setZoomLevelOn( 16 ).
-                setShowLabel( false ).
-                setTint( 0x7Fef0055 ).
-                setVisible( true ).
-                build();
-
-      //  mMapControl.addDisplayRule( myCustomMeetingRoomDisplayRule );
-
-
-        mMapControl.setOnMarkerClickListener( marker -> {
-
-            final Location loc = mMapControl.getLocation( marker );
-            if( loc != null )
-            {
-                marker.showInfoWindow();
-
-
-                loc.setDisplayRule( myCustomMeetingRoomDisplayRule );
-            }
-
-            return true;
-        });
 
         mMapControl.init( miError -> {
 
@@ -149,9 +116,6 @@ public class ChangeDisplaySettingsFragment extends Fragment {
                 getActivity().runOnUiThread(() -> {
                     mMapControl.selectFloor( 1 );
                     mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
-
-
-
                 });
             }
         });

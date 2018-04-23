@@ -20,24 +20,35 @@ import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
 
+/***
+ ---
+ title: Show the Blue Dot with MapsIndoors - Part 2
+ ---
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- * Use the {@link ShowUserLocationFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+ This is part 2 of the tutorial of managing a blue dot on the map. [In Part 1 we created the position provider](showmylocationmypositionprovider). Now we will create a Fragment displaying a map that shows the users (mock) location.
+
+ Create a class `ShowUserLocationFragment` that inherits from `Fragment`.
+ ***/
+
+
 public class ShowUserLocationFragment extends Fragment {
 
-
-    MapControl mMapControl;
-    SupportMapFragment mMapFragment;
+    /***
+     Add a `GoogleMap` and a `MapControl` to the class
+     ***/
     GoogleMap mGoogleMap;
+    MapControl mMapControl;
 
+    /***
+     Add a map fragment
+     ***/
+    SupportMapFragment mMapFragment;
+
+    /***
+     The lat lng of the Venue
+     ***/
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
-    //query objects
-
+    //
 
     public ShowUserLocationFragment() {
         // Required empty public constructor
@@ -109,14 +120,16 @@ public class ShowUserLocationFragment extends Fragment {
     };
 
     void  setupMapsIndoors() {
+        /***
+         Setup the map so that it shows the demo venue and initialise mapControl
+         ***/
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+        {
 
-        DemoPositionProvider demoPositionProvider = new DemoPositionProvider();
-        MapsIndoors.setPositionProvider(demoPositionProvider);
-        demoPositionProvider.startPositioning(null);
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
+        }
 
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
-        mMapControl.showUserPosition(true);
-
         mMapControl.init( miError -> {
 
             if( getActivity() != null )
@@ -128,6 +141,19 @@ public class ShowUserLocationFragment extends Fragment {
                 });
             }
         });
+
+        /***
+         * Create an instance of the 'DemoPositionProvider' that we defined previously
+         * Assign the `DemoPositionProvider` instance to `MapsIndoors.positionProvider`
+         * Start positioning
+         * Tell mapControl to show the users location
+         ***/
+        DemoPositionProvider demoPositionProvider = new DemoPositionProvider();
+        MapsIndoors.setPositionProvider(demoPositionProvider);
+        demoPositionProvider.startPositioning(null);
+        mMapControl.showUserPosition(true);
+        //
+
     }
 
 

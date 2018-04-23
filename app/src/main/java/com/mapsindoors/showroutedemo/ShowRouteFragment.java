@@ -19,6 +19,7 @@ import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.MPDirectionsRenderer;
 import com.mapsindoors.mapssdk.MPRoutingProvider;
 import com.mapsindoors.mapssdk.MapControl;
+import com.mapsindoors.mapssdk.MapsIndoors;
 import com.mapsindoors.mapssdk.OnRouteResultListener;
 import com.mapsindoors.mapssdk.RoutingProvider;
 import com.mapsindoors.mapssdk.errors.MIError;
@@ -114,6 +115,12 @@ public class ShowRouteFragment extends Fragment {
     };
 
     void  setupMapsIndoors() {
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+        {
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
+
+        }
+
         mRoutingProvider  = new MPRoutingProvider();
 
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );

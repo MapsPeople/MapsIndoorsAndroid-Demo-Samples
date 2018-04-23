@@ -15,14 +15,6 @@ import com.mapsindoors.mapssdk.MapsIndoors;
 import com.mapsindoors.mapssdk.errors.MIError;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SolutionSelectorFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link SolutionSelectorFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SolutionSelectorFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -76,9 +68,9 @@ public class SolutionSelectorFragment extends Fragment {
 
         buttonMP.setOnClickListener( v -> {
 
-            if( !MapsIndoors.getAPIKey().equalsIgnoreCase( "57e4e4992e74800ef8b69718" ) )
+            if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
             {
-                MapsIndoors.setAPIKey( "57e4e4992e74800ef8b69718" );
+                MapsIndoors.setAPIKey( getString( R.string.mi_api_key)  );
             }
 
             MapsIndoors.synchronizeContent( this::dataSyncDone);
@@ -86,9 +78,9 @@ public class SolutionSelectorFragment extends Fragment {
 
         buttonAAU.setOnClickListener( v -> {
 
-            if( !MapsIndoors.getAPIKey().equalsIgnoreCase( "5667325fc1843a06bca1dd2b" ) )
+            if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.aau_api_key) ) )
             {
-                MapsIndoors.setAPIKey( "5667325fc1843a06bca1dd2b" );
+                MapsIndoors.setAPIKey( getString( R.string.aau_api_key)  );
             }
 
             MapsIndoors.synchronizeContent( this::dataSyncDone);
@@ -108,9 +100,6 @@ public class SolutionSelectorFragment extends Fragment {
             }*/
 
         } );
-
-
-
     }
 
 

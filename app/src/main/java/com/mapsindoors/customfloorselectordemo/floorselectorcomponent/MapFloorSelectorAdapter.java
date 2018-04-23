@@ -25,7 +25,6 @@ import java.util.ArrayList;
  */
 
 public class MapFloorSelectorAdapter extends ArrayAdapter<String> {
-    public static final String TAG = MapFloorSelectorAdapter.class.getSimpleName();
 
     private Context mContext;
     private ArrayList<FloorBase> mItemList;
@@ -104,10 +103,7 @@ public class MapFloorSelectorAdapter extends ArrayAdapter<String> {
         addAll(iList);
     }
 
-    public void setSelectedItem(int position) {
-        mSelectedButtonIndex = position;
-        notifyDataSetChanged();
-    }
+
 
     public int setSelectedButtonWithFloorValue(int floorValue) {
         for (int i = 0, aLen = mItemList.size(); i < aLen; i++) {

@@ -1,6 +1,7 @@
 <resources>
-	<string name="mapsindoors_api_key" translatable="false">57e4e4992e74800ef8b69718</string>
+	<string name="mi_api_key" translatable="false">57e4e4992e74800ef8b69718</string>
 
+	<string name="aau_api_key" translatable="false">5667325fc1843a06bca1dd2b</string>
 
 	<!-- Offline data switches -->
 	<bool name="mapsindoors_offlinemode_enabled">false</bool>

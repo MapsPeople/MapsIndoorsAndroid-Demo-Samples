@@ -17,15 +17,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.MapControl;
+import com.mapsindoors.mapssdk.MapsIndoors;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- * Use the {@link ChangeFloorFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ChangeFloorFragment extends Fragment {
 
 
@@ -106,6 +100,12 @@ public class ChangeFloorFragment extends Fragment {
     };
 
     void  setupMapsIndoors() {
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+        {
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
+
+        }
+
 
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
 

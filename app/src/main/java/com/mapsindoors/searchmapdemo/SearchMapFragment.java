@@ -19,15 +19,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.Location;
 import com.mapsindoors.mapssdk.MapControl;
+import com.mapsindoors.mapssdk.MapsIndoors;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- * Use the {@link SearchMapFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SearchMapFragment extends Fragment {
 
 
@@ -38,9 +32,10 @@ public class SearchMapFragment extends Fragment {
     Location locationToSelect = null;
 
     private OnFragmentInteractionListener mListener;
-
+    /***
+     The lat lng of the Venue
+     ***/
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
-    //query objects
 
 
     public SearchMapFragment() {
@@ -116,10 +111,17 @@ public class SearchMapFragment extends Fragment {
 
     void  setupMapsIndoors() {
 
+        /***
+         Setting the API key to the desired solution
+         ***/
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+        {
+
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
+        }
+
+
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
-
-
-
         mMapControl.init( miError -> {
 
             if( getActivity() != null )

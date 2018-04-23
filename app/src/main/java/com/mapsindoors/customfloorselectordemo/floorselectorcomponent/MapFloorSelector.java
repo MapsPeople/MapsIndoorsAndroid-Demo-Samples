@@ -69,9 +69,6 @@ public class MapFloorSelector extends FrameLayout
 	ListView mFloorSelectorListView;
 
 
-	View bottomScrollGradient;
-	View topScrollGradient;
-
 	float currentZoomLevel;
 
 	public MapFloorSelector( Context context )
@@ -107,32 +104,13 @@ public class MapFloorSelector extends FrameLayout
 		mAnimator = null;
 		mFlags = 0;
 
-		//if( !isInEditMode() )
 		{
-
-			bottomScrollGradient = findViewById(R.id.bottom_gradient);
-			topScrollGradient = findViewById(R.id.top_gradient);
 
 			mFloorSelectorListView = findViewById( R.id.mapspeople_floor_selector_list );
 			mListAdapter = new MapFloorSelectorAdapter( context, R.layout.control_mapsindoors_floor_selector_button );
 
-			ViewTreeObserver observer = mFloorSelectorListView.getViewTreeObserver();
 
 			mFloorSelectorListView.setAdapter( mListAdapter );
-
-			int a= 1;
-
-			observer.addOnGlobalLayoutListener( () -> {
-				if (willMyListScroll()) {
-					bottomScrollGradient.setVisibility(VISIBLE);
-					topScrollGradient.setVisibility(VISIBLE);
-
-				} else{
-					bottomScrollGradient.setVisibility(INVISIBLE);
-					topScrollGradient.setVisibility(INVISIBLE);
-				}
-
-			} );
 
 
 			mFloorSelectorListView.setOnItemClickListener( ( parent, view, position, id ) -> {
@@ -151,25 +129,6 @@ public class MapFloorSelector extends FrameLayout
 		}
 	}
 
-	public void setFlags(int flags)
-	{
-		mFlags = flags;
-	}
-
-	public void addFlags(int flags)
-	{
-		mFlags |= flags;
-	}
-
-	public void clearFlags(int flags)
-	{
-		mFlags &= ~flags;
-	}
-
-	public int getFlags()
-	{
-		return mFlags;
-	}
 
 
 	//region Implements IFloorSelector
@@ -307,9 +266,7 @@ public class MapFloorSelector extends FrameLayout
 		if(mWillShowView == show || (currentZoomLevel < 18f && show))
 			return;
 
-		if( (((mFlags & FLAG_PREVENT_SHOW_HIDE_FROM_CONTROL) != 0) && show)
-			//|| !mHasFloorsToShow
-				) {
+		if( (((mFlags & FLAG_PREVENT_SHOW_HIDE_FROM_CONTROL) != 0) && show)) {
 			return;
 		}
 
@@ -332,9 +289,6 @@ public class MapFloorSelector extends FrameLayout
 					? mAnimator
 					: ViewCompat.animate( this );
 
-			// Check if an ongoing anim has to be cancelled
-			//mShowViewCancelled
-			//mAnimator.cancel();
 
 			if( show && (cAlpha < 0.1f) ) {
 				// Fade in anim setup
@@ -458,18 +412,6 @@ public class MapFloorSelector extends FrameLayout
 		setVisibility( visible ? View.VISIBLE : View.GONE );
 	}
 
-	boolean willMyListScroll() {
-
-		if(mFloorSelectorListView.getChildAt(0) !=  null){
-			int realSizeOfListView  = mFloorSelectorListView.getChildAt(0).getHeight() * mListAdapter.getCount();
-			int currentSizeOfListView = mFloorSelectorListView.getHeight();
-
-			return realSizeOfListView > currentSizeOfListView;
-		}
-
-		return false;
-
-	}
 
 	//endregion
 }
