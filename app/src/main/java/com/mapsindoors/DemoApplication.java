@@ -25,7 +25,11 @@ public class DemoApplication extends Application
                 getApplicationContext(),
                 getString( R.string.mi_api_key),
                 getString( R.string.google_maps_key )
+
         );
+
+        MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
+
         sInstance = this;
 
         //MapsIndoors.synchronizeContent( null );
