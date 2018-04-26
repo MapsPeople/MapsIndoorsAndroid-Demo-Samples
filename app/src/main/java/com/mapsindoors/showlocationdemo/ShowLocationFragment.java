@@ -91,7 +91,6 @@ public class ShowLocationFragment extends Fragment {
     private void setupView( View rootView) {
         if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
         {
-
             MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
         }
 
@@ -109,7 +108,6 @@ public class ShowLocationFragment extends Fragment {
             mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 13.0f ) );
 
             setupMapsIndoors();
-
         }
     };
 
@@ -159,24 +157,20 @@ public class ShowLocationFragment extends Fragment {
         @Override
         public void onLocationsReady( @Nullable List< Location > locations, @Nullable MIError error )
         {
-
             if( locations != null && locations.size() != 0 )
             {
                 mMapControl.displaySearchResults( Collections.singletonList( locations.get( 0 ) ), true );
             }
         }
-
     };
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-
     }
 }

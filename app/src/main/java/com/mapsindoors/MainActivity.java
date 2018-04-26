@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity
 
         // showing the first demo
         onNavigationItemSelected(mNavigationView.getMenu().getItem(0));
-
     }
 
     @Override
