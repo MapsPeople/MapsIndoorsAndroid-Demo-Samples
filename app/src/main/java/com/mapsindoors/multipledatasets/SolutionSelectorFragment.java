@@ -96,7 +96,7 @@ public class SolutionSelectorFragment extends Fragment {
             // if(error == null){
             mListener.onSolutionChoosen();
            /* }else {
-                Toast.makeText(getContext() , "An error occured with the message: " + error.message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext() , "An error occurred with the message: " + error.message, Toast.LENGTH_SHORT).show();
             }*/
 
         } );
