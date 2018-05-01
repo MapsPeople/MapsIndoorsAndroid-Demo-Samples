@@ -55,7 +55,7 @@ public class SearchFragment extends Fragment {
      ***/
     LocationQuery.Builder iLocsQueryBuilder;
     LocationQuery mSearchQuery;
-    private OnFragmentInteractionListener mListener;
+    OnFragmentInteractionListener mListener;
     ListView mMainMenuList;
 
 
@@ -72,6 +72,11 @@ public class SearchFragment extends Fragment {
     String mLastSearchText;
     private Handler searchHandler;
 
+
+    public SearchFragment()
+    {
+        // Required empty public constructor
+    }
 
     @Nullable
     @Override
@@ -99,21 +104,6 @@ public class SearchFragment extends Fragment {
 
         init();
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
     }
     //endregion
 
@@ -153,7 +143,6 @@ public class SearchFragment extends Fragment {
         iLocsQueryBuilder = new LocationQuery.Builder();
 
         mIsMenuCleared = true;
-        
     }
 
 
@@ -166,7 +155,7 @@ public class SearchFragment extends Fragment {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             String text = mSearchEditTextView.getText().toString();
-            if (!text.isEmpty()) {
+            if ( !TextUtils.isEmpty( text ) ) {
                 if (text.startsWith(" ")) {
                     mSearchEditTextView.setText(text.trim());
                 }
@@ -202,39 +191,33 @@ public class SearchFragment extends Fragment {
 
 
     // Close keyboard and search when user presses search on the keyboard
-    TextView.OnEditorActionListener mEditTextViewOnEditorActionListener = new TextView.OnEditorActionListener() {
-        @Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            boolean handled = false;
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                closeKeyboard();
-                handled = true;
-            }
-            return handled;
+    TextView.OnEditorActionListener mEditTextViewOnEditorActionListener = ( v, actionId, event ) -> {
+        boolean handled = false;
+        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            closeKeyboard();
+            handled = true;
         }
+        return handled;
     };
 
     //Close keyboard and search when user presses enter
-    View.OnKeyListener mEditTextOnKeyListener = new View.OnKeyListener() {
-        @Override
-        public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+    View.OnKeyListener mEditTextOnKeyListener = ( view, keyCode, keyEvent ) -> {
 
-            if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-                switch (keyCode) {
-                    case KeyEvent.KEYCODE_DPAD_CENTER:
-                    case KeyEvent.KEYCODE_ENTER: {
-                        closeKeyboard();
-                        return true;
-                    }
-                    case KeyEvent.KEYCODE_BACK: {
-                        break;
-                    }
-                    default:
-                        startSearchTimer();
+        if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_DPAD_CENTER:
+                case KeyEvent.KEYCODE_ENTER: {
+                    closeKeyboard();
+                    return true;
                 }
+                case KeyEvent.KEYCODE_BACK: {
+                    break;
+                }
+                default:
+                    startSearchTimer();
             }
-            return false;
         }
+        return false;
     };
 
     private void setFocusOnSearchBox() {
@@ -256,25 +239,15 @@ public class SearchFragment extends Fragment {
     /**
      *
      */
-    View.OnClickListener mClearSearchButtonClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-
-            runClearSearchButtonClickAction();
-
-        }
-    };
+    View.OnClickListener mClearSearchButtonClickListener = v -> runClearSearchButtonClickAction();
 
     /**
      *
      */
-    View.OnFocusChangeListener mClearSearchButtonFocusChangeListener = new View.OnFocusChangeListener() {
-        @Override
-        public void onFocusChange(View view, boolean hasFocus) {
-            if (hasFocus) {
-                //Exit button pressed. Close the keyboard and go back to default - (viewing types)
-                runClearSearchButtonClickAction();
-            }
+    View.OnFocusChangeListener mClearSearchButtonFocusChangeListener = ( view, hasFocus ) -> {
+        if (hasFocus) {
+            //Exit button pressed. Close the keyboard and go back to default - (viewing types)
+            runClearSearchButtonClickAction();
         }
     };
 
@@ -313,7 +286,7 @@ public class SearchFragment extends Fragment {
     }
 
 
-    //Only search after a second of delay. Any search requests before one sec should replace the seach and restart the timer.
+    //Only search after a second of delay. Any search requests before one sec should replace the search and restart the timer.
     void startSearchTimer() {
         if (searchHandler != null) {
             searchHandler.removeCallbacks(searchRunner);
@@ -374,9 +347,6 @@ public class SearchFragment extends Fragment {
     };
 
 
-
-
-
     OnLocationsReadyListener mSearchLocationsReadyListener = new OnLocationsReadyListener() {
 
         @Override
@@ -400,14 +370,15 @@ public class SearchFragment extends Fragment {
      ***/
     AdapterView.OnItemClickListener mAdapterViewOnItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        public void onItemClick( AdapterView< ? > parent, View view, int position, long id )
+        {
             closeKeyboard();
 
-            mListener.onUserSelectedLocation((Location) mListAdapter.getItem(position));
-
+            if( mListener != null )
+            {
+                mListener.onUserSelectedLocation( (Location) mListAdapter.getItem( position ) );
             }
-
+        }
     };
 
 
@@ -427,11 +398,8 @@ public class SearchFragment extends Fragment {
         void onUserSelectedLocation(Location loc);
     }
 
-
-    public static SearchFragment newInstance( ) {
-        SearchFragment fragment = new SearchFragment();
-
-        return fragment;
+    public static SearchFragment newInstance()
+    {
+        return new SearchFragment();
     }
-
 }

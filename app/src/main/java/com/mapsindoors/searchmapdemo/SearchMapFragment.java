@@ -1,5 +1,6 @@
 package com.mapsindoors.searchmapdemo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -38,26 +39,17 @@ public class SearchMapFragment extends Fragment {
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
 
 
-    public SearchMapFragment() {
+    public SearchMapFragment()
+    {
         // Required empty public constructor
     }
 
     public static SearchMapFragment newInstance() {
-
-        SearchMapFragment fragment = new SearchMapFragment();
-
-        return fragment;
+        return new SearchMapFragment();
     }
 
 
     //region FRAGMENT LIFECYCLE
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,61 +97,56 @@ public class SearchMapFragment extends Fragment {
             mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 13.0f ) );
 
             setupMapsIndoors();
-
         }
     };
 
-    void  setupMapsIndoors() {
-
+    void setupMapsIndoors()
+    {
         /***
          Setting the API key to the desired solution
          ***/
-        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
         {
-
-            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
         }
 
+        if( getActivity() == null )
+        {
+            return;
+        }
 
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
         mMapControl.init( miError -> {
 
-            if( getActivity() != null )
+            if( miError == null )
             {
-                getActivity().runOnUiThread(() -> {
+                Activity context = getActivity();
+                if( context != null )
+                {
+                    context.runOnUiThread(() -> {
 
-                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
+                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
 
-                    if(locationToSelect != null){
-                        mMapControl.selectLocation(locationToSelect);
-                        locationToSelect = null;
-                    } else {
-                        mMapControl.selectFloor( 1 );
-                    }
-
-                });
+                        if( locationToSelect != null )
+                        {
+                            mMapControl.selectLocation( locationToSelect );
+                            locationToSelect = null;
+                        }
+                        else
+                        {
+                            mMapControl.selectFloor( 1 );
+                        }
+                    });
+                }
             }
-
         });
     }
-
-
-
-
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-    }
-
 
     public interface OnFragmentInteractionListener {
         void onSearchButtonClick();
     }
 
     public void selectLocation(Location loc){
-
         locationToSelect = loc;
     }
 
@@ -170,5 +157,4 @@ public class SearchMapFragment extends Fragment {
             mListener = (OnFragmentInteractionListener) context;
         }
     }
-
 }

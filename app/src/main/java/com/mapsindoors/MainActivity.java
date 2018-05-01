@@ -32,10 +32,12 @@ import com.mapsindoors.showvenuedemo.ShowVenueFragment;
 import static android.support.v4.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        SearchFragment.OnFragmentInteractionListener,
-        SearchMapFragment.OnFragmentInteractionListener,
-        SolutionSelectorFragment.OnFragmentInteractionListener{
+        implements
+            NavigationView.OnNavigationItemSelectedListener,
+            SearchFragment.OnFragmentInteractionListener,
+            SearchMapFragment.OnFragmentInteractionListener,
+            SolutionSelectorFragment.OnFragmentInteractionListener
+{
 
 
     NavigationView mNavigationView;
@@ -95,12 +97,11 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected( @NonNull MenuItem item )
+    {
         // Handle navigation view item clicks here.
-        Fragment fragment = null;
-
+        Fragment fragment;
 
         switch(item.getItemId()) {
             case R.id.show_location_item:
@@ -164,7 +165,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
     @Override
     public void onUserSelectedLocation( Location loc )

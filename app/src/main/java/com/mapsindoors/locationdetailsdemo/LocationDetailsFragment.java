@@ -1,6 +1,6 @@
 package com.mapsindoors.locationdetailsdemo;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -54,24 +54,18 @@ public class LocationDetailsFragment extends Fragment {
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     //
 
-    public LocationDetailsFragment() {
+    public LocationDetailsFragment()
+    {
+        // Required empty public constructor
     }
 
-    public static LocationDetailsFragment newInstance( ) {
-        LocationDetailsFragment fragment = new LocationDetailsFragment();
-
-        return fragment;
+    public static LocationDetailsFragment newInstance()
+    {
+        return new LocationDetailsFragment();
     }
 
 
     //Region FRAGMENT LIFECYCLE
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,21 +97,21 @@ public class LocationDetailsFragment extends Fragment {
     /***
      Setup the needed views for this example
      ***/
-    private void setupView( View rootView) {
-
+    private void setupView( View rootView )
+    {
         FragmentManager fm = getChildFragmentManager();
 
+        detailsTextView = rootView.findViewById( R.id.details_text_view );
 
-        detailsTextView = rootView.findViewById(R.id.details_text_view);
-
-        mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
+        mMapFragment = (SupportMapFragment) fm.findFragmentById( R.id.mapfragment );
 
         mMapFragment.getMapAsync( mOnMapReadyCallback );
     }
 
     OnMapReadyCallback mOnMapReadyCallback = new OnMapReadyCallback() {
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady( GoogleMap googleMap )
+        {
             mGoogleMap = googleMap;
             mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 13.0f ) );
 
@@ -128,18 +122,20 @@ public class LocationDetailsFragment extends Fragment {
     /***
      Setup MapsIndoors
      ***/
-    void  setupMapsIndoors() {
-
+    void setupMapsIndoors()
+    {
         /***
          Setting the API key to the desired solution
          ***/
-
-        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
         {
-            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
-
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
         }
 
+        if( getActivity() == null )
+        {
+            return;
+        }
 
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
 
@@ -153,9 +149,10 @@ public class LocationDetailsFragment extends Fragment {
             {
                 marker.showInfoWindow();
 
-               if(detailsTextView.getVisibility() != View.VISIBLE){
-                   detailsTextView.setVisibility(View.VISIBLE);
-               }
+                if( detailsTextView.getVisibility() != View.VISIBLE )
+                {
+                    detailsTextView.setVisibility( View.VISIBLE );
+                }
 
                 /***
                  Show the Name and the description of a POI in a label
@@ -171,36 +168,20 @@ public class LocationDetailsFragment extends Fragment {
          ***/
         mMapControl.init( miError -> {
 
-            if( getActivity() != null )
+            if( miError == null )
             {
-                getActivity().runOnUiThread(() -> {
-                    /***
-                     Select a floor and animate the camera to the venue position
-                     ***/
-                    mMapControl.selectFloor( 1 );
-                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
-                    //
-                });
+                Activity context = getActivity();
+                if( context != null )
+                {
+                    context.runOnUiThread( () -> {
+                        /***
+                         Select a floor and animate the camera to the venue position
+                         ***/
+                        mMapControl.selectFloor( 1 );
+                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
+                    });
+                }
             }
         });
     }
-
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-    }
-
-
-
-
-
 }

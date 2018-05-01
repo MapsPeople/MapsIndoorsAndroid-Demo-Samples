@@ -20,32 +20,28 @@ public class SolutionSelectorFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
 
-     Button buttonMP ;
-     Button buttonAAU ;
-     View mainView;
-
+    Button buttonMP;
+    Button buttonAAU;
+    View   mainView;
 
 
     private OnFragmentInteractionListener mListener;
 
-    public SolutionSelectorFragment() {
+
+    public SolutionSelectorFragment()
+    {
         // Required empty public constructor
     }
 
 
     // TODO: Rename and change types and number of parameters
     public static SolutionSelectorFragment newInstance() {
-        SolutionSelectorFragment fragment = new SolutionSelectorFragment();
+        final SolutionSelectorFragment fragment = new SolutionSelectorFragment();
+
         Bundle args = new Bundle();
-
         fragment.setArguments(args);
+
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -53,16 +49,15 @@ public class SolutionSelectorFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        mainView =   inflater.inflate(R.layout.fragment_solution_selector, container, false);
+        mainView = inflater.inflate( R.layout.fragment_solution_selector, container, false );
 
         setupView();
 
         return mainView;
     }
 
-
-    void setupView(){
-
+    void setupView()
+    {
         buttonMP  = mainView.findViewById( R.id.btn_mp );
         buttonAAU  = mainView.findViewById( R.id.btn_aau );
 
@@ -88,10 +83,9 @@ public class SolutionSelectorFragment extends Fragment {
 
     }
 
-    void dataSyncDone(MIError error) {
-
-
-        new Handler(Looper.getMainLooper()).post( () -> {
+    void dataSyncDone( MIError error )
+    {
+        new Handler( Looper.getMainLooper() ).post( () -> {
 
             // if(error == null){
             mListener.onSolutionChoosen();

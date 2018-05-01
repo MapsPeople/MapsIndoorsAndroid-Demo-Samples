@@ -21,16 +21,18 @@ public class DemoApplication extends Application
         dbglog.useDebug( true );
         dbglog.setCustomTagPrefix( TAG + "_" );
 
+        // Initialize the MapsIndoors SDK here by providing:
+        // - The application context
+        // - The MapsIndoors API key
         MapsIndoors.initialize(
                 getApplicationContext(),
                 getString( R.string.mi_api_key)
         );
 
+        // Your Google Maps API key
         MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
 
         sInstance = this;
-
-        //MapsIndoors.synchronizeContent( null );
     }
 
     // This is called when the overall system is running low on memory,

@@ -1,6 +1,6 @@
 package com.mapsindoors.showmultiplelocations;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -46,26 +46,19 @@ public class ShowMultipleLocationsFragment extends Fragment {
 
     SupportMapFragment mMapFragment;
 
-    public ShowMultipleLocationsFragment() {
+
+    public ShowMultipleLocationsFragment()
+    {
         // Required empty public constructor
     }
 
-
-    public static ShowMultipleLocationsFragment newInstance() {
-        ShowMultipleLocationsFragment fragment = new ShowMultipleLocationsFragment();
-
-        return fragment;
+    public static ShowMultipleLocationsFragment newInstance()
+    {
+        return new ShowMultipleLocationsFragment();
     }
 
 
     //region FRAGMENT LIFECYCLE
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,59 +88,64 @@ public class ShowMultipleLocationsFragment extends Fragment {
     //endregion
 
 
-    private void setupView( View rootView) {
-
+    private void setupView( View rootView )
+    {
         FragmentManager fm = getChildFragmentManager();
 
-        mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
+        mMapFragment = (SupportMapFragment) fm.findFragmentById( R.id.mapfragment );
 
         mMapFragment.getMapAsync( mOnMapReadyCallback );
     }
 
     OnMapReadyCallback mOnMapReadyCallback = new OnMapReadyCallback() {
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady( GoogleMap googleMap )
+        {
             mGoogleMap = googleMap;
             mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 13.0f ) );
 
             setupMapsIndoors();
-
         }
     };
 
-
-
-    void  setupMapsIndoors() {
-
-        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+    void setupMapsIndoors()
+    {
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
         {
-            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
-
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
         }
 
-        mMapControl = new MapControl(getActivity(), mMapFragment, mGoogleMap);
+        if( getActivity() == null )
+        {
+            return;
+        }
 
+        mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
         mMapControl.init( miError -> {
-            // after the map control is initialized we can
-            queryLocation();
 
-            if( getActivity() != null )
+            if( miError == null )
             {
-                getActivity().runOnUiThread( () -> {
-                    mMapControl.selectFloor( 1 );
-                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 18f ) );
+                Activity context = getActivity();
+                if( context != null )
+                {
+                    queryLocation();
 
-                } );
+                    context.runOnUiThread( () -> {
+                        mMapControl.selectFloor( 1 );
+                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 18f ) );
+
+                    } );
+                }
             }
-        } );
+        });
     }
 
 
     MPLocationsProvider mLocationsProvider;
 
 
-    void queryLocation(){
-
+    void queryLocation()
+    {
         mLocationsProvider = new MPLocationsProvider();
 
         mLocationQueryBuilder = new LocationQuery.Builder();
@@ -164,36 +162,19 @@ public class ShowMultipleLocationsFragment extends Fragment {
 
         /*** Query the data ***/
         mLocationsProvider.getLocationsAsync( mLocationQuery, mSearchLocationsReadyListener );
-        //
-
     }
 
     /*** Show search on map When the 'OnLocationsReadyListener' is called ***/
     OnLocationsReadyListener mSearchLocationsReadyListener = new OnLocationsReadyListener()
     {
         @Override
-        public void onLocationsReady( @Nullable List< Location > locations, @Nullable MIError error )
+        public void onLocationsReady( @Nullable List<Location> locations, @Nullable MIError error )
         {
-
             if( locations != null && locations.size() != 0 )
             {
                 /* display the locations on the map*/
                 mMapControl.displaySearchResults( locations, true );
-
             }
         }
-
     };
-    //
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-    }
 }

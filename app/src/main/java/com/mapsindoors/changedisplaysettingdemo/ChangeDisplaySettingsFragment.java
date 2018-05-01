@@ -1,6 +1,6 @@
 package com.mapsindoors.changedisplaysettingdemo;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,9 +15,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-
 import com.mapsindoors.R;
-import com.mapsindoors.mapssdk.Location;
 import com.mapsindoors.mapssdk.LocationDisplayRule;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
@@ -32,25 +30,18 @@ public class ChangeDisplaySettingsFragment extends Fragment {
     GoogleMap mGoogleMap;
 
 
-    public ChangeDisplaySettingsFragment() {
+    public ChangeDisplaySettingsFragment()
+    {
         // Required empty public constructor
     }
 
-    public static ChangeDisplaySettingsFragment newInstance() {
-        ChangeDisplaySettingsFragment fragment = new ChangeDisplaySettingsFragment();
-
-        return fragment;
+    public static ChangeDisplaySettingsFragment newInstance()
+    {
+        return new ChangeDisplaySettingsFragment();
     }
 
 
     //region FRAGMENT LIFECYCLE
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -79,30 +70,36 @@ public class ChangeDisplaySettingsFragment extends Fragment {
     }
     //endregion
 
-    private void setupView( View rootView) {
-
+    private void setupView( View rootView )
+    {
         FragmentManager fm = getChildFragmentManager();
 
-        mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
+        mMapFragment = (SupportMapFragment) fm.findFragmentById( R.id.mapfragment );
 
         mMapFragment.getMapAsync( mOnMapReadyCallback );
     }
 
     OnMapReadyCallback mOnMapReadyCallback = new OnMapReadyCallback() {
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady( GoogleMap googleMap )
+        {
             mGoogleMap = googleMap;
             mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 13.0f ) );
 
             setupMapsIndoors();
-
         }
     };
 
-    void setupMapsIndoors() {
-        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+    void setupMapsIndoors()
+    {
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
         {
-            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
+        }
+
+        if( getActivity() == null )
+        {
+            return;
         }
 
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
@@ -111,43 +108,28 @@ public class ChangeDisplaySettingsFragment extends Fragment {
 
         mMapControl.init( miError -> {
 
-            if( getActivity() != null )
+            if( miError == null )
             {
-                getActivity().runOnUiThread(() -> {
-                    mMapControl.selectFloor( 1 );
-                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
-                });
+                Activity context = getActivity();
+                if( context != null )
+                {
+                    context.runOnUiThread(() -> {
+                        mMapControl.selectFloor( 1 );
+                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
+                    });
+                }
             }
         });
     }
 
-
-    void changeDisplayRules() {
-        final LocationDisplayRule rule = new LocationDisplayRule.Builder("MeetingRoom").
-                setIcon(R.drawable.archive, 20, 20).
-                setZoomLevelOn(16).
-                setVisible(true).
+    void changeDisplayRules()
+    {
+        final LocationDisplayRule rule = new LocationDisplayRule.Builder( "MeetingRoom" ).
+                setIcon( R.drawable.archive, 20, 20 ).
+                setZoomLevelOn( 16 ).
+                setVisible( true ).
                 build();
 
-
-        mMapControl.addDisplayRule(rule);
-
+        mMapControl.addDisplayRule( rule );
     }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-    }
-
-
-
-
-
 }

@@ -1,6 +1,6 @@
 package com.mapsindoors.customfloorselectordemo;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,7 +14,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.mapsindoors.R;
 import com.mapsindoors.customfloorselectordemo.floorselectorcomponent.MapFloorSelector;
@@ -36,26 +35,18 @@ public class CustomFloorSelectorFragment extends Fragment {
     //query objects
 
 
-    public CustomFloorSelectorFragment() {
+    public CustomFloorSelectorFragment()
+    {
         // Required empty public constructor
     }
 
-    public static CustomFloorSelectorFragment newInstance() {
-        CustomFloorSelectorFragment fragment = new CustomFloorSelectorFragment();
-
-        return fragment;
+    public static CustomFloorSelectorFragment newInstance()
+    {
+        return new CustomFloorSelectorFragment();
     }
 
 
     //region FRAGMENT LIFECYCLE
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -83,71 +74,61 @@ public class CustomFloorSelectorFragment extends Fragment {
     }
     //endregion
 
-    private void setupView( View rootView) {
 
+    private void setupView( View rootView )
+    {
         FragmentManager fm = getChildFragmentManager();
 
-        mMapFloorSelector = rootView.findViewById(R.id.mp_floor_selector);
+        mMapFloorSelector = rootView.findViewById( R.id.mp_floor_selector );
 
-        mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
+        mMapFragment = (SupportMapFragment) fm.findFragmentById( R.id.mapfragment );
 
         mMapFragment.getMapAsync( mOnMapReadyCallback );
     }
 
     OnMapReadyCallback mOnMapReadyCallback = new OnMapReadyCallback() {
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady( GoogleMap googleMap )
+        {
             mGoogleMap = googleMap;
             mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 13.0f ) );
 
             setupMapsIndoors();
-
         }
     };
 
-    void  setupMapsIndoors() {
-        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+    void setupMapsIndoors()
+    {
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
         {
-            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
+        }
 
+        if( getActivity() == null )
+        {
+            return;
         }
 
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
-        mMapControl.setFloorSelector(mMapFloorSelector);
+
+        mMapControl.setFloorSelector( mMapFloorSelector );
         mMapControl.setFloorSelectorType( FloorSelectorType.ONLYCURRENTBUILDING );
 
         mMapControl.init( miError -> {
 
-            if( getActivity() != null )
+            if( miError == null )
             {
-                getActivity().runOnUiThread(() -> {
-                    //setting the floor level programatically
-                    mMapControl.selectFloor( 1 );
+                Activity context = getActivity();
+                if( context != null )
+                {
+                    context.runOnUiThread( () -> {
+                        //setting the floor level programmatically
+                        mMapControl.selectFloor( 1 );
 
-                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
-
-                });
+                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
+                    } );
+                }
             }
         });
     }
-
-
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-    }
-
-
-
-
-
 }
