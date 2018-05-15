@@ -35,4 +35,5 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation "com.google.android.gms:play-services-maps:15.0.1"
     implementation 'com.mapspeople.mapsindoors:mapsindoorssdk:2.0.0-rc2@aar'
+    implementation 'com.google.code.gson:gson:2.8.4'
 }
