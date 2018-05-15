@@ -172,8 +172,8 @@ public class ShowMultipleLocationsFragment extends Fragment {
         {
             if( locations != null && locations.size() != 0 )
             {
-                /* display the locations on the map*/
-                mMapControl.displaySearchResults( locations, true );
+                /* Display the locations on the map */
+                mMapControl.displaySearchResults( locations, true, 40 );
             }
         }
     };

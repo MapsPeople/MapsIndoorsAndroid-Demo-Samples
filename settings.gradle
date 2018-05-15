@@ -1,10 +1,1 @@
 include ':app'
-
-////### MapsPeople - DEBUG ONLY
-//static def getDevUserName() {
-//   if( System.getenv( "USERNAME" ) != null) return System.getenv( "USERNAME" )
-//    if( System.getenv( "LOGNAME" ) != null) return System.getenv( "LOGNAME" )
-//   return ""
-//}
-//include ':MapsIndoorsSDK'
-//project(':MapsIndoorsSDK').projectDir = new File(settingsDir, ((getDevUserName() == "jjv") || (getDevUserName() == "jose")) ? '../../SDK/MISDKAND/MapsIndoorsSDK' : '../MISDKANDV2/MapsIndoorsSDK')
