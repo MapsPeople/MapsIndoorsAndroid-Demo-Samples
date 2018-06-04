@@ -18,8 +18,11 @@ public class DemoApplication extends Application
         super.onCreate();
         // Required initialization logic here!
 
-        dbglog.useDebug( true );
-        dbglog.setCustomTagPrefix( TAG + "_" );
+        // Enable MapsIndoors debug messages (console)
+        {
+            dbglog.useDebug( true );
+            dbglog.setCustomTagPrefix( TAG + "_" );
+        }
 
         // Initialize the MapsIndoors SDK here by providing:
         // - The application context
