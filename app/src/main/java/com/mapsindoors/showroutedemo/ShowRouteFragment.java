@@ -20,6 +20,7 @@ import com.mapsindoors.mapssdk.MPDirectionsRenderer;
 import com.mapsindoors.mapssdk.MPRoutingProvider;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
+import com.mapsindoors.mapssdk.OnLegSelectedListener;
 import com.mapsindoors.mapssdk.RoutingProvider;
 import com.mapsindoors.mapssdk.models.Point;
 
@@ -85,7 +86,6 @@ public class ShowRouteFragment extends Fragment {
 
         FragmentManager fm = getChildFragmentManager();
 
-
         mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
 
         mMapFragment.getMapAsync( mOnMapReadyCallback );
@@ -118,7 +118,7 @@ public class ShowRouteFragment extends Fragment {
 
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
 
-        mRoutingRenderer = new MPDirectionsRenderer( getContext(), null, mGoogleMap );
+        mRoutingRenderer = new MPDirectionsRenderer( getContext(), mGoogleMap, mMapControl, null);
 
         mMapControl.init( miError -> {
 
@@ -145,11 +145,17 @@ public class ShowRouteFragment extends Fragment {
     void routing()
     {
         mRoutingProvider.setOnRouteResultListener( ( route, error ) -> {
-            mRoutingRenderer.setRoute( route );
-            // mRoutingRenderer.setAlpha(255);
-            if( getActivity() != null )
+            if( route != null )
             {
-                getActivity().runOnUiThread( () -> mRoutingRenderer.setRouteLegIndex( 0 ) );
+                mRoutingRenderer.setRoute( route );
+
+                if( getActivity() != null )
+                {
+                    getActivity().runOnUiThread( () -> mRoutingRenderer.setRouteLegIndex( 0 ) );
+                }
+            } else
+            {
+                // Can't get a route between the giving points
             }
         });
 
