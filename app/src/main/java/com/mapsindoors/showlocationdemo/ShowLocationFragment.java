@@ -1,6 +1,6 @@
 package com.mapsindoors.showlocationdemo;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,30 +35,24 @@ public class ShowLocationFragment extends Fragment {
     GoogleMap mGoogleMap;
 
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
+
     //query objects
     LocationQuery         mLocationQuery;
     LocationQuery.Builder mLocationQueryBuilder;
 
-    public ShowLocationFragment() {
+
+    public ShowLocationFragment()
+    {
         // Required empty public constructor
     }
 
-
-    public static ShowLocationFragment newInstance() {
-        ShowLocationFragment fragment = new ShowLocationFragment();
-
-        return fragment;
+    public static ShowLocationFragment newInstance()
+    {
+        return new ShowLocationFragment();
     }
 
 
     //region FRAGMENT LIFECYCLE
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,67 +82,75 @@ public class ShowLocationFragment extends Fragment {
     //endregion
 
 
-    private void setupView( View rootView) {
-        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+    private void setupView( View rootView )
+    {
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
         {
-
-            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
         }
 
         FragmentManager fm = getChildFragmentManager();
 
-        mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
+        mMapFragment = (SupportMapFragment) fm.findFragmentById( R.id.mapfragment );
 
         mMapFragment.getMapAsync( mOnMapReadyCallback );
     }
 
     OnMapReadyCallback mOnMapReadyCallback = new OnMapReadyCallback() {
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady( GoogleMap googleMap )
+        {
             mGoogleMap = googleMap;
             mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 13.0f ) );
 
             setupMapsIndoors();
-
         }
     };
 
+    void setupMapsIndoors()
+    {
+        if( getActivity() == null )
+        {
+            return;
+        }
 
-    void  setupMapsIndoors() {
-
-        mMapControl = new MapControl(getActivity(), mMapFragment, mGoogleMap);
-
+        mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
         mMapControl.init( miError -> {
-            // after the map control is initialized we can
-            queryLocation();
 
-            if( getActivity() != null )
+            if( miError == null )
             {
-                getActivity().runOnUiThread( () -> {
-                    mMapControl.selectFloor( 1 );
-                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 18f ) );
+                Activity context = getActivity();
+                if( context != null )
+                {
+                    queryLocation();
 
-                } );
+                    context.runOnUiThread( () -> {
+                        mMapControl.selectFloor( 1 );
+                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 18f ) );
+                    });
+                }
             }
         });
     }
 
     MPLocationsProvider mLocationsProvider;
 
-    void queryLocation(){
-
+    void queryLocation()
+    {
         mLocationsProvider = new MPLocationsProvider();
 
-        mLocationQueryBuilder =     new LocationQuery.Builder();
+        mLocationQueryBuilder = new LocationQuery.Builder();
 
-        // init the query builder, in this case we will query the coffee machine in our office
+        // Init the query builder, in this case we will query the coffee machine in our office
         mLocationQueryBuilder.
                 setQuery("coffee machine").
                 setOrderBy( LocationQuery.NO_ORDER ).
                 setFloor(1).
                 setMaxResults(1);
+
         // Build the query
         mLocationQuery = mLocationQueryBuilder.build();
+
         // Query the data
         mLocationsProvider.getLocationsAsync( mLocationQuery, mSearchLocationsReadyListener );
     }
@@ -159,24 +161,10 @@ public class ShowLocationFragment extends Fragment {
         @Override
         public void onLocationsReady( @Nullable List< Location > locations, @Nullable MIError error )
         {
-
             if( locations != null && locations.size() != 0 )
             {
                 mMapControl.displaySearchResults( Collections.singletonList( locations.get( 0 ) ), true );
             }
         }
-
     };
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-    }
 }

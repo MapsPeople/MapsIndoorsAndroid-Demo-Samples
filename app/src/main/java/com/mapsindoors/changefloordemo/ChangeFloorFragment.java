@@ -1,6 +1,6 @@
 package com.mapsindoors.changefloordemo;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,20 +36,11 @@ public class ChangeFloorFragment extends Fragment {
     }
 
     public static ChangeFloorFragment newInstance() {
-        ChangeFloorFragment fragment = new ChangeFloorFragment();
-
-        return fragment;
+        return new ChangeFloorFragment();
     }
 
 
     //region FRAGMENT LIFECYCLE
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,8 +69,8 @@ public class ChangeFloorFragment extends Fragment {
     }
     //endregion
 
-    private void setupView( View rootView) {
-
+    private void setupView( View rootView)
+    {
         FragmentManager fm = getChildFragmentManager();
 
 
@@ -90,57 +81,46 @@ public class ChangeFloorFragment extends Fragment {
 
     OnMapReadyCallback mOnMapReadyCallback = new OnMapReadyCallback() {
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady( GoogleMap googleMap )
+        {
             mGoogleMap = googleMap;
             mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 13.0f ) );
 
             setupMapsIndoors();
-
         }
     };
 
-    void  setupMapsIndoors() {
-        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+    void setupMapsIndoors()
+    {
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
         {
-            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
-
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
         }
 
+        if( getActivity() == null )
+        {
+            return;
+        }
 
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
 
         mMapControl.init( miError -> {
 
-            if( getActivity() != null )
+            if( miError == null )
             {
-                getActivity().runOnUiThread(() -> {
-                    //setting the floor level programatically
-                    mMapControl.selectFloor( 1 );
+                Activity context = getActivity();
+                if( context != null )
+                {
+                    context.runOnUiThread( () -> {
 
-                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
+                        // Set the floor level programmatically
+                        mMapControl.selectFloor( 1 );
 
-                });
+                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
+
+                    });
+                }
             }
         });
     }
-
-
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-    }
-
-
-
-
-
 }

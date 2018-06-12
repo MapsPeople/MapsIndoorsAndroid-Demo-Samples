@@ -1,6 +1,6 @@
 package com.mapsindoors.showuserLocation;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,7 +15,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
@@ -50,23 +49,19 @@ public class ShowUserLocationFragment extends Fragment {
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     //
 
-    public ShowUserLocationFragment() {
+    public ShowUserLocationFragment()
+    {
         // Required empty public constructor
     }
 
-    public static ShowUserLocationFragment newInstance() {
-        ShowUserLocationFragment fragment = new ShowUserLocationFragment();
-        return fragment;
+
+    public static ShowUserLocationFragment newInstance()
+    {
+        return new ShowUserLocationFragment();
     }
 
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
-    }
+    //region FRAGMENT LIFECYCLE
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -85,33 +80,40 @@ public class ShowUserLocationFragment extends Fragment {
 
 
 
-    private void setupView( View rootView) {
-
+    private void setupView( View rootView )
+    {
         FragmentManager fm = getChildFragmentManager();
 
-        mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
+        mMapFragment = (SupportMapFragment) fm.findFragmentById( R.id.mapfragment );
 
         mMapFragment.getMapAsync( mOnMapReadyCallback );
     }
 
     OnMapReadyCallback mOnMapReadyCallback = new OnMapReadyCallback() {
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady( GoogleMap googleMap )
+        {
             mGoogleMap = googleMap;
             mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 13.0f ) );
 
             setupMapsIndoors();
-
         }
     };
 
-    void  setupMapsIndoors() {
+    void setupMapsIndoors()
+    {
         /***
          Set the API key to the MI solution
          ***/
-        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
         {
-            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
+
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
+        }
+
+        if( getActivity() == null )
+        {
+            return;
         }
 
         /***
@@ -120,13 +122,17 @@ public class ShowUserLocationFragment extends Fragment {
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
         mMapControl.init( miError -> {
 
-            if( getActivity() != null )
+            if( miError == null )
             {
-                getActivity().runOnUiThread(() -> {
-                    mMapControl.selectFloor( 1 );
-                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
+                Activity context = getActivity();
+                if( context != null )
+                {
+                    context.runOnUiThread( () -> {
+                        mMapControl.selectFloor( 1 );
+                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
 
-                });
+                    });
+                }
             }
         });
 
@@ -146,19 +152,8 @@ public class ShowUserLocationFragment extends Fragment {
          * Tell the mapControl to show the users location
          ***/
         mMapControl.showUserPosition(true);
+
         //
-
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     @Override
@@ -176,4 +171,5 @@ public class ShowUserLocationFragment extends Fragment {
 
         super.onDestroyView();
     }
+
 }

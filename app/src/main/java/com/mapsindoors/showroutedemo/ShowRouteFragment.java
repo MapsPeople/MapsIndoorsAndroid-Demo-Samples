@@ -1,6 +1,6 @@
 package com.mapsindoors.showroutedemo;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,11 +20,9 @@ import com.mapsindoors.mapssdk.MPDirectionsRenderer;
 import com.mapsindoors.mapssdk.MPRoutingProvider;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
-import com.mapsindoors.mapssdk.OnRouteResultListener;
+import com.mapsindoors.mapssdk.OnLegSelectedListener;
 import com.mapsindoors.mapssdk.RoutingProvider;
-import com.mapsindoors.mapssdk.errors.MIError;
 import com.mapsindoors.mapssdk.models.Point;
-import com.mapsindoors.mapssdk.models.Route;
 
 
 /**
@@ -51,20 +49,11 @@ public class ShowRouteFragment extends Fragment {
     }
 
     public static ShowRouteFragment newInstance() {
-        ShowRouteFragment fragment = new ShowRouteFragment();
-
-        return fragment;
+        return new ShowRouteFragment();
     }
 
 
     //region FRAGMENT LIFECYCLE
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,7 +86,6 @@ public class ShowRouteFragment extends Fragment {
 
         FragmentManager fm = getChildFragmentManager();
 
-
         mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
 
         mMapFragment.getMapAsync( mOnMapReadyCallback );
@@ -105,84 +93,75 @@ public class ShowRouteFragment extends Fragment {
 
     OnMapReadyCallback mOnMapReadyCallback = new OnMapReadyCallback() {
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady( GoogleMap googleMap )
+        {
             mGoogleMap = googleMap;
             mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 13.0f ) );
 
             setupMapsIndoors();
-
         }
     };
 
-    void  setupMapsIndoors() {
-        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+    void setupMapsIndoors()
+    {
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
         {
-            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
-
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
         }
 
-        mRoutingProvider  = new MPRoutingProvider();
+        if( getActivity() == null )
+        {
+            return;
+        }
+
+        mRoutingProvider = new MPRoutingProvider();
 
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
 
-        mRoutingRenderer = new MPDirectionsRenderer(getContext(),null,mGoogleMap);
-
+        mRoutingRenderer = new MPDirectionsRenderer( getContext(), mGoogleMap, mMapControl, null);
 
         mMapControl.init( miError -> {
 
-            if( getActivity() != null )
+            if( miError == null )
             {
-                getActivity().runOnUiThread(() -> {
-                    //setting the floor level programatically
-                    mMapControl.selectFloor( 1 );
+                Activity context = getActivity();
+                if( context != null )
+                {
+                    context.runOnUiThread( () -> {
 
-                    // make the route
-                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 19f ) );
+                        //setting the floor level programmatically
+                        mMapControl.selectFloor( 1 );
 
-                });
+                        // make the route
+                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 19f ) );
+                    });
+                }
             }
         });
 
-
         routing();
-
     }
 
-
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-    }
-
-
-
-    void routing(){
+    void routing()
+    {
         mRoutingProvider.setOnRouteResultListener( ( route, error ) -> {
-            mRoutingRenderer.setRoute(route);
-           // mRoutingRenderer.setAlpha(255);
-            getActivity().runOnUiThread(() -> {
-                mRoutingRenderer.setRouteLegIndex(0);
-            });
+            if( route != null )
+            {
+                mRoutingRenderer.setRoute( route );
 
-        } );
+                if( getActivity() != null )
+                {
+                    getActivity().runOnUiThread( () -> mRoutingRenderer.setRouteLegIndex( 0 ) );
+                }
+            } else
+            {
+                // Can't get a route between the giving points
+            }
+        });
 
-        Point origin = new Point(57.057917,9.950361 );
-        Point destination = new Point(57.058038,9.950509 ) ;
+        Point origin = new Point( 57.057917, 9.950361 );
+        Point destination = new Point( 57.058038, 9.950509 );
 
-
-        mRoutingProvider.query( origin, destination);
-
-
+        mRoutingProvider.query( origin, destination );
     }
-
-
 }

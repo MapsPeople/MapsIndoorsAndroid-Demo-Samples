@@ -1,8 +1,7 @@
 package com.mapsindoors.showvenuedemo;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -14,12 +13,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
-import com.mapsindoors.mapssdk.OnLoadingDataReadyListener;
-import com.mapsindoors.mapssdk.errors.MIError;
 import com.mapsindoors.mapssdk.models.Venue;
+import com.mapsindoors.mapssdk.models.VenueCollection;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,23 +43,11 @@ public class ShowVenueFragment extends Fragment {
 
 
     public static ShowVenueFragment newInstance() {
-        ShowVenueFragment fragment = new ShowVenueFragment();
-
-        return fragment;
+        return new ShowVenueFragment();
     }
 
 
     //region FRAGMENT
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
-
-    }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,68 +70,60 @@ public class ShowVenueFragment extends Fragment {
 
     OnMapReadyCallback mOnMapReadyCallback = new OnMapReadyCallback() {
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady( GoogleMap googleMap )
+        {
             mGoogleMap = googleMap;
             mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 13.0f ) );
 
             setupMapsIndoors();
-
         }
     };
     //endregion
 
 
-    void  setupMapsIndoors() {
-        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
+    void setupMapsIndoors()
+    {
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
         {
-            MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
-
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
         }
 
-        mMapControl = new MapControl(getActivity(), mMapFragment, mGoogleMap);
+        if( getActivity() == null )
+        {
+            return;
+        }
 
+        mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
         mMapControl.init( miError -> {
-            // after the map control is initialized we can
 
-            getActivity().runOnUiThread(() -> {
+            if( miError == null )
+            {
+                Activity context = getActivity();
+                if( context != null )
+                {
+                    context.runOnUiThread(() -> {
 
-                mMapControl.selectFloor( 1 );
+                        mMapControl.selectFloor( 1 );
 
-                mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 18f ) );
+                        VenueCollection venues = MapsIndoors.getVenues();
 
-                Venue currentVenue = MapsIndoors.getVenues().getCurrentVenue();
+                        if( venues != null )
+                        {
+                            Venue currentVenue = venues.getCurrentVenue();
 
-                mMapControl.setMapPosition( currentVenue.getLatLngBoundingBox(), true, 10 );
+                            if( currentVenue != null )
+                            {
+                                LatLngBounds latLngBounds = currentVenue.getLatLngBoundingBox();
 
-
-                });
-
-        } );
+                                if( (mGoogleMap != null) && (latLngBounds != null) )
+                                {
+                                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngBounds( latLngBounds, 10 ) );
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
-
-
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-
-
-
-
-
-    }
+}

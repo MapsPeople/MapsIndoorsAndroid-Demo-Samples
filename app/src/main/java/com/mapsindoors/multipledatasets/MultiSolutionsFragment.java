@@ -1,6 +1,6 @@
 package com.mapsindoors.multipledatasets;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -47,25 +47,19 @@ public class MultiSolutionsFragment extends Fragment {
     float  selectedCameraCloseUpZoom = MAPSPEOPLE_CORPORATE_HQ_ZOOM;
     int selectedFloorIndex;
 
-    public MultiSolutionsFragment() {
+
+    public MultiSolutionsFragment()
+    {
         // Required empty public constructor
     }
 
-    public static MultiSolutionsFragment newInstance( ) {
-        MultiSolutionsFragment fragment = new MultiSolutionsFragment();
-
-        return fragment;
+    public static MultiSolutionsFragment newInstance()
+    {
+        return new MultiSolutionsFragment();
     }
 
 
     //region FRAGMENT LIFECYCLE
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,7 +72,6 @@ public class MultiSolutionsFragment extends Fragment {
     public void onViewCreated( @NonNull View view, @Nullable Bundle savedInstanceState )
     {
         super.onViewCreated( view, savedInstanceState );
-
 
         if( MapsIndoors.getAPIKey().equalsIgnoreCase( "57e4e4992e74800ef8b69718" ) )
         {
@@ -108,8 +101,9 @@ public class MultiSolutionsFragment extends Fragment {
     }
     //endregion
 
-    private void setupView( View rootView) {
 
+    private void setupView( View rootView )
+    {
         FragmentManager fm = getChildFragmentManager();
 
         mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
@@ -119,45 +113,37 @@ public class MultiSolutionsFragment extends Fragment {
 
     OnMapReadyCallback mOnMapReadyCallback = new OnMapReadyCallback() {
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady( GoogleMap googleMap )
+        {
             mGoogleMap = googleMap;
-            mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( selectedCameraPosition, 13.0f  ) );
+            mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( selectedCameraPosition, 13.0f ) );
 
             setupMapsIndoors();
-
         }
     };
 
-    void  setupMapsIndoors() {
+    void setupMapsIndoors()
+    {
+        if( getActivity() == null )
+        {
+            return;
+        }
 
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
-
-
         mMapControl.init( miError -> {
 
-            if( getActivity() != null )
+            if( miError == null )
             {
-                getActivity().runOnUiThread(() -> {
-                    mMapControl.selectFloor( 1 );
-                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( selectedCameraPosition, selectedCameraCloseUpZoom) );
+                Activity context = getActivity();
+                if( context != null )
+                {
+                    context.runOnUiThread( () -> {
 
-                });
+                        mMapControl.selectFloor( 1 );
+                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( selectedCameraPosition, selectedCameraCloseUpZoom ) );
+                    });
+                }
             }
         });
-
     }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-
-    }
-
 }
