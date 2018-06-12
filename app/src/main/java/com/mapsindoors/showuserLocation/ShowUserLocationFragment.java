@@ -56,12 +56,10 @@ public class ShowUserLocationFragment extends Fragment {
 
     public static ShowUserLocationFragment newInstance() {
         ShowUserLocationFragment fragment = new ShowUserLocationFragment();
-
         return fragment;
     }
 
 
-    //region FRAGMENT LIFECYCLE
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,19 +83,7 @@ public class ShowUserLocationFragment extends Fragment {
         setupView( view );
     }
 
-    @Override
-    public void onDestroyView()
-    {
-        if( mMapControl != null )
-        {
-            mMapControl.onDestroy();
-        }
 
-        // free the MapsIndoorsPositionProvider
-        MapsIndoors.setPositionProvider(null);
-        super.onDestroyView();
-    }
-    //endregion
 
     private void setupView( View rootView) {
 
@@ -121,14 +107,16 @@ public class ShowUserLocationFragment extends Fragment {
 
     void  setupMapsIndoors() {
         /***
-         Setup the map so that it shows the demo venue and initialise mapControl
+         Set the API key to the MI solution
          ***/
         if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
         {
-
             MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
         }
 
+        /***
+         Instanciate and init the mapControl object
+         ***/
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
         mMapControl.init( miError -> {
 
@@ -144,20 +132,23 @@ public class ShowUserLocationFragment extends Fragment {
 
         /***
          * Create an instance of the 'DemoPositionProvider' that we defined previously
-         * Assign the `DemoPositionProvider` instance to `MapsIndoors.positionProvider`
-         * Start positioning
-         * Tell mapControl to show the users location
          ***/
         DemoPositionProvider demoPositionProvider = new DemoPositionProvider();
+        /***
+         * Assign the `DemoPositionProvider` instance to the `MapsIndoors.positionProvider` by calling the 'MapsIndoors.setPositionProvider'
+         ***/
         MapsIndoors.setPositionProvider(demoPositionProvider);
+        /***
+         * Start positioning
+         ***/
         demoPositionProvider.startPositioning(null);
+        /***
+         * Tell the mapControl to show the users location
+         ***/
         mMapControl.showUserPosition(true);
         //
 
     }
-
-
-
 
     @Override
     public void onAttach(Context context) {
@@ -168,11 +159,21 @@ public class ShowUserLocationFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-
     }
 
+    @Override
+    public void onDestroyView()
+    {
+        if( mMapControl != null )
+        {
+            mMapControl.onDestroy();
+        }
+        /***
+         In the 'onDestroyView' method, we need to free the MapsIndoors PositionProvider
+         ***/
+        MapsIndoors.setPositionProvider(null);
+        //
 
-
-
-
+        super.onDestroyView();
+    }
 }

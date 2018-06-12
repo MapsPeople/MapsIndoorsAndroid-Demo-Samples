@@ -23,16 +23,13 @@ public class DemoApplication extends Application
 
         MapsIndoors.initialize(
                 getApplicationContext(),
-                getString( R.string.mi_api_key),
-                getString( R.string.google_maps_key )
-
+                getString( R.string.mi_api_key)
         );
 
         MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
 
         sInstance = this;
 
-        //MapsIndoors.synchronizeContent( null );
     }
 
     // This is called when the overall system is running low on memory,

@@ -33,7 +33,9 @@ import com.mapsindoors.mapssdk.MapsIndoors;
  Start by creating a `Fragment or an Activity` class that contains the google map fragment
  ***/
 
-public class LocationDetailsFragment extends Fragment {
+public class LocationDetailsFragment extends Fragment
+//
+{
 
     /***
      Add a `GoogleMap` and a `MapControl` to the class
@@ -114,7 +116,9 @@ public class LocationDetailsFragment extends Fragment {
 
         mMapFragment.getMapAsync( mOnMapReadyCallback );
     }
-
+    /***
+     Once the map is ready move the camera to the venue location and call the setupMapsIndoors
+     ***/
     OnMapReadyCallback mOnMapReadyCallback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
@@ -124,51 +128,28 @@ public class LocationDetailsFragment extends Fragment {
             setupMapsIndoors();
         }
     };
-
-    /***
-     Setup MapsIndoors
-     ***/
+//
     void  setupMapsIndoors() {
 
         /***
          Setting the API key to the desired solution
          ***/
-
         if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
         {
             MapsIndoors.setAPIKey( getString( R.string.mi_api_key) );
 
         }
 
+        /***
+         Setting the Google API key
+         ***/
+        MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
 
+        /***
+         Instanciate and init the MapControl object which will sync data
+         ***/
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
 
-        /***
-         When a marker is clicked, get related MapsIndoors location object and set label text, based on the name and description of the location
-         ***/
-        mMapControl.setOnMarkerClickListener( marker -> {
-
-            final Location loc = mMapControl.getLocation( marker );
-            if( loc != null )
-            {
-                marker.showInfoWindow();
-
-               if(detailsTextView.getVisibility() != View.VISIBLE){
-                   detailsTextView.setVisibility(View.VISIBLE);
-               }
-
-                /***
-                 Show the Name and the description of a POI in a label
-                 ***/
-                detailsTextView.setText( "Name: " + loc.getName() + "\nDescription: " + loc.getStringProperty( LocationPropertyNames.DESCRIPTION ) );
-            }
-
-            return true;
-        } );
-
-        /***
-         Init the MapControl object which will sync data
-         ***/
         mMapControl.init( miError -> {
 
             if( getActivity() != null )
@@ -183,8 +164,28 @@ public class LocationDetailsFragment extends Fragment {
                 });
             }
         });
-    }
 
+        /***
+         When a marker is clicked, get the related MapsIndoors location object and set the label text based on the name and description of the location
+         ***/
+        mMapControl.setOnMarkerClickListener( marker -> {
+
+            final Location loc = mMapControl.getLocation( marker );
+            if( loc != null )
+            {
+                marker.showInfoWindow();
+
+               if(detailsTextView.getVisibility() != View.VISIBLE){
+                   detailsTextView.setVisibility(View.VISIBLE);
+               }
+                detailsTextView.setText( "Name: " + loc.getName() + "\nDescription: " + loc.getStringProperty( LocationPropertyNames.DESCRIPTION ) );
+            }
+
+            return true;
+        } );
+
+    }
+//
 
 
     @Override

@@ -27,7 +27,9 @@ import java.util.TimerTask;
  Create a class `DemoPositionProvider` that implements `PositionProvider`.
  ***/
 public class DemoPositionProvider  implements
-        PositionProvider {
+        PositionProvider
+//
+{
 
     /***
      Add some member variables to `DemoPositionProvider`.
@@ -108,7 +110,7 @@ public class DemoPositionProvider  implements
     public boolean isRunning() {
         return isRunning ;
     }
-
+    //
     @Override
     public void addOnPositionUpdateListener(@Nullable OnPositionUpdateListener listener) {
 

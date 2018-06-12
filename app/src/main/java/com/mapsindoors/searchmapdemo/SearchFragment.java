@@ -37,20 +37,20 @@ import java.util.List;
  title: Create a Search Experience with MapsIndoors - Part 1
  ---
 
- This is an example of creating a simple search experience using MapsIndoors. We will create a map with a search button that leads to another view controller that handles the search and selection. On selection of a location, we go back to the map and shows the selected location on the map.
+ This is an example of creating a simple search experience using MapsIndoors. We will create a map with a search button that leads to another Fragment that handles the search and selection. On selection of a location, we go back to the map and shows the selected location on the map.
 
  We will start by creating a simple search controller that handles search and selection of MapsIndoors locations
 
- Declare a protocol for our location selection with a `didSelectLocation` method
+ Declare a listener for our location selection with a `onUserSelectedLocation` method
  ***/
 public class SearchFragment extends Fragment {
 
     /***
      Setup member variables for `SearchFragment`:
-
+     * An instance of type `LocationQuery.Builder`
      * An instance of type `LocationQuery`
      * The selection listener
-     * A List View
+     * A List View to show the search result
      * Some view components
      ***/
     LocationQuery.Builder iLocsQueryBuilder;
@@ -130,30 +130,34 @@ public class SearchFragment extends Fragment {
         mMainMenuList.setOnItemClickListener(mAdapterViewOnItemClickListener);
         mMainMenuList.invalidate();
 
+        /*** Instanciate the query builder ***/
+        iLocsQueryBuilder = new LocationQuery.Builder();
+
         /***
          Init and setup the view components for a better search experience.
          ***/
-        //Note: Creating a textwatcher as it's needed for software keyboard support.
+        //
+        /*** Note: Creating a textwatcher as it's needed for software keyboard support. ***/
         mSearchEditTextView.addTextChangedListener(mEditTextViewTextWatcher);
         mSearchEditTextView.setOnFocusChangeListener(mEditTextViewOnFocusChangeListener);
 
-        //Close keyboard and search when user presses search on the keyboard:
+        /*** Close keyboard and search when user presses search on the keyboard: ***/
         mSearchEditTextView.setOnEditorActionListener(mEditTextViewOnEditorActionListener);
 
-        //Close keyboard and search when user presses enter:
+        /***Close keyboard and search when user presses enter: ***/
         mSearchEditTextView.setOnKeyListener(mEditTextOnKeyListener);
 
-        // Clear search button
+        /*** Clear search button ***/
         mSearchClearBtn.setOnClickListener(mClearSearchButtonClickListener);
         mSearchClearBtn.setOnFocusChangeListener(mClearSearchButtonFocusChangeListener);
 
+        /*** Clear search button ***/
         mCSearchLocationsProvider = new MPLocationsProvider();
 
-        // Setup the query; the search string will be set where needed
-        iLocsQueryBuilder = new LocationQuery.Builder();
+        //
 
         mIsMenuCleared = true;
-        
+
     }
 
 
@@ -409,7 +413,7 @@ public class SearchFragment extends Fragment {
             }
 
     };
-
+//
 
     @Override
     public void onAttach(Context context) {
@@ -426,11 +430,10 @@ public class SearchFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onUserSelectedLocation(Location loc);
     }
-
+//
 
     public static SearchFragment newInstance( ) {
         SearchFragment fragment = new SearchFragment();
-
         return fragment;
     }
 
