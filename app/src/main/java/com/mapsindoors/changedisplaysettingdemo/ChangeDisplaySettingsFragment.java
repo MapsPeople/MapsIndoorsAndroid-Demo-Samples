@@ -114,7 +114,7 @@ public class ChangeDisplaySettingsFragment extends Fragment {
                 if( context != null )
                 {
                     context.runOnUiThread(() -> {
-                        mMapControl.selectFloor( 1 );
+                        mMapControl.selectFloor( 0 );
                         mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
                     });
                 }

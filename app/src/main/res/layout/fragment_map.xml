@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".showlocationdemo.ShowLocationFragment">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <fragment
         android:id="@+id/mapfragment"

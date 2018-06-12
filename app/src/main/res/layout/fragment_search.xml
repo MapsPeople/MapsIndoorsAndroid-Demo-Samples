@@ -77,7 +77,6 @@
         android:background="@color/white"
         >
 
-        <!-- TODO: Convert to RecyclerView -->
 
         <RelativeLayout
             android:layout_width="wrap_content"
