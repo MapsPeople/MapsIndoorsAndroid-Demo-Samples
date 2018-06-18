@@ -27,7 +27,7 @@ import com.mapsindoors.mapssdk.MapsIndoors;
  title: Create a Search Experience with MapsIndoors - Part 2
  ---
 
- This is part 2 of the tutorial of creating a simple search experience using MapsIndoors. [In Part 1 we created the search Fragment](searchmysearchcontroller). Now we will create the "main" controller displaying the map and eventually the selected location.
+ This is part 2 of the tutorial of creating a simple search experience using MapsIndoors. [In Part 1 we created the search Fragment](searchmapdemosearchfragment). Now we will create the "main" controller displaying the map and eventually the selected location.
 
  Start by creating a Fragment
  ***/

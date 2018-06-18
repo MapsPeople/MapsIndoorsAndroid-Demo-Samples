@@ -174,7 +174,7 @@ public class DemoPositionProvider  implements
 
 
     /***
-     In [Part 2](showmylocationshowmylocationcontroller) we will create the map fragment that displays the blue dot.
+     In [Part 2](showuserlocationshowuserlocationfragment) we will create the map fragment that displays the blue dot.
      ***/
     //
 

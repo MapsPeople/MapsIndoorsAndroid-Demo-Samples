@@ -408,4 +408,10 @@ public class SearchFragment extends Fragment {
     {
         return new SearchFragment();
     }
+
+    /***
+     In [Part 2](searchmapdemosearchmapfragment) we will create the map fragment that displays the search result.
+     ***/
+    //
 }
+
