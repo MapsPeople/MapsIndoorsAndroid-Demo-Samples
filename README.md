@@ -1,27 +1,19 @@
-# MapsIndoors
-
-[![Version](https://img.shields.io/cocoapods/v/MapsIndoors.svg?style=flat)](http://cocoapods.org/pods/MapsIndoors)
-[![License](https://img.shields.io/cocoapods/l/MapsIndoors.svg?style=flat)](http://cocoapods.org/pods/MapsIndoors)
-[![Platform](https://img.shields.io/cocoapods/p/MapsIndoors.svg?style=flat)](http://cocoapods.org/pods/MapsIndoors)
+# MapsIndoors Demo project
+This project contains Multiple fragments each one showcases a diffirent functionality of the Mapsindoors SDK.
 
 ## Usage
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+Clone the project and open it in Android Studio.
+
 
 ## Requirements
 
-## Installation
+First you need to generate a google maps key for android from this [link](https://developers.google.com/maps/documentation/android-sdk/signup) and put it in this file.
 
-MapsIndoors is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
-
-```ruby
-pod "MapsIndoors"
-```
 
 ## Author
 
-MapsPeople A/S, Daniel Nielsen, dn@mapspeople.com
+MapsPeople A/S, Mohammed Amine Naimi, man@mapspeople.com
 
 ## License
 
