@@ -151,21 +151,6 @@ public class LocationDetailsFragment extends Fragment
          ***/
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
 
-        mMapControl.init( miError -> {
-
-            if( getActivity() != null )
-            {
-                getActivity().runOnUiThread(() -> {
-                    /***
-                     Select a floor and animate the camera to the venue position
-                     ***/
-                    mMapControl.selectFloor( 1 );
-                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
-                    //
-                });
-            }
-        });
-
         /***
          When a marker is clicked, get the related MapsIndoors location object and set the label text based on the name and description of the location
          ***/
