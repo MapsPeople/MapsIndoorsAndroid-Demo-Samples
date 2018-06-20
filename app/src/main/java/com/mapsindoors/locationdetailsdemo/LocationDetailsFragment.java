@@ -147,7 +147,7 @@ public class LocationDetailsFragment extends Fragment
         }
 
         /***
-         Instanciate and init the MapControl object which will sync data
+         Instantiate and init the MapControl object which will sync data
          ***/
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
 
