@@ -133,3 +133,4 @@ app/src/main/res/raw/third_party_licenses
 build_file_checksums.ser
 app/src/main/res/values/google_maps_api.xml
 scripts/
+/.idea
