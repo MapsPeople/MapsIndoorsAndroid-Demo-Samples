@@ -143,7 +143,7 @@ public class SearchMapFragment extends Fragment
         }
 
         /***
-         Instanciate the MapControl object
+         Instantiate the MapControl object
          ***/
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
         /***

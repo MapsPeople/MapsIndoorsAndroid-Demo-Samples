@@ -120,7 +120,7 @@ public class SearchFragment extends Fragment {
         mMainMenuList.setOnItemClickListener(mAdapterViewOnItemClickListener);
         mMainMenuList.invalidate();
 
-        /*** Instanciate the query builder ***/
+        /*** Instantiate the query builder ***/
         iLocsQueryBuilder = new LocationQuery.Builder();
 
         /***

@@ -117,7 +117,7 @@ public class ShowUserLocationFragment extends Fragment {
         }
 
         /***
-         Instanciate and init the mapControl object
+         Instantiate and init the mapControl object
          ***/
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
         mMapControl.init( miError -> {

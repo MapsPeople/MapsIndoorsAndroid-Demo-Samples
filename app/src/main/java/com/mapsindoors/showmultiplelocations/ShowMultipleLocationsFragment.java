@@ -39,7 +39,7 @@ public class ShowMultipleLocationsFragment extends Fragment {
      ***/
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     /***
-     The query object and the querry builder
+     The query object and the query builder
      ***/
     LocationQuery mLocationQuery;
     LocationQuery.Builder mLocationQueryBuilder;
@@ -150,7 +150,7 @@ public class ShowMultipleLocationsFragment extends Fragment {
 
         mLocationQueryBuilder = new LocationQuery.Builder();
 
-        /*** init the query builder, in this case we will query for all to toilets ***/
+        /*** Init the query builder, in this case we will query for all to toilets ***/
         mLocationQueryBuilder.
                 setQuery("Toilet").
                 setOrderBy( LocationQuery.NO_ORDER ).
