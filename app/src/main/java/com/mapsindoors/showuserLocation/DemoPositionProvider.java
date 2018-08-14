@@ -1,7 +1,7 @@
 package com.mapsindoors.showuserLocation;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.mapsindoors.mapssdk.MPPositionResult;
 import com.mapsindoors.mapssdk.OnPositionUpdateListener;
