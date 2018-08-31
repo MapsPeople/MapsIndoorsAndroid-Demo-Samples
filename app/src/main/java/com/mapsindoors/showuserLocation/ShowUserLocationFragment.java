@@ -117,9 +117,28 @@ public class ShowUserLocationFragment extends Fragment {
         }
 
         /***
-         Instantiate and init the mapControl object
+         Instantiate the mapControl object
          ***/
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
+
+        /***
+         * Create an instance of the 'DemoPositionProvider' that we defined previously
+         ***/
+        DemoPositionProvider demoPositionProvider = new DemoPositionProvider();
+
+        /***
+         * Assign the `DemoPositionProvider` instance to the `MapsIndoors.positionProvider` by calling the 'MapsIndoors.setPositionProvider'
+         ***/
+        MapsIndoors.setPositionProvider(demoPositionProvider);
+
+        /***
+         * Tell the mapControl to show the users location
+         ***/
+        mMapControl.showUserPosition(true);
+
+        /***
+         Init the mapControl object
+         ***/
         mMapControl.init( miError -> {
 
             if( miError == null )
@@ -131,29 +150,15 @@ public class ShowUserLocationFragment extends Fragment {
                         mMapControl.selectFloor( 1 );
                         mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
 
+
+                        /***
+                         * Start positioning
+                         ***/
+                        demoPositionProvider.startPositioning(null);
                     });
                 }
             }
         });
-
-        /***
-         * Create an instance of the 'DemoPositionProvider' that we defined previously
-         ***/
-        DemoPositionProvider demoPositionProvider = new DemoPositionProvider();
-        /***
-         * Assign the `DemoPositionProvider` instance to the `MapsIndoors.positionProvider` by calling the 'MapsIndoors.setPositionProvider'
-         ***/
-        MapsIndoors.setPositionProvider(demoPositionProvider);
-        /***
-         * Start positioning
-         ***/
-        demoPositionProvider.startPositioning(null);
-        /***
-         * Tell the mapControl to show the users location
-         ***/
-        mMapControl.showUserPosition(true);
-
-        //
     }
 
     @Override

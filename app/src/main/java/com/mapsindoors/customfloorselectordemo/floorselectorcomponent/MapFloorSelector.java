@@ -19,9 +19,9 @@ import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.IFloorSelector;
 import com.mapsindoors.mapssdk.OnFloorSelectedListener;
 import com.mapsindoors.mapssdk.dbglog;
-import com.mapsindoors.mapssdk.models.Building;
-import com.mapsindoors.mapssdk.models.Floor;
-import com.mapsindoors.mapssdk.models.FloorBase;
+import com.mapsindoors.mapssdk.Building;
+import com.mapsindoors.mapssdk.Floor;
+import com.mapsindoors.mapssdk.FloorBase;
 
 import java.util.ArrayList;
 import java.util.Collections;

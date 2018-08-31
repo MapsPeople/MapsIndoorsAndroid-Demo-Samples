@@ -9,7 +9,7 @@ import com.mapsindoors.mapssdk.OnStateChangedListener;
 import com.mapsindoors.mapssdk.PermissionsAndPSListener;
 import com.mapsindoors.mapssdk.PositionProvider;
 import com.mapsindoors.mapssdk.PositionResult;
-import com.mapsindoors.mapssdk.models.Point;
+import com.mapsindoors.mapssdk.Point;
 
 import java.util.Timer;
 import java.util.TimerTask;

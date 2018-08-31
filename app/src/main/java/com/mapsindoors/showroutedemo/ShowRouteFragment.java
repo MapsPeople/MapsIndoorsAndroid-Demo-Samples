@@ -1,11 +1,14 @@
 package com.mapsindoors.showroutedemo;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +24,7 @@ import com.mapsindoors.mapssdk.MPRoutingProvider;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
 import com.mapsindoors.mapssdk.RoutingProvider;
-import com.mapsindoors.mapssdk.models.Point;
+import com.mapsindoors.mapssdk.Point;
 
 
 /**
@@ -129,17 +132,18 @@ public class ShowRouteFragment extends Fragment {
                 {
                     context.runOnUiThread( () -> {
 
-                        //setting the floor level programmatically
+                        // Setting the floor level programmatically
                         mMapControl.selectFloor( 1 );
 
-                        // make the route
+                        // Make the route
                         mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 19f ) );
+
+                        // Wait a bit before create/render the route
+                        new Handler( context.getMainLooper() ).postDelayed( this::routing, 2000 );
                     });
                 }
             }
         });
-
-        routing();
     }
 
     void routing()

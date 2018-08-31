@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.mapsindoors.DemoApplication;
 import com.mapsindoors.R;
-import com.mapsindoors.mapssdk.models.FloorBase;
+import com.mapsindoors.mapssdk.FloorBase;
 
 import java.util.ArrayList;
 

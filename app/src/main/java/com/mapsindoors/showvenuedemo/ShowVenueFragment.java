@@ -17,8 +17,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
-import com.mapsindoors.mapssdk.models.Venue;
-import com.mapsindoors.mapssdk.models.VenueCollection;
+import com.mapsindoors.mapssdk.Venue;
+import com.mapsindoors.mapssdk.VenueCollection;
 
 /**
  * A simple {@link Fragment} subclass.
