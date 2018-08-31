@@ -12,8 +12,8 @@
     <string name="show_multiple_locations_item_title">Show Multiple Locations Demo</string>
     <string name="show_route_item_title">Show Route Demo</string>
     <string name="show_venue_item_title">Show Venue Demo</string>
-    <string name="show_building_item_title">Show building Demo</string>
-    <string name="show_floor_item_title">Show floor Demo</string>
+    <string name="show_building_item_title">Show Building Demo</string>
+    <string name="show_floor_item_title">Show Floor Demo</string>
 
     <string name="change_displ_sett_item_title">Change Display Setting Demo</string>
 
