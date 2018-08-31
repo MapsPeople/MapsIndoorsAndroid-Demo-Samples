@@ -109,7 +109,8 @@ public class CustomFloorSelectorFragment extends Fragment {
             return;
         }
 
-        mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
+        mMapControl = new MapControl( getActivity() );
+        mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
         mMapControl.setFloorSelector( mMapFloorSelector );
         mMapControl.setFloorSelectorType( FloorSelectorType.ONLYCURRENTBUILDING );

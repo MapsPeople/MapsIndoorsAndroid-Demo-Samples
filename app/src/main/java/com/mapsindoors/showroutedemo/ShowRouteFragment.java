@@ -115,7 +115,8 @@ public class ShowRouteFragment extends Fragment {
 
         mRoutingProvider = new MPRoutingProvider();
 
-        mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
+        mMapControl = new MapControl( getActivity() );
+        mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
         mRoutingRenderer = new MPDirectionsRenderer( getContext(), mGoogleMap, mMapControl, null);
 

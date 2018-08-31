@@ -146,6 +146,7 @@ public class SearchMapFragment extends Fragment
          Instantiate the MapControl object
          ***/
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
+
         /***
          * init the MapControl object which will sync data.
          * When the init is done, if the 'locationToSelect' is not null we call the 'mMapControl.selectLocation()' to select the desired location otherwise select a floor

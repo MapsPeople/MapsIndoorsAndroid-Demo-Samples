@@ -102,7 +102,8 @@ public class ChangeFloorFragment extends Fragment {
             return;
         }
 
-        mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
+        mMapControl = new MapControl( getActivity() );
+        mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
         mMapControl.init( miError -> {
 
