@@ -1,7 +1,7 @@
 package com.mapsindoors.showuserLocation;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.mapsindoors.mapssdk.MPPositionResult;
 import com.mapsindoors.mapssdk.OnPositionUpdateListener;
@@ -9,7 +9,7 @@ import com.mapsindoors.mapssdk.OnStateChangedListener;
 import com.mapsindoors.mapssdk.PermissionsAndPSListener;
 import com.mapsindoors.mapssdk.PositionProvider;
 import com.mapsindoors.mapssdk.PositionResult;
-import com.mapsindoors.mapssdk.models.Point;
+import com.mapsindoors.mapssdk.Point;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -70,14 +70,14 @@ public class DemoPositionProvider  implements
 
 
     /***
-     Implement the `isPSEnabled` method to check is the Positionning system is working or not, in this case the PS is always working since it's a mocked positioning provider.
+     Implement the `isPSEnabled` method to check is the Positioning system is working or not, in this case the PS is always working since it's a mocked positioning provider.
      ***/
     @Override
     public boolean isPSEnabled() {
         return true ;
     }
     /***
-     Implement the `startPositioning` method. We set the `running` boolean to true and scheduel the repeating task of updating the user position by calling the updatePosition every 3 seconds.
+     Implement the `startPositioning` method. We set the `running` boolean to true and schedule the repeating task of updating the user position by calling the updatePosition every 3 seconds.
      ***/
     @Override
     public void startPositioning(@Nullable String arg) {
@@ -89,7 +89,6 @@ public class DemoPositionProvider  implements
         public void run() { updatePosition();}},
                 0,
                 3000);
-
     }
 
     /***

@@ -2,10 +2,10 @@ package com.mapsindoors.showmultiplelocations;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +39,7 @@ public class ShowMultipleLocationsFragment extends Fragment {
      ***/
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     /***
-     The query object and the querry builder
+     The query object and the query builder
      ***/
     LocationQuery mLocationQuery;
     LocationQuery.Builder mLocationQueryBuilder;
@@ -120,7 +120,9 @@ public class ShowMultipleLocationsFragment extends Fragment {
             return;
         }
 
-        mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
+        mMapControl = new MapControl( getActivity() );
+        mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
+
         mMapControl.init( miError -> {
 
             if( miError == null )
@@ -150,7 +152,7 @@ public class ShowMultipleLocationsFragment extends Fragment {
 
         mLocationQueryBuilder = new LocationQuery.Builder();
 
-        /*** init the query builder, in this case we will query for all to toilets ***/
+        /*** Init the query builder, in this case we will query for all to toilets ***/
         mLocationQueryBuilder.
                 setQuery("Toilet").
                 setOrderBy( LocationQuery.NO_ORDER ).

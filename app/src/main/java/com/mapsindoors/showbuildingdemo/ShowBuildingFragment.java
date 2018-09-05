@@ -2,8 +2,8 @@ package com.mapsindoors.showbuildingdemo;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +17,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
-import com.mapsindoors.mapssdk.models.Building;
+import com.mapsindoors.mapssdk.Building;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -93,7 +93,9 @@ public class ShowBuildingFragment extends Fragment {
             return;
         }
 
-        mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
+        mMapControl = new MapControl( getActivity() );
+        mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
+
         mMapControl.init( miError -> {
 
             if( miError == null )

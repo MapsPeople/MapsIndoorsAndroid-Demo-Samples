@@ -4,10 +4,10 @@ package com.mapsindoors.customfloorselectordemo.floorselectorcomponent;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.res.ResourcesCompat;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.mapsindoors.DemoApplication;
 import com.mapsindoors.R;
-import com.mapsindoors.mapssdk.models.FloorBase;
+import com.mapsindoors.mapssdk.FloorBase;
 
 import java.util.ArrayList;
 

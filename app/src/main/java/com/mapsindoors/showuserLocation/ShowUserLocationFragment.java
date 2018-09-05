@@ -2,10 +2,10 @@ package com.mapsindoors.showuserLocation;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,9 +117,28 @@ public class ShowUserLocationFragment extends Fragment {
         }
 
         /***
-         Instanciate and init the mapControl object
+         Instantiate the mapControl object
          ***/
         mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
+
+        /***
+         * Create an instance of the 'DemoPositionProvider' that we defined previously
+         ***/
+        DemoPositionProvider demoPositionProvider = new DemoPositionProvider();
+
+        /***
+         * Assign the `DemoPositionProvider` instance to the `MapsIndoors.positionProvider` by calling the 'MapsIndoors.setPositionProvider'
+         ***/
+        MapsIndoors.setPositionProvider(demoPositionProvider);
+
+        /***
+         * Tell the mapControl to show the users location
+         ***/
+        mMapControl.showUserPosition(true);
+
+        /***
+         Init the mapControl object
+         ***/
         mMapControl.init( miError -> {
 
             if( miError == null )
@@ -131,29 +150,15 @@ public class ShowUserLocationFragment extends Fragment {
                         mMapControl.selectFloor( 1 );
                         mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
 
+
+                        /***
+                         * Start positioning
+                         ***/
+                        demoPositionProvider.startPositioning(null);
                     });
                 }
             }
         });
-
-        /***
-         * Create an instance of the 'DemoPositionProvider' that we defined previously
-         ***/
-        DemoPositionProvider demoPositionProvider = new DemoPositionProvider();
-        /***
-         * Assign the `DemoPositionProvider` instance to the `MapsIndoors.positionProvider` by calling the 'MapsIndoors.setPositionProvider'
-         ***/
-        MapsIndoors.setPositionProvider(demoPositionProvider);
-        /***
-         * Start positioning
-         ***/
-        demoPositionProvider.startPositioning(null);
-        /***
-         * Tell the mapControl to show the users location
-         ***/
-        mMapControl.showUserPosition(true);
-
-        //
     }
 
     @Override
