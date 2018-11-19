@@ -1,4 +1,4 @@
-package mapsindoors.com.midemo;
+package com.mapsindoors;
 
 import org.junit.Test;
 

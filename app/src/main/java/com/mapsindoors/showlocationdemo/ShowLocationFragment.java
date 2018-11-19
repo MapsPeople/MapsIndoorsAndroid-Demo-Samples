@@ -2,10 +2,10 @@ package com.mapsindoors.showlocationdemo;
 
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +27,8 @@ import com.mapsindoors.mapssdk.errors.MIError;
 import java.util.Collections;
 import java.util.List;
 
-public class ShowLocationFragment extends Fragment {
+public class ShowLocationFragment extends Fragment
+{
 
 
     MapControl mMapControl;
