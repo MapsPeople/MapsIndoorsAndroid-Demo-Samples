@@ -3,8 +3,8 @@ package com.mapsindoors.searchmapdemo;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -23,8 +23,10 @@ import android.widget.ViewFlipper;
 
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.Location;
-import com.mapsindoors.mapssdk.LocationQuery;
-import com.mapsindoors.mapssdk.MPLocationsProvider;
+import com.mapsindoors.mapssdk.MPFilter;
+import com.mapsindoors.mapssdk.MPLocation;
+import com.mapsindoors.mapssdk.MPQuery;
+import com.mapsindoors.mapssdk.MapsIndoors;
 import com.mapsindoors.mapssdk.OnLocationsReadyListener;
 import com.mapsindoors.mapssdk.errors.MIError;
 import com.mapsindoors.searchmapdemo.adapter.IconTextListAdapter;
@@ -47,14 +49,11 @@ public class SearchFragment extends Fragment {
 
     /***
      Setup member variables for `SearchFragment`:
-     * An instance of type `LocationQuery.Builder`
-     * An instance of type `LocationQuery`
      * The selection listener
      * A List View to show the search result
      * Some view components
      ***/
-    LocationQuery.Builder iLocsQueryBuilder;
-    LocationQuery mSearchQuery;
+
     OnFragmentInteractionListener mListener;
     ListView mMainMenuList;
 
@@ -120,8 +119,6 @@ public class SearchFragment extends Fragment {
         mMainMenuList.setOnItemClickListener(mAdapterViewOnItemClickListener);
         mMainMenuList.invalidate();
 
-        /*** Instantiate the query builder ***/
-        iLocsQueryBuilder = new LocationQuery.Builder();
 
         /***
          Init and setup the view components for a better search experience.
@@ -140,9 +137,6 @@ public class SearchFragment extends Fragment {
         /*** Clear search button ***/
         mSearchClearBtn.setOnClickListener(mClearSearchButtonClickListener);
         mSearchClearBtn.setOnFocusChangeListener(mClearSearchButtonFocusChangeListener);
-
-        /*** Clear search button ***/
-        mCSearchLocationsProvider = new MPLocationsProvider();
 
         //
 
@@ -314,7 +308,6 @@ public class SearchFragment extends Fragment {
      * Non-empty search string
      */
     String mCSearchString;
-    MPLocationsProvider mCSearchLocationsProvider;
 
     private Runnable searchRunner = new Runnable()
     {
@@ -334,40 +327,22 @@ public class SearchFragment extends Fragment {
                     // Show as busy
                     mViewFlipper.setDisplayedChild(1);
 
-                            iLocsQueryBuilder.
-                                    setCategories( null ).
-                                    setOrderBy( LocationQuery.RELEVANCE ).
-                                    setQueryMode( LocationQuery.MODE_PREFER_ONLINE );
 
+                    MPQuery q = new MPQuery.Builder().setQuery(mCSearchString).build();
+                    MPFilter f = new MPFilter.Builder().setTake(10).build();
 
-                    mSearchQuery = iLocsQueryBuilder.build();
-                    // Indoor locations - setup the search query
-                    mSearchQuery.setQuery( mCSearchString );
-
-                    mCSearchLocationsProvider.getLocationsAsync( mSearchQuery, mSearchLocationsReadyListener );
+                    MapsIndoors.getLocationsAsync(q, f, (locs, err) -> {
+                        mViewFlipper.setDisplayedChild(0);
+                        if(locs != null){
+                            mListAdapter.setList(locs);
+                        }
+                  });
                 }
             }
 
         }
     };
 
-
-    OnLocationsReadyListener mSearchLocationsReadyListener = new OnLocationsReadyListener() {
-
-        @Override
-        public void onLocationsReady(@Nullable List<Location> locations, @Nullable MIError error) {
-
-            if(locations != null){
-
-                getActivity().runOnUiThread( () -> {
-                    mViewFlipper.setDisplayedChild(0);
-
-                    mListAdapter.setList(locations);
-                } );
-            }
-        }
-
-    };
 
 
     /***
@@ -381,7 +356,7 @@ public class SearchFragment extends Fragment {
 
             if( mListener != null )
             {
-                mListener.onUserSelectedLocation( (Location) mListAdapter.getItem( position ) );
+                mListener.onUserSelectedLocation( (MPLocation) mListAdapter.getItem( position ) );
             }
         }
     };
@@ -400,7 +375,7 @@ public class SearchFragment extends Fragment {
      Declare an interface that will handle the communication between the fragment and the activity.
      ***/
     public interface OnFragmentInteractionListener {
-        void onUserSelectedLocation(Location loc);
+        void onUserSelectedLocation(MPLocation loc);
     }
 
 

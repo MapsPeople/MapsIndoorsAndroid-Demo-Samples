@@ -2,10 +2,10 @@ package com.mapsindoors.showuserLocation;
 
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,7 +119,8 @@ public class ShowUserLocationFragment extends Fragment {
         /***
          Instantiate the mapControl object
          ***/
-        mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
+        mMapControl = new MapControl( getActivity() );
+        mMapControl.setGoogleMap(mGoogleMap, mMapFragment.getView());
 
         /***
          * Create an instance of the 'DemoPositionProvider' that we defined previously

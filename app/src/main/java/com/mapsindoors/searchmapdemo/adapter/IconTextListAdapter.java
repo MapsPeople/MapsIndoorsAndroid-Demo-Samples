@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.Location;
+import com.mapsindoors.mapssdk.MPLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +18,12 @@ import java.util.List;
 public class IconTextListAdapter extends BaseAdapter {
     private static final String TAG = IconTextListAdapter.class.getSimpleName();
 
-    private List<Location> mItemList;
+    private List<MPLocation> mItemList;
     private Context context;
 
 
 
-    public IconTextListAdapter(Context context, List<Location> itemList) {
+    public IconTextListAdapter(Context context, List<MPLocation> itemList) {
 
         mItemList = new ArrayList<>();
         mItemList.addAll(itemList);
@@ -31,7 +32,7 @@ public class IconTextListAdapter extends BaseAdapter {
     }
 
 
-    public void setList(List<Location> itemList) {
+    public void setList(List<MPLocation> itemList) {
         mItemList.clear();
 
        mItemList.addAll(itemList);
@@ -39,7 +40,7 @@ public class IconTextListAdapter extends BaseAdapter {
        notifyDataSetChanged();
     }
 
-    public void addToList(Location newElement) {
+    public void addToList(MPLocation newElement) {
         mItemList.add(newElement);
     }
 
@@ -64,7 +65,7 @@ public class IconTextListAdapter extends BaseAdapter {
 
         View mainView = inflater.inflate(R.layout.control_searchmenu_item, null, true);
 
-        Location element = mItemList.get(index);
+        MPLocation element = mItemList.get(index);
         TextView locationLabel = mainView.findViewById(R.id.ctrl_mainmenu_textitem) ;
         locationLabel.setText(element.getName());
 

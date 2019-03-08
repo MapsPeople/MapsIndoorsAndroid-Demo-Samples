@@ -3,10 +3,10 @@ package com.mapsindoors.searchmapdemo;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +19,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.Location;
+import com.mapsindoors.mapssdk.MPLocation;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
 
@@ -47,7 +48,7 @@ public class SearchMapFragment extends Fragment
      ***/
     SupportMapFragment mMapFragment;
     Button searchButton;
-    Location locationToSelect = null;
+    MPLocation locationToSelect = null;
 
     /***
      A listener to report the click on the search Button to the activity
@@ -145,7 +146,8 @@ public class SearchMapFragment extends Fragment
         /***
          Instantiate the MapControl object
          ***/
-        mMapControl = new MapControl( getActivity(), mMapFragment, mGoogleMap );
+        mMapControl = new MapControl( getActivity() );
+        mMapControl.setGoogleMap(mGoogleMap, mMapFragment.getView());
 
         /***
          * init the MapControl object which will sync data.
@@ -185,7 +187,7 @@ public class SearchMapFragment extends Fragment
     /***
      A public method to select a location
      ***/
-    public void selectLocation(Location loc){
+    public void selectLocation(MPLocation loc){
         locationToSelect = loc;
     }
     //

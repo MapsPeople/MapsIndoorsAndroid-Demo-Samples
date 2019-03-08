@@ -1,4 +1,4 @@
-package com.mapsindoors.locationdetailsdemo;
+package com.mapsindoors.locationdatasource;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,26 +17,31 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.mapsindoors.R;
-import com.mapsindoors.mapssdk.Location;
-import com.mapsindoors.mapssdk.LocationPropertyNames;
-import com.mapsindoors.mapssdk.MPLocation;
+import com.mapsindoors.locationdetailsdemo.LocationDetailsFragment;
+import com.mapsindoors.mapssdk.LocationDisplayRule;
+import com.mapsindoors.mapssdk.MPLocationSource;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
-
+import com.mapsindoors.mapssdk.OnResultReadyListener;
+import com.mapsindoors.mapssdk.errors.MIError;
 
 /***
  ---
- title: Show Location Details
+ title: Creating your own Location Source - Part 2
  ---
 
- This is an example of displaying some details of a MapsIndoors location
+ > Note! This document describes a pre-release feature. We reserve the right to change this feature and the corresponding interfaces without further notice. Any mentioned SDK versions are not intended for production use.
 
- Start by creating a `Fragment or an Activity` class that contains the google map fragment
+ This is part 2 of the tutorial of building a custom Location Source, representing locations of people. [In Part 1 we created the Location Source](locationdatasourcespeoplelocationdatasource). Now we will create a Fragment displaying a map that shows the mocked people locations on top of a MapsIndoors map.
+
+ Create a class `LocationDataSourcesFragment` that extends `Fragment`.
  ***/
 
-public class LocationDetailsFragment extends Fragment
-//
-{
+public class LocationDataSourcesFragment  extends Fragment {
+
+
+    final String PEOPLE_TYPE = "People";
+     final int POI_GROUP_ID = 1;
 
     /***
      Add a `GoogleMap` and a `MapControl` to the class
@@ -49,7 +54,6 @@ public class LocationDetailsFragment extends Fragment
      ***/
 
     SupportMapFragment mMapFragment;
-    TextView detailsTextView;
 
     /***
      The lat lng of the Venue
@@ -57,14 +61,14 @@ public class LocationDetailsFragment extends Fragment
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     //
 
-    public LocationDetailsFragment()
+    public LocationDataSourcesFragment()
     {
         // Required empty public constructor
     }
 
-    public static LocationDetailsFragment newInstance()
+    public static LocationDataSourcesFragment newInstance()
     {
-        return new LocationDetailsFragment();
+        return new LocationDataSourcesFragment();
     }
 
 
@@ -83,6 +87,7 @@ public class LocationDetailsFragment extends Fragment
         super.onViewCreated( view, savedInstanceState );
 
         setupView( view );
+
     }
 
     @Override
@@ -104,7 +109,6 @@ public class LocationDetailsFragment extends Fragment
     {
         FragmentManager fm = getChildFragmentManager();
 
-        detailsTextView = rootView.findViewById( R.id.details_text_view );
 
         mMapFragment = (SupportMapFragment) fm.findFragmentById( R.id.mapfragment );
 
@@ -130,6 +134,10 @@ public class LocationDetailsFragment extends Fragment
      ***/
     void setupMapsIndoors()
     {
+
+
+        MapsIndoors.onApplicationTerminate();
+
         /***
          Setting the API key to the desired solution
          ***/
@@ -148,35 +156,41 @@ public class LocationDetailsFragment extends Fragment
         }
 
         /***
+         Set the location sources to `PeopleDataSource` and `MapsIndoorsLocationSource`
+         ***/
+        MapsIndoors.setLocationSources(new MPLocationSource[]{  new PeopleDataSource(PEOPLE_TYPE), MapsIndoors.getMapsIndoorsLocationSource() }, new OnResultReadyListener() {
+            @Override
+            public void onResultReady(@Nullable MIError error) {
+
+                if (error != null) {
+                    Toast.makeText(getContext(), "Error occured when setting the Datasources", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+        /***
          Instantiate and init the MapControl object which will sync data
          ***/
         mMapControl = new MapControl( getActivity() );
         mMapControl.setGoogleMap(mGoogleMap, mMapFragment.getView());
 
+
         /***
-         When a marker is clicked, get the related MapsIndoors location object and set the label text based on the name and description of the location
+         Setup a display setting that refers to the type of locations that your location source operates with.
          ***/
-        mMapControl.setOnMarkerClickListener( marker -> {
+        LocationDisplayRule peopleTypeDisplayRule = new LocationDisplayRule.Builder(PEOPLE_TYPE).
 
-            final MPLocation loc = mMapControl.getLocation( marker );
-            if( loc != null )
-            {
-                marker.showInfoWindow();
+                setBitmapDrawableIcon(R.drawable.generic_user).
+                setVisible(true).
+                setShowLabel(false).
+                setZoomLevelOn(18).
+                setLocationClusterId(POI_GROUP_ID).
+                setDisplayRank(1).
+                setVisible(true).
+                build();
 
-                if( detailsTextView.getVisibility() != View.VISIBLE )
-                {
-                    detailsTextView.setVisibility( View.VISIBLE );
-                }
-
-                /***
-                 Show the Name and the description of a POI in a label
-                 ***/
-                detailsTextView.setText( "Name: " + loc.getName() + "\nDescription: " + loc.getStringProperty( LocationPropertyNames.DESCRIPTION ) );
-            }
-
-            return true;
-        } );
-
+        mMapControl.addDisplayRule(peopleTypeDisplayRule);
 
         /***
          Init the MapControl object which will sync data
@@ -199,4 +213,9 @@ public class LocationDetailsFragment extends Fragment
             }
         });
     }
+
+
+
+
+
 }

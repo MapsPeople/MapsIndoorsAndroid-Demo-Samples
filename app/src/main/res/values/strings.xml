@@ -22,7 +22,9 @@
     <string name="show_my_location_item_title">Show My Location Demo</string>
     <string name="multiple_dataset_item_title">Multiple Datasets Demo</string>
 
-    <string name="Search_Map_item_title">Search Map Demo</string>
+    <string name="Search_map_item_title">Search Map Demo</string>
+    <string name="clustering_item_title">Clustering Demo</string>
+    <string name="location_data_source_item_title">Location data sources Demo</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

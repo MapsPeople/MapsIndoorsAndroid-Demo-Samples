@@ -2,10 +2,10 @@ package com.mapsindoors.showlocationdemo;
 
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,18 +16,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.mapsindoors.R;
-import com.mapsindoors.mapssdk.Location;
-import com.mapsindoors.mapssdk.LocationQuery;
-import com.mapsindoors.mapssdk.MPLocationsProvider;
+import com.mapsindoors.mapssdk.MPFilter;
+import com.mapsindoors.mapssdk.MPQuery;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
-import com.mapsindoors.mapssdk.OnLocationsReadyListener;
-import com.mapsindoors.mapssdk.errors.MIError;
 
-import java.util.Collections;
-import java.util.List;
-
-public class ShowLocationFragment extends Fragment {
+public class ShowLocationFragment extends Fragment
+{
 
 
     MapControl mMapControl;
@@ -36,9 +31,6 @@ public class ShowLocationFragment extends Fragment {
 
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
 
-    //query objects
-    LocationQuery         mLocationQuery;
-    LocationQuery.Builder mLocationQueryBuilder;
 
 
     public ShowLocationFragment()
@@ -135,38 +127,29 @@ public class ShowLocationFragment extends Fragment {
         });
     }
 
-    MPLocationsProvider mLocationsProvider;
+
+
 
     void queryLocation()
     {
-        mLocationsProvider = new MPLocationsProvider();
 
-        mLocationQueryBuilder = new LocationQuery.Builder();
 
-        // Init the query builder, in this case we will query the coffee machine in our office
-        mLocationQueryBuilder.
-                setQuery("coffee machine").
-                setOrderBy( LocationQuery.NO_ORDER ).
-                setFloor(1).
-                setMaxResults(1);
+        /*** Init the query builder and build a query, in this case we will query for coffee machines***/
+        MPQuery query = new MPQuery.Builder().setQuery("coffee machine").build();
 
-        // Build the query
-        mLocationQuery = mLocationQueryBuilder.build();
+        /*** Init the filter builder and build a filter, the criterias in this case we want 1 coffee machine from the 1st floor***/
+        MPFilter filter = new MPFilter.Builder().setTake(1).
+                setFloorIndex(1).
+                build();
 
-        // Query the data
-        mLocationsProvider.getLocationsAsync( mLocationQuery, mSearchLocationsReadyListener );
+
+        /*** Query the data ***/
+        MapsIndoors.getLocationsAsync(query, filter, (locs, err) -> {
+            if(locs != null && locs.size() != 0 ){
+                mMapControl.displaySearchResults( locs, true );
+            }
+        });
+
     }
 
-
-    OnLocationsReadyListener mSearchLocationsReadyListener = new OnLocationsReadyListener()
-    {
-        @Override
-        public void onLocationsReady( @Nullable List< Location > locations, @Nullable MIError error )
-        {
-            if( locations != null && locations.size() != 0 )
-            {
-                mMapControl.displaySearchResults( Collections.singletonList( locations.get( 0 ) ), true );
-            }
-        }
-    };
 }

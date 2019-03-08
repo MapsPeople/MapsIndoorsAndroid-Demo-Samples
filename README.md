@@ -1,5 +1,5 @@
 # MapsIndoors Demo project
-This project contains Multiple fragments each one showcases a diffirent functionality of the Mapsindoors SDK.
+This project contains Multiple fragments each one showcases a different functionality of the MapsIndoors SDK.
 
 ## Usage
 

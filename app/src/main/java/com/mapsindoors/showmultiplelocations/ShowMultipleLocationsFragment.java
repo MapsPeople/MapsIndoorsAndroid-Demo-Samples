@@ -2,10 +2,10 @@ package com.mapsindoors.showmultiplelocations;
 
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +17,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.Location;
-import com.mapsindoors.mapssdk.LocationQuery;
-import com.mapsindoors.mapssdk.MPLocationsProvider;
+import com.mapsindoors.mapssdk.MPFilter;
+import com.mapsindoors.mapssdk.MPQuery;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
 import com.mapsindoors.mapssdk.OnLocationsReadyListener;
@@ -41,8 +41,8 @@ public class ShowMultipleLocationsFragment extends Fragment {
     /***
      The query object and the query builder
      ***/
-    LocationQuery mLocationQuery;
-    LocationQuery.Builder mLocationQueryBuilder;
+    /*LocationQuery mLocationQuery;
+    LocationQuery.Builder mLocationQueryBuilder;*/
 
     SupportMapFragment mMapFragment;
 
@@ -143,40 +143,28 @@ public class ShowMultipleLocationsFragment extends Fragment {
     }
 
 
-    MPLocationsProvider mLocationsProvider;
 
 
     void queryLocation()
     {
-        mLocationsProvider = new MPLocationsProvider();
 
-        mLocationQueryBuilder = new LocationQuery.Builder();
 
-        /*** Init the query builder, in this case we will query for all to toilets ***/
-        mLocationQueryBuilder.
-                setQuery("Toilet").
-                setOrderBy( LocationQuery.NO_ORDER ).
-                setFloor(1).
-                setMaxResults(50);
+        /*** Init the query builder and build a query, in this case we will query for all to toilets***/
+        MPQuery query = new MPQuery.Builder().setQuery("Toilet").build();
 
-        /*** Build the query ***/
-        mLocationQuery = mLocationQueryBuilder.build();
+        /*** Init the filter builder and build a filter, the criterias in this case we want maximum 50 toilets from the 1st floor***/
+        MPFilter filter = new MPFilter.Builder().setTake(50).
+                setFloorIndex(1).
+                build();
+
 
         /*** Query the data ***/
-        mLocationsProvider.getLocationsAsync( mLocationQuery, mSearchLocationsReadyListener );
+        MapsIndoors.getLocationsAsync(query, filter, (locs, err) -> {
+            if(locs != null && locs.size() != 0 ){
+                mMapControl.displaySearchResults( locs, true, 40 );
+            }
+        });
+
     }
 
-    /*** Show search on map When the 'OnLocationsReadyListener' is called ***/
-    OnLocationsReadyListener mSearchLocationsReadyListener = new OnLocationsReadyListener()
-    {
-        @Override
-        public void onLocationsReady( @Nullable List<Location> locations, @Nullable MIError error )
-        {
-            if( locations != null && locations.size() != 0 )
-            {
-                /* Display the locations on the map */
-                mMapControl.displaySearchResults( locations, true, 40 );
-            }
-        }
-    };
 }

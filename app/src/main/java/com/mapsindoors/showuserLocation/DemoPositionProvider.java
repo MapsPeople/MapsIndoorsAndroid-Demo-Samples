@@ -1,7 +1,7 @@
 package com.mapsindoors.showuserLocation;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.mapsindoors.mapssdk.MPPositionResult;
 import com.mapsindoors.mapssdk.OnPositionUpdateListener;
@@ -128,14 +128,16 @@ public class DemoPositionProvider  implements
     }
 
     @Override
-    public void addOnstateChangedListener(OnStateChangedListener onStateChangedListener) {
+    public void addOnStateChangedListener(@Nullable OnStateChangedListener onStateChangedListener) {
 
     }
 
     @Override
-    public void removeOnstateChangedListener(OnStateChangedListener onStateChangedListener) {
+    public void removeOnStateChangedListener(@Nullable OnStateChangedListener onStateChangedListener) {
 
     }
+
+
 
     @Override
     public void checkPermissionsAndPSEnabled(PermissionsAndPSListener permissionAPSlist) {
