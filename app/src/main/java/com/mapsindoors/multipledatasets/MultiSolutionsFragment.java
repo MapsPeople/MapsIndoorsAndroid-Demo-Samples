@@ -93,11 +93,14 @@ public class MultiSolutionsFragment extends Fragment
     @Override
     public void onDestroyView()
     {
+
+
         if( mMapControl != null )
         {
             mMapControl.onDestroy();
         }
 
+        MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
         super.onDestroyView();
     }
     //endregion

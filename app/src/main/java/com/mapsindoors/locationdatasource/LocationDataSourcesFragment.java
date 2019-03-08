@@ -16,6 +16,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.mapsindoors.DemoApplication;
 import com.mapsindoors.R;
 import com.mapsindoors.locationdetailsdemo.LocationDetailsFragment;
 import com.mapsindoors.mapssdk.LocationDisplayRule;
@@ -23,6 +24,7 @@ import com.mapsindoors.mapssdk.MPLocationSource;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
 import com.mapsindoors.mapssdk.OnResultReadyListener;
+import com.mapsindoors.mapssdk.OnSyncDataReadyListener;
 import com.mapsindoors.mapssdk.errors.MIError;
 
 /***
@@ -128,7 +130,7 @@ public class LocationDataSourcesFragment  extends Fragment {
         }
     };
 
-
+    PeopleDataSource peopleDataSource;
     /***
      Setup MapsIndoors
      ***/
@@ -136,38 +138,52 @@ public class LocationDataSourcesFragment  extends Fragment {
     {
 
 
-        MapsIndoors.onApplicationTerminate();
+      //  MapsIndoors.onApplicationTerminate();
 
-        /***
-         Setting the API key to the desired solution
-         ***/
-        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
-        {
-            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
-        }
+
+      //  MapsIndoors.initialize( getActivity().getApplicationContext(), getString( R.string.mi_api_key )  );
+
 
         /***
          Setting the Google API key
          ***/
-        MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
+        //MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
         if( getActivity() == null )
         {
             return;
         }
 
+         peopleDataSource = new PeopleDataSource(PEOPLE_TYPE);
+
         /***
          Set the location sources to `PeopleDataSource` and `MapsIndoorsLocationSource`
          ***/
-        MapsIndoors.setLocationSources(new MPLocationSource[]{  new PeopleDataSource(PEOPLE_TYPE), MapsIndoors.getMapsIndoorsLocationSource() }, new OnResultReadyListener() {
+     MapsIndoors.setLocationSources(new MPLocationSource[]{peopleDataSource   }, new OnResultReadyListener() {
             @Override
             public void onResultReady(@Nullable MIError error) {
 
                 if (error != null) {
                     Toast.makeText(getContext(), "Error occured when setting the Datasources", Toast.LENGTH_SHORT).show();
                 }
+                else {
+
+                    setupMapcontrol();
+                }
             }
         });
+       //     setupMapcontrol();
 
+     /*   MapsIndoors.synchronizeContent(new OnSyncDataReadyListener() {
+            @Override
+            public void onSyncReady(@Nullable MIError error) {
+                peopleDataSource.createMockMPLocations();
+            }
+        });*/
+
+    }
+
+
+    void setupMapcontrol(){
 
         /***
          Instantiate and init the MapControl object which will sync data
@@ -187,7 +203,6 @@ public class LocationDataSourcesFragment  extends Fragment {
                 setZoomLevelOn(18).
                 setLocationClusterId(POI_GROUP_ID).
                 setDisplayRank(1).
-                setVisible(true).
                 build();
 
         mMapControl.addDisplayRule(peopleTypeDisplayRule);
@@ -199,22 +214,22 @@ public class LocationDataSourcesFragment  extends Fragment {
 
             if( miError == null )
             {
+                peopleDataSource.createMockMPLocations();
+
                 Activity context = getActivity();
                 if( context != null )
                 {
-                    context.runOnUiThread( () -> {
-                        /***
-                         Select a floor and animate the camera to the venue position
-                         ***/
-                        mMapControl.selectFloor( 1 );
-                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
-                    });
+                    //context.runOnUiThread( () -> {
+                    /***
+                     Select a floor and animate the camera to the venue position
+                     ***/
+                    mMapControl.selectFloor( 1 );
+                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
+                    // });
                 }
             }
         });
     }
-
-
 
 
 

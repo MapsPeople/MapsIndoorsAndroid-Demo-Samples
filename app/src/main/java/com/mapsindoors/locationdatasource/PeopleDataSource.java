@@ -55,6 +55,8 @@ public class PeopleDataSource implements MPLocationSource {
     BuildingCollection buildingCollection;
     int peoplesNumber = 100;
 
+
+    String type;
     /***
      Create a Constructor that takes a type string. Call `generatePeoplesLocations` and `startMockingPersonsPositions`.
      ***/
@@ -62,14 +64,10 @@ public class PeopleDataSource implements MPLocationSource {
 
         status = MPLocationSourceStatus.NOT_INITIALIZED;
 
-        buildingCollection = MapsIndoors.getBuildings();
+
+        this.type = type;
 
 
-        locationsList.addAll(generatePeoplesLocations( type));
-
-        status = MPLocationSourceStatus.AVAILABLE;
-
-        startMockingPersonsPositions();
 
     }
     /***
@@ -100,6 +98,13 @@ public class PeopleDataSource implements MPLocationSource {
     }
 
 
+    public void createMockMPLocations(){
+        buildingCollection = MapsIndoors.getBuildings();
+        locationsList.addAll(generatePeoplesLocations( type));
+        startMockingPersonsPositions();
+        status = MPLocationSourceStatus.AVAILABLE;
+
+    }
     /***
      Create a method called `updatePeoplesPositionsRandomly`. Iterate numberOfPeople again and for each iteration:
      * Get the corresponding MPLocation Builder

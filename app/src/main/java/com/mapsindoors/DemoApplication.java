@@ -27,13 +27,13 @@ public class DemoApplication extends Application
         // Initialize the MapsIndoors SDK here by providing:
         // - The application context
         // - The MapsIndoors API key
-        MapsIndoors.initialize(
+     MapsIndoors.initialize(
                 getApplicationContext(),
                 getString( R.string.mi_api_key)
         );
 
         // Your Google Maps API key
-        MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
+     //   MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
 
         sInstance = this;
     }

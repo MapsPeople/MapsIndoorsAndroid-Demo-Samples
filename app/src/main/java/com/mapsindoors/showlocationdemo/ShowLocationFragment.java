@@ -76,11 +76,6 @@ public class ShowLocationFragment extends Fragment
 
     private void setupView( View rootView )
     {
-        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
-        {
-            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
-        }
-
         FragmentManager fm = getChildFragmentManager();
 
         mMapFragment = (SupportMapFragment) fm.findFragmentById( R.id.mapfragment );
@@ -105,6 +100,13 @@ public class ShowLocationFragment extends Fragment
         {
             return;
         }
+
+
+
+        MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
+        MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
+
+
 
         mMapControl = new MapControl( getActivity() );
         mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );

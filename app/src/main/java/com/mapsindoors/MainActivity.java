@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         mNavigationView.setNavigationItemSelectedListener(this);
 
         // showing the first demo
-        onNavigationItemSelected(mNavigationView.getMenu().getItem(0));
+        onNavigationItemSelected(mNavigationView.getMenu().getItem(12));
     }
 
     @Override
