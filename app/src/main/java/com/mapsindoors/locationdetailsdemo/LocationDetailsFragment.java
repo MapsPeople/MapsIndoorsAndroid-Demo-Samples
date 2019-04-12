@@ -171,7 +171,7 @@ public class LocationDetailsFragment extends Fragment
                 /***
                  Show the Name and the description of a POI in a label
                  ***/
-                detailsTextView.setText( "Name: " + loc.getName() + "\nDescription: " + loc.getStringProperty( LocationPropertyNames.DESCRIPTION ) );
+                detailsTextView.setText( "Name: " + loc.getName() + "\nDescription: " + loc.getDescription() );
             }
 
             return true;

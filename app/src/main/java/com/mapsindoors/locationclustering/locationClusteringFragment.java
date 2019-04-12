@@ -183,11 +183,6 @@ public class locationClusteringFragment extends Fragment {
                 return getCircularImageWithText(""+ locations.size(),textSize,imageSize.width, imageSize.height );
             }
 
-            @Override
-            public boolean getImage(@NonNull String clusterId, @NonNull List<MPLocation> locations, @NonNull ImageSize imageSize, @NonNull OnSingleImageLoadedListener listener) {
-                return false;
-            }
-
             @NonNull
             @Override
             public ImageSize getImageSize(@NonNull String clusterId, int count) {

@@ -126,7 +126,7 @@ public class ChangeDisplaySettingsFragment extends Fragment {
     void changeDisplayRules()
     {
         final LocationDisplayRule rule = new LocationDisplayRule.Builder( "MeetingRoom" ).
-                setIcon( R.drawable.archive, 20, 20 ).
+                setBitmapDrawableIcon( R.drawable.archive, 20, 20 ).
                 setZoomLevelOn( 16 ).
                 setVisible( true ).
                 build();
