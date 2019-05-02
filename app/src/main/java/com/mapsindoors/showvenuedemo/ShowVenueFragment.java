@@ -1,9 +1,10 @@
 package com.mapsindoors.showvenuedemo;
 
+
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +28,12 @@ import com.mapsindoors.mapssdk.VenueCollection;
  * Use the {@link ShowVenueFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ShowVenueFragment extends Fragment {
+public class ShowVenueFragment extends Fragment
+{
 
-
-    MapControl mMapControl;
+    MapControl         mMapControl;
     SupportMapFragment mMapFragment;
-    GoogleMap mGoogleMap;
+    GoogleMap          mGoogleMap;
 
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
 
@@ -50,14 +51,16 @@ public class ShowVenueFragment extends Fragment {
     //region FRAGMENT
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView( LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
         setupView(rootView);
 
         return rootView;
     }
+
+
 
     private void setupView(View rootView) {
 

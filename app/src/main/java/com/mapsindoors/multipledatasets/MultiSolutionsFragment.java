@@ -1,11 +1,12 @@
 package com.mapsindoors.multipledatasets;
 
+
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,6 @@ import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -27,12 +27,12 @@ import com.mapsindoors.mapssdk.MapsIndoors;
  * Use the {@link MultiSolutionsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MultiSolutionsFragment extends Fragment {
+public class MultiSolutionsFragment extends Fragment
+{
 
-
-    MapControl mMapControl;
+    MapControl         mMapControl;
     SupportMapFragment mMapFragment;
-    GoogleMap mGoogleMap;
+    GoogleMap          mGoogleMap;
 
 
     final        LatLng MAPSPEOPLE_CORPORATE_HQ_LOCATION       = new LatLng( 57.05813067, 9.95058065 );
@@ -62,10 +62,10 @@ public class MultiSolutionsFragment extends Fragment {
     //region FRAGMENT LIFECYCLE
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView( LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        return inflater.inflate( R.layout.fragment_map, container, false);
     }
 
     @Override

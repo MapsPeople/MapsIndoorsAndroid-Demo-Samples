@@ -1,12 +1,13 @@
 package com.mapsindoors.searchmapdemo;
 
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,24 +40,24 @@ public class SearchMapFragment extends Fragment
      Add a `GoogleMap` and a `MapControl` to the class
      ***/
     MapControl mMapControl;
-    GoogleMap mGoogleMap;
+    GoogleMap  mGoogleMap;
 
 
     /***
      Add other needed views for this example
      ***/
     SupportMapFragment mMapFragment;
-    Button searchButton;
-    Location locationToSelect = null;
+    Button             searchButton;
+    Location           locationToSelect = null;
 
     /***
      A listener to report the click on the search Button to the activity
      ***/
-    private OnFragmentInteractionListener mListener;
+    private      OnFragmentInteractionListener mListener;
     /***
      The lat lng of the Venue
      ***/
-    static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
+    static final LatLng                        VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     //
 
     public SearchMapFragment()
@@ -80,9 +81,9 @@ public class SearchMapFragment extends Fragment
     //region FRAGMENT LIFECYCLE
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_search_map, container, false);
+    public View onCreateView( LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
+        return inflater.inflate( R.layout.fragment_search_map, container, false);
     }
 
     @Override
@@ -155,7 +156,6 @@ public class SearchMapFragment extends Fragment
 
             if( miError == null )
             {
-
                 Activity context = getActivity();
                 if( context != null )
                 {
@@ -190,7 +190,7 @@ public class SearchMapFragment extends Fragment
     }
     //
     @Override
-    public void onAttach(Context context) {
+    public void onAttach( Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;

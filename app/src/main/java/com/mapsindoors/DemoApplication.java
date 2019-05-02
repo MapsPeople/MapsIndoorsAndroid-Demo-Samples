@@ -1,5 +1,6 @@
 package com.mapsindoors;
 
+
 import android.app.Application;
 import android.content.res.Configuration;
 
@@ -8,8 +9,8 @@ import com.mapsindoors.mapssdk.dbglog;
 
 public class DemoApplication extends Application
 {
-    public static final String TAG = DemoApplication.class.getSimpleName();
-    private static Application sInstance;
+    public static final String      TAG = DemoApplication.class.getSimpleName();
+    private static      Application sInstance;
 
     // Called when the application is starting, before any other application objects have been created.
     // Overriding this method is totally optional!

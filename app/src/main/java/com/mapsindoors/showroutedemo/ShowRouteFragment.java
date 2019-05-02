@@ -1,14 +1,13 @@
 package com.mapsindoors.showroutedemo;
 
-import android.app.Activity;
-import android.content.Context;
-import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
+import android.app.Activity;
+import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +22,8 @@ import com.mapsindoors.mapssdk.MPDirectionsRenderer;
 import com.mapsindoors.mapssdk.MPRoutingProvider;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
-import com.mapsindoors.mapssdk.RoutingProvider;
 import com.mapsindoors.mapssdk.Point;
-
+import com.mapsindoors.mapssdk.RoutingProvider;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,13 +32,14 @@ import com.mapsindoors.mapssdk.Point;
  * Use the {@link ShowRouteFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ShowRouteFragment extends Fragment {
+public class ShowRouteFragment extends Fragment
+{
 
 
-    MapControl mMapControl;
-    SupportMapFragment mMapFragment;
-    GoogleMap mGoogleMap;
-    RoutingProvider mRoutingProvider ;
+    MapControl           mMapControl;
+    SupportMapFragment   mMapFragment;
+    GoogleMap            mGoogleMap;
+    RoutingProvider      mRoutingProvider ;
     MPDirectionsRenderer mRoutingRenderer;
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     //query objects
@@ -58,8 +57,8 @@ public class ShowRouteFragment extends Fragment {
     //region FRAGMENT LIFECYCLE
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView( LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
@@ -88,7 +87,7 @@ public class ShowRouteFragment extends Fragment {
 
         FragmentManager fm = getChildFragmentManager();
 
-        mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
+        mMapFragment = (SupportMapFragment) fm.findFragmentById( R.id.mapfragment);
 
         mMapFragment.getMapAsync( mOnMapReadyCallback );
     }
@@ -163,8 +162,8 @@ public class ShowRouteFragment extends Fragment {
             }
         });
 
-        Point origin = new Point( 57.057917, 9.950361 );
-        Point destination = new Point( 57.058038, 9.950509 );
+        final Point origin = new Point( 57.057917, 9.950361 );
+        final Point destination = new Point( 57.058038, 9.950509 );
 
         mRoutingProvider.query( origin, destination );
     }

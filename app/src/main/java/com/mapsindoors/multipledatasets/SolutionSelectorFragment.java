@@ -1,10 +1,11 @@
 package com.mapsindoors.multipledatasets;
 
+
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.fragment.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,8 @@ import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.MapsIndoors;
 import com.mapsindoors.mapssdk.errors.MIError;
 
-
-public class SolutionSelectorFragment extends Fragment {
+public class SolutionSelectorFragment extends Fragment
+{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
@@ -45,8 +46,8 @@ public class SolutionSelectorFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView( LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
         mainView = inflater.inflate( R.layout.fragment_solution_selector, container, false );
@@ -88,7 +89,7 @@ public class SolutionSelectorFragment extends Fragment {
         new Handler( Looper.getMainLooper() ).post( () -> {
 
             // if(error == null){
-            mListener.onSolutionChoosen();
+            mListener.onSolutionChosen();
            /* }else {
                 Toast.makeText(getContext() , "An error occurred with the message: " + error.message, Toast.LENGTH_SHORT).show();
             }*/
@@ -98,7 +99,7 @@ public class SolutionSelectorFragment extends Fragment {
 
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach( Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
@@ -117,6 +118,6 @@ public class SolutionSelectorFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-         void onSolutionChoosen();
+         void onSolutionChosen();
     }
 }

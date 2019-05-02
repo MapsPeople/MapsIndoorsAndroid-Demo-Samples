@@ -1,7 +1,7 @@
 package com.mapsindoors.showuserLocation;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.mapsindoors.mapssdk.MPPositionResult;
 import com.mapsindoors.mapssdk.OnPositionUpdateListener;
@@ -25,9 +25,7 @@ import java.util.TimerTask;
 
  Create a class `DemoPositionProvider` that implements `PositionProvider`.
  ***/
-public class DemoPositionProvider  implements
-        PositionProvider
-//
+public class DemoPositionProvider implements PositionProvider
 {
 
     /***
@@ -38,7 +36,6 @@ public class DemoPositionProvider  implements
      * `mLatestPosition`: The latest positioning result
      * `mPositionUpdateTimer`: A timer so we can update the position of the user within an time interval
      ***/
-
     OnPositionUpdateListener mPositionUpdateListener;
     boolean isRunning = false;
 
@@ -58,16 +55,16 @@ public class DemoPositionProvider  implements
      * Assign the `fixedPosition` value to `mLatestPosition`
      * Notify the listener by calling `onPositionUpdate` passing the new position as argument
      ***/
-    void updatePosition(){
-        if(isRunning){
+    void updatePosition()
+    {
+        if( isRunning ) {
             mLatestPosition = fixedPosition;
             mLatestPosition.setProvider( this );
-            if (mPositionUpdateListener != null) {
-                mPositionUpdateListener.onPositionUpdate(mLatestPosition);
+            if( mPositionUpdateListener != null ) {
+                mPositionUpdateListener.onPositionUpdate( mLatestPosition );
             }
         }
     }
-
 
     /***
      Implement the `isPSEnabled` method to check is the Positioning system is working or not, in this case the PS is always working since it's a mocked positioning provider.
@@ -80,7 +77,8 @@ public class DemoPositionProvider  implements
      Implement the `startPositioning` method. We set the `running` boolean to true and schedule the repeating task of updating the user position by calling the updatePosition every 3 seconds.
      ***/
     @Override
-    public void startPositioning(@Nullable String arg) {
+    public void startPositioning( @Nullable String arg )
+    {
         isRunning = true;
 
         //Set the schedule function and rate
@@ -98,7 +96,6 @@ public class DemoPositionProvider  implements
     public void stopPositioning(@Nullable String arg) {
         isRunning = false;
         mPositionUpdateTimer.cancel();
-
     }
 
     /***
@@ -113,13 +110,11 @@ public class DemoPositionProvider  implements
     public void addOnPositionUpdateListener(@Nullable OnPositionUpdateListener listener) {
 
         mPositionUpdateListener = listener;
-
     }
 
     @Override
     public void removeOnPositionUpdateListener(@Nullable OnPositionUpdateListener listener) {
         mPositionUpdateListener = null;
-
     }
 
     @Override

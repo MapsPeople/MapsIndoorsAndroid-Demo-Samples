@@ -1,11 +1,12 @@
 package com.mapsindoors.locationdetailsdemo;
 
+
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,6 @@ import com.mapsindoors.mapssdk.LocationPropertyNames;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
 
-
 /***
  ---
  title: Show Location Details
@@ -32,7 +32,6 @@ import com.mapsindoors.mapssdk.MapsIndoors;
 
  Start by creating a `Fragment or an Activity` class that contains the google map fragment
  ***/
-
 public class LocationDetailsFragment extends Fragment
 //
 {
@@ -41,14 +40,14 @@ public class LocationDetailsFragment extends Fragment
      Add a `GoogleMap` and a `MapControl` to the class
      ***/
     MapControl mMapControl;
-    GoogleMap mGoogleMap;
+    GoogleMap  mGoogleMap;
 
     /***
      Add other needed views for this example
      ***/
 
     SupportMapFragment mMapFragment;
-    TextView detailsTextView;
+    TextView           detailsTextView;
 
     /***
      The lat lng of the Venue
@@ -70,8 +69,8 @@ public class LocationDetailsFragment extends Fragment
     //Region FRAGMENT LIFECYCLE
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView( LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_show_location_details, container, false);
     }

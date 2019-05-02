@@ -1,11 +1,12 @@
 package com.mapsindoors.changefloordemo;
 
+
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +20,13 @@ import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
 
+public class ChangeFloorFragment extends Fragment
+{
 
-public class ChangeFloorFragment extends Fragment {
 
-
-    MapControl mMapControl;
+    MapControl         mMapControl;
     SupportMapFragment mMapFragment;
-    GoogleMap mGoogleMap;
+    GoogleMap          mGoogleMap;
 
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     //query objects
@@ -43,10 +44,10 @@ public class ChangeFloorFragment extends Fragment {
     //region FRAGMENT LIFECYCLE
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView( LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        return inflater.inflate( R.layout.fragment_map, container, false);
     }
 
     @Override

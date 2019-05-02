@@ -1,11 +1,12 @@
 package com.mapsindoors.showuserLocation;
 
+
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,14 +29,13 @@ import com.mapsindoors.mapssdk.MapsIndoors;
 
  Create a class `ShowUserLocationFragment` that inherits from `Fragment`.
  ***/
-
-
-public class ShowUserLocationFragment extends Fragment {
+public class ShowUserLocationFragment extends Fragment
+{
 
     /***
      Add a `GoogleMap` and a `MapControl` to the class
      ***/
-    GoogleMap mGoogleMap;
+    GoogleMap  mGoogleMap;
     MapControl mMapControl;
 
     /***
@@ -64,11 +64,12 @@ public class ShowUserLocationFragment extends Fragment {
     //region FRAGMENT LIFECYCLE
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView( LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        return inflater.inflate( R.layout.fragment_map, container, false);
     }
+
 
     @Override
     public void onViewCreated( @NonNull View view, @Nullable Bundle savedInstanceState )
@@ -77,8 +78,6 @@ public class ShowUserLocationFragment extends Fragment {
 
         setupView( view );
     }
-
-
 
     private void setupView( View rootView )
     {

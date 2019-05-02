@@ -1,9 +1,10 @@
 package com.mapsindoors.showbuildingdemo;
 
+
 import android.app.Activity;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.mapsindoors.R;
+import com.mapsindoors.mapssdk.Building;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
-import com.mapsindoors.mapssdk.Building;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,12 +27,13 @@ import com.mapsindoors.mapssdk.Building;
  * Use the {@link ShowBuildingFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ShowBuildingFragment extends Fragment {
+public class ShowBuildingFragment extends Fragment
+{
 
 
-    MapControl mMapControl;
+    MapControl         mMapControl;
     SupportMapFragment mMapFragment;
-    GoogleMap mGoogleMap;
+    GoogleMap          mGoogleMap;
 
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
 
@@ -50,10 +52,10 @@ public class ShowBuildingFragment extends Fragment {
     //region FRAGMENT
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView( LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_map, container, false);
+        View rootView = inflater.inflate( R.layout.fragment_map, container, false);
         setupView(rootView);
 
         return rootView;

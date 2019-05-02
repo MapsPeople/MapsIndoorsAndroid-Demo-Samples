@@ -4,10 +4,10 @@ package com.mapsindoors.customfloorselectordemo.floorselectorcomponent;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +24,15 @@ import java.util.ArrayList;
  * Created by Jose J Varó (jjv@mapspeople.com) on 2/28/2017.
  */
 
-public class MapFloorSelectorAdapter extends ArrayAdapter<String> {
+public class MapFloorSelectorAdapter extends ArrayAdapter<String>
+{
 
-    private Context mContext;
+    private Context              mContext;
     private ArrayList<FloorBase> mItemList;
-    private int mSelectedButtonIndex;
+    private int                  mSelectedButtonIndex;
 
 
-    MapFloorSelectorAdapter(@NonNull Context context, @LayoutRes int resource) {
+    MapFloorSelectorAdapter( @NonNull Context context, @LayoutRes int resource) {
         super(context, resource);
 
         mContext = context;
@@ -42,18 +43,18 @@ public class MapFloorSelectorAdapter extends ArrayAdapter<String> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView( int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         View view;
 
         if (convertView == null) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.control_mapsindoors_floor_selector_button, parent, false);
+            view = LayoutInflater.from(mContext).inflate( R.layout.control_mapsindoors_floor_selector_button, parent, false);
         } else {
             view = convertView;
         }
 
         TextView textView = view.findViewById(R.id.mapspeople_floor_selector_btn);
 
-        Resources res = mContext.getResources();
+        Resources       res      = mContext.getResources();
         Resources.Theme appTheme = DemoApplication.getInstance().getTheme();
 
         if (position != mSelectedButtonIndex) {
@@ -61,7 +62,7 @@ public class MapFloorSelectorAdapter extends ArrayAdapter<String> {
             // Non selected
             //b.setBackgroundColor( ResourcesCompat.getColor(res, R.color.white, appTheme ) );
             textView.setBackgroundColor(ResourcesCompat.getColor(res, R.color.white, appTheme));
-            textView.setTextColor(ResourcesCompat.getColor(res, R.color.grey, appTheme));
+            textView.setTextColor( ResourcesCompat.getColor(res, R.color.grey, appTheme));
             textView.setTypeface(null, Typeface.NORMAL);
 
         } else {

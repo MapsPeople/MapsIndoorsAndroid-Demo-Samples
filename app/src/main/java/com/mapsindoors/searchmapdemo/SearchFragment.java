@@ -1,10 +1,11 @@
 package com.mapsindoors.searchmapdemo;
 
+
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -43,8 +44,8 @@ import java.util.List;
 
  Declare a listener for our location selection with a `onUserSelectedLocation` method
  ***/
-public class SearchFragment extends Fragment {
-
+public class SearchFragment extends Fragment
+{
     /***
      Setup member variables for `SearchFragment`:
      * An instance of type `LocationQuery.Builder`
@@ -53,18 +54,18 @@ public class SearchFragment extends Fragment {
      * A List View to show the search result
      * Some view components
      ***/
-    LocationQuery.Builder iLocsQueryBuilder;
-    LocationQuery mSearchQuery;
+    LocationQuery.Builder         iLocsQueryBuilder;
+    LocationQuery                 mSearchQuery;
     OnFragmentInteractionListener mListener;
-    ListView mMainMenuList;
+    ListView                      mMainMenuList;
 
 
-    View mMainView;
-    EditText mSearchEditTextView;
-    ImageButton mSearchClearBtn;
+    View                mMainView;
+    EditText            mSearchEditTextView;
+    ImageButton         mSearchClearBtn;
     IconTextListAdapter mListAdapter;
-    ViewFlipper mViewFlipper;
-    ImageButton mBackButton;
+    ViewFlipper         mViewFlipper;
+    ImageButton         mBackButton;
     //
 
     boolean mIsMenuCleared = false;
@@ -80,7 +81,7 @@ public class SearchFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (mMainView == null) {
             mMainView = inflater.inflate(R.layout.fragment_search, container, false);
@@ -100,7 +101,7 @@ public class SearchFragment extends Fragment {
 
         mSearchClearBtn = view.findViewById(R.id.directionsfullmenu_search_clear_btn);
 
-        mBackButton = view.findViewById(R.id.directionsfullmenusearch_back_button);
+        mBackButton = view.findViewById( R.id.directionsfullmenusearch_back_button);
 
         init();
 
@@ -144,12 +145,8 @@ public class SearchFragment extends Fragment {
         /*** Clear search button ***/
         mCSearchLocationsProvider = new MPLocationsProvider();
 
-        //
-
         mIsMenuCleared = true;
-
     }
-
 
 
     TextWatcher mEditTextViewTextWatcher = new TextWatcher() {
@@ -170,7 +167,7 @@ public class SearchFragment extends Fragment {
         }
 
         @Override
-        public void afterTextChanged(Editable s) {
+        public void afterTextChanged( Editable s) {
 
             //Only start searching if the user wrote something to look for
             if (!TextUtils.isEmpty(s)) {
@@ -228,7 +225,7 @@ public class SearchFragment extends Fragment {
     private void setFocusOnSearchBox() {
         mSearchEditTextView.post( () -> {
             mSearchEditTextView.requestFocusFromTouch();
-            InputMethodManager lManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager lManager = (InputMethodManager) getActivity().getSystemService( Context.INPUT_METHOD_SERVICE);
             lManager.showSoftInput(mSearchEditTextView, 0);
         } );
     }
@@ -355,7 +352,7 @@ public class SearchFragment extends Fragment {
     OnLocationsReadyListener mSearchLocationsReadyListener = new OnLocationsReadyListener() {
 
         @Override
-        public void onLocationsReady(@Nullable List<Location> locations, @Nullable MIError error) {
+        public void onLocationsReady( @Nullable List<Location> locations, @Nullable MIError error) {
 
             if(locations != null){
 
@@ -402,7 +399,6 @@ public class SearchFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         void onUserSelectedLocation(Location loc);
     }
-
 
     public static SearchFragment newInstance()
     {

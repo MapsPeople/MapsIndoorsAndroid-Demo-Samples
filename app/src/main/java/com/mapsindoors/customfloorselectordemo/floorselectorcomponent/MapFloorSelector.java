@@ -1,13 +1,14 @@
 package com.mapsindoors.customfloorselectordemo.floorselectorcomponent;
 
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.ViewPropertyAnimatorCompat;
-import androidx.core.view.ViewPropertyAnimatorListener;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
+import android.support.v4.view.ViewPropertyAnimatorCompat;
+import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +17,16 @@ import android.widget.ListView;
 
 import com.mapsindoors.BuildConfig;
 import com.mapsindoors.R;
-import com.mapsindoors.mapssdk.IFloorSelector;
-import com.mapsindoors.mapssdk.OnFloorSelectedListener;
-import com.mapsindoors.mapssdk.dbglog;
 import com.mapsindoors.mapssdk.Building;
 import com.mapsindoors.mapssdk.Floor;
 import com.mapsindoors.mapssdk.FloorBase;
+import com.mapsindoors.mapssdk.IFloorSelector;
+import com.mapsindoors.mapssdk.OnFloorSelectedListener;
+import com.mapsindoors.mapssdk.dbglog;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 
 /**
  * MapFloorSelector
@@ -36,8 +36,7 @@ import java.util.List;
  * Copyright © 2017 MapsPeople A/S. All rights reserved.
  */
 public class MapFloorSelector extends FrameLayout
-		implements
-		IFloorSelector
+		implements IFloorSelector
 {
 	public final String TAG = MapFloorSelector.class.getSimpleName();
 
@@ -50,13 +49,13 @@ public class MapFloorSelector extends FrameLayout
 
 
 	OnFloorSelectedListener mFloorSelectedListener;
-	int mCurrentFloorIndex;
+	int                     mCurrentFloorIndex;
 	private ViewPropertyAnimatorCompat mAnimator;
 
 
 	private MapFloorSelectorAdapter mListAdapter;
 
-	private boolean mWillShowView = true;
+	boolean mWillShowView = true;
 
 	private boolean mWillShowViewPrev, mShowViewCancelled;
 
@@ -82,7 +81,7 @@ public class MapFloorSelector extends FrameLayout
 		init( context );
 	}
 
-	public MapFloorSelector(Context context, @Nullable AttributeSet attrs, int defStyleAttr )
+	public MapFloorSelector( Context context, @Nullable AttributeSet attrs, int defStyleAttr )
 	{
 		super( context, attrs, defStyleAttr );
 		init( context );
@@ -104,13 +103,10 @@ public class MapFloorSelector extends FrameLayout
 		mFlags = 0;
 
 		{
-
 			mFloorSelectorListView = findViewById( R.id.mapspeople_floor_selector_list );
 			mListAdapter = new MapFloorSelectorAdapter( context, R.layout.control_mapsindoors_floor_selector_button );
 
-
 			mFloorSelectorListView.setAdapter( mListAdapter );
-
 
 			mFloorSelectorListView.setOnItemClickListener( ( parent, view, position, id ) -> {
 				int newIndex = (int) view.getTag();
@@ -150,18 +146,14 @@ public class MapFloorSelector extends FrameLayout
 
 			populateListInternal( building.getFloors() );
 
-
 			if( testVar == 0 ) {
 				show( true, true );
 			}
 			mHasFloorsToShow = true;
 		}
 		else {
-		//	if( testVar == 0 ) {
-				show( false, true );
-		//	}
+			show( false, true );
 			mHasFloorsToShow = false;
-
 		}
 	}
 
@@ -178,10 +170,7 @@ public class MapFloorSelector extends FrameLayout
 		else{
 			//setFlags(1);
 			show( false, true );
-
 		}
-
-
 	}
 
 	@Override
@@ -324,11 +313,8 @@ public class MapFloorSelector extends FrameLayout
 		refreshUI();
 	}
 
-
-
 	private void populateListInternal( List<?> floors )
 	{
-
 		ArrayList<FloorBase> fbList = new ArrayList<>();
 
 		int floorCount = floors.size();
@@ -407,7 +393,7 @@ public class MapFloorSelector extends FrameLayout
 		}
 	};
 
-	private void setVisible( boolean visible ) {
+	void setVisible( boolean visible ) {
 		setVisibility( visible ? View.VISIBLE : View.GONE );
 	}
 
