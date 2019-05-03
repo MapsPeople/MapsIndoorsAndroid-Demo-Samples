@@ -8,13 +8,14 @@ import com.mapsindoors.mapssdk.dbglog;
 
 public class DemoApplication extends Application
 {
-    public static final String TAG = DemoApplication.class.getSimpleName();
-    private static Application sInstance;
+    public static final String      TAG = DemoApplication.class.getSimpleName();
+    private static      Application sInstance;
 
     // Called when the application is starting, before any other application objects have been created.
     // Overriding this method is totally optional!
     @Override
-    public void onCreate() {
+    public void onCreate()
+    {
         super.onCreate();
         // Required initialization logic here!
 
@@ -27,13 +28,10 @@ public class DemoApplication extends Application
         // Initialize the MapsIndoors SDK here by providing:
         // - The application context
         // - The MapsIndoors API key
-     MapsIndoors.initialize(
-                getApplicationContext(),
-                getString( R.string.mi_api_key)
-        );
+        MapsIndoors.initialize( getApplicationContext(), getString( R.string.mi_api_key ) );
 
         // Your Google Maps API key
-     //   MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
+        //   MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
 
         sInstance = this;
     }
@@ -42,7 +40,8 @@ public class DemoApplication extends Application
     // and would like actively running processes to tighten their belts.
     // Overriding this method is totally optional!
     @Override
-    public void onLowMemory() {
+    public void onLowMemory()
+    {
         super.onLowMemory();
     }
 
@@ -56,7 +55,8 @@ public class DemoApplication extends Application
         MapsIndoors.onApplicationConfigurationChanged( newConfig );
     }
 
-    public static Application getInstance() {
+    public static Application getInstance()
+    {
         return sInstance;
     }
 

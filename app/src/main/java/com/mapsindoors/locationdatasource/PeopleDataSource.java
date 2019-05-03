@@ -75,15 +75,15 @@ public class PeopleDataSource implements MPLocationSource {
      ***/
     Timer mDataUpdateTimer = new Timer();
 
-    private void startMockingPersonsPositions(){
-
-        mDataUpdateTimer.scheduleAtFixedRate(new TimerTask() {
-                                                 @Override
-                                                 public void run() {
-                                                     updatePeoplesPositionsRandomly();
-                                                 }},
-                0,
-                5000);
+    private void startMockingPersonsPositions()
+    {
+        mDataUpdateTimer.scheduleAtFixedRate( new TimerTask() {
+            @Override
+            public void run()
+            {
+                updatePeoplesPositionsRandomly();
+            }
+        }, 0, 5000 );
     }
 
     /***
@@ -116,13 +116,12 @@ public class PeopleDataSource implements MPLocationSource {
 
         List<MPLocation> updatedList = new ArrayList<>();
 
-        for(int locID = 0;locID < locationsList.size() ;locID++){
-            MPLocation.Builder updateBuilder = locationsBuilders.get(locID);
+        for( int locID = 0; locID < locationsList.size(); locID++ ) {
+            MPLocation.Builder updateBuilder = locationsBuilders.get( locID );
 
-            updateBuilder.setPosition(getRandomPosition());
+            updateBuilder.setPosition( getRandomPosition() );
 
-            updatedList.add(updateBuilder.build());
-
+            updatedList.add( updateBuilder.build() );
         }
 
         locationsList.clear();
@@ -130,8 +129,6 @@ public class PeopleDataSource implements MPLocationSource {
 
         notifyUpdateLocations(updatedList);
     }
-
-
 
     /***
      Create a method called `generatePersonsLocations` that takes a type string. Iterate numberOfPeople and for each iteration create:
