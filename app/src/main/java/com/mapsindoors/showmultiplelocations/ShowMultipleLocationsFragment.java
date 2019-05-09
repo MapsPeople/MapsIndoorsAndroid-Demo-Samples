@@ -15,9 +15,13 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.mapsindoors.BuildConfig;
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.Location;
 import com.mapsindoors.mapssdk.MPFilter;
+import com.mapsindoors.mapssdk.MPLocation;
+import com.mapsindoors.mapssdk.MPLocationSourceOnStatusChangedListener;
+import com.mapsindoors.mapssdk.MPLocationSourceStatus;
 import com.mapsindoors.mapssdk.MPQuery;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
@@ -52,6 +56,7 @@ public class ShowMultipleLocationsFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @NonNull
     public static ShowMultipleLocationsFragment newInstance()
     {
         return new ShowMultipleLocationsFragment();
@@ -59,10 +64,10 @@ public class ShowMultipleLocationsFragment extends Fragment {
 
 
     //region FRAGMENT LIFECYCLE
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView( @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
+    {
         // Inflate the layout for this fragment
         return inflater.inflate( R.layout.fragment_map, container, false );
     }
@@ -123,40 +128,25 @@ public class ShowMultipleLocationsFragment extends Fragment {
         mMapControl = new MapControl( getActivity() );
         mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
-        mMapControl.init( miError -> {
+        //
+        MapsIndoors.addLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
 
-            if( miError == null )
-            {
-                Activity context = getActivity();
-                if( context != null )
-                {
-                    queryLocation();
-
-                    context.runOnUiThread( () -> {
-                        mMapControl.selectFloor( 1 );
-                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 18f ) );
-
-                    } );
-                }
-            }
-        });
+        // Initialize MapControl. In this case we only need to know when locations are ready
+        mMapControl.init( null );
     }
-
-
-
 
     void queryLocation()
     {
-
-
         /*** Init the query builder and build a query, in this case we will query for all to toilets***/
-        MPQuery query = new MPQuery.Builder().setQuery("Toilet").build();
-
-        /*** Init the filter builder and build a filter, the criterias in this case we want maximum 50 toilets from the 1st floor***/
-        MPFilter filter = new MPFilter.Builder().setTake(50).
-                setFloorIndex(1).
+        MPQuery query = new MPQuery.Builder().
+                setQuery("Toilet").
                 build();
 
+        /*** Init the filter builder and build a filter, the criteria in this case we want maximum 50 toilets from the 1st floor***/
+        MPFilter filter = new MPFilter.Builder().
+                setTake( 50 ).
+                setFloorIndex( 1 ).
+                build();
 
         /*** Query the data ***/
         MapsIndoors.getLocationsAsync(query, filter, (locs, err) -> {
@@ -164,7 +154,33 @@ public class ShowMultipleLocationsFragment extends Fragment {
                 mMapControl.displaySearchResults( locs, true, 40 );
             }
         });
-
     }
 
+    final MPLocationSourceOnStatusChangedListener locationSourceOnStatusChangedListener = new MPLocationSourceOnStatusChangedListener()
+    {
+        @Override
+        public void onStatusChanged( @NonNull MPLocationSourceStatus status, int sourceId )
+        {
+            if( status == MPLocationSourceStatus.AVAILABLE ) {
+                final Activity context = getActivity();
+                if( context != null ) {
+                    context.runOnUiThread( () -> {
+
+                        final List<MPLocation> locations = MapsIndoors.getLocations();
+                        if( locations.size() == 0 ) {
+                            if( BuildConfig.DEBUG){}
+                        }
+
+                        //
+                        mMapControl.selectFloor( 1 );
+
+                        //
+                        queryLocation();
+
+                        //mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 21f ) );
+                    } );
+                }
+            }
+        }
+    };
 }

@@ -2,6 +2,8 @@ package com.mapsindoors.showbuildingdemo;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -41,23 +43,42 @@ public class ShowBuildingFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @NonNull
     public static ShowBuildingFragment newInstance()
     {
         return new ShowBuildingFragment();
     }
 
 
-    //region FRAGMENT
+    //region FRAGMENT LIFECYCLE
+    @Override
+    @Nullable
+    public View onCreateView( @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
+    {
+        // Inflate the layout for this fragment
+        return inflater.inflate( R.layout.fragment_map, container, false );
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_map, container, false);
-        setupView(rootView);
+    public void onViewCreated( @NonNull View view, @Nullable Bundle savedInstanceState )
+    {
+        super.onViewCreated( view, savedInstanceState );
 
-        return rootView;
+        setupView( view );
     }
+
+    @Override
+    public void onDestroyView()
+    {
+        if( mMapControl != null )
+        {
+            mMapControl.onDestroy();
+        }
+
+        super.onDestroyView();
+    }
+    //endregion
+
 
     private void setupView( View rootView )
     {
@@ -78,8 +99,6 @@ public class ShowBuildingFragment extends Fragment {
             setupMapsIndoors();
         }
     };
-    //endregion
-
 
     void setupMapsIndoors()
     {
@@ -100,25 +119,22 @@ public class ShowBuildingFragment extends Fragment {
 
             if( miError == null )
             {
-                Activity context = getActivity();
+                final Activity context = getActivity();
                 if( context != null )
                 {
-                    context.runOnUiThread( () -> {
+                    mMapControl.selectFloor( 1 );
 
-                        mMapControl.selectFloor( 1 );
+                    final Building currentBuilding = mMapControl.getCurrentBuilding();
 
-                        Building currentBuilding = mMapControl.getCurrentBuilding();
+                    if( currentBuilding != null )
+                    {
+                        final LatLngBounds latLngBounds = currentBuilding.getLatLngBoundingBox();
 
-                        if( currentBuilding != null )
+                        if( (mGoogleMap != null) && (latLngBounds != null) )
                         {
-                            LatLngBounds latLngBounds = currentBuilding.getLatLngBoundingBox();
-
-                            if( (mGoogleMap != null) && (latLngBounds != null) )
-                            {
-                                mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngBounds( latLngBounds, 10 ) );
-                            }
+                            mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngBounds( latLngBounds, 10 ) );
                         }
-                    });
+                    }
                 }
             }
         });

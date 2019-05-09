@@ -15,11 +15,21 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.mapsindoors.BuildConfig;
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.MPFilter;
+import com.mapsindoors.mapssdk.MPLocation;
+import com.mapsindoors.mapssdk.MPLocationSource;
+import com.mapsindoors.mapssdk.MPLocationSourceOnStatusChangedListener;
+import com.mapsindoors.mapssdk.MPLocationSourceStatus;
+import com.mapsindoors.mapssdk.MPLocationsObserver;
 import com.mapsindoors.mapssdk.MPQuery;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
+import com.mapsindoors.mapssdk.OnLoadingDataReadyListener;
+import com.mapsindoors.mapssdk.errors.MIError;
+
+import java.util.List;
 
 public class ShowLocationFragment extends Fragment
 {
@@ -38,6 +48,7 @@ public class ShowLocationFragment extends Fragment
         // Required empty public constructor
     }
 
+    @NonNull
     public static ShowLocationFragment newInstance()
     {
         return new ShowLocationFragment();
@@ -45,12 +56,12 @@ public class ShowLocationFragment extends Fragment
 
 
     //region FRAGMENT LIFECYCLE
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView( @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
+    {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        return inflater.inflate( R.layout.fragment_map, container, false );
     }
 
     @Override
@@ -64,8 +75,8 @@ public class ShowLocationFragment extends Fragment
     @Override
     public void onDestroyView()
     {
-        if( mMapControl != null )
-        {
+        if( mMapControl != null ) {
+            MapsIndoors.removeLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
             mMapControl.onDestroy();
         }
 
@@ -96,62 +107,72 @@ public class ShowLocationFragment extends Fragment
 
     void setupMapsIndoors()
     {
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
+        {
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
+        }
+
         if( getActivity() == null )
         {
             return;
         }
 
-
-
-        MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
-        MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
-
-
-
         mMapControl = new MapControl( getActivity() );
         mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
-        mMapControl.init( miError -> {
+        //
+        MapsIndoors.addLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
 
-            if( miError == null )
-            {
-                Activity context = getActivity();
-                if( context != null )
-                {
-                    queryLocation();
-
-                    context.runOnUiThread( () -> {
-                        mMapControl.selectFloor( 1 );
-                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 18f ) );
-                    });
-                }
-            }
-        });
+        // Initialize MapControl. In this case we only need to know when locations are ready
+        mMapControl.init( null );
+        //
     }
-
-
-
 
     void queryLocation()
     {
+        /*** Init the query builder and build a query, in this case we will query for coffee machines ***/
+        MPQuery query = new MPQuery.Builder().
+                setQuery("coffee machine").
+                build();
 
-
-        /*** Init the query builder and build a query, in this case we will query for coffee machines***/
-        MPQuery query = new MPQuery.Builder().setQuery("coffee machine").build();
-
-        /*** Init the filter builder and build a filter, the criterias in this case we want 1 coffee machine from the 1st floor***/
-        MPFilter filter = new MPFilter.Builder().setTake(1).
+        /*** Init the filter builder and build a filter, the criteria in this case we want 1 coffee machine from the 1st floor ***/
+        MPFilter filter = new MPFilter.Builder().
                 setFloorIndex(1).
                 build();
 
-
         /*** Query the data ***/
-        MapsIndoors.getLocationsAsync(query, filter, (locs, err) -> {
-            if(locs != null && locs.size() != 0 ){
+        MapsIndoors.getLocationsAsync( query, filter, ( locs, err ) -> {
+            if( locs != null && locs.size() != 0 ) {
                 mMapControl.displaySearchResults( locs, true );
             }
-        });
-
+        } );
     }
 
+    final MPLocationSourceOnStatusChangedListener locationSourceOnStatusChangedListener = new MPLocationSourceOnStatusChangedListener()
+    {
+        @Override
+        public void onStatusChanged( @NonNull MPLocationSourceStatus status, int sourceId )
+        {
+            if( status == MPLocationSourceStatus.AVAILABLE ) {
+                final Activity context = getActivity();
+                if( context != null ) {
+                    context.runOnUiThread( () -> {
+
+                        final List<MPLocation> locations = MapsIndoors.getLocations();
+                        if( locations.size() == 0 ) {
+                            if(BuildConfig.DEBUG){}
+                        }
+
+                        //
+                        mMapControl.selectFloor( 1 );
+
+                        //
+                        queryLocation();
+
+                        //mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 21f ) );
+                    } );
+                }
+            }
+        }
+    };
 }

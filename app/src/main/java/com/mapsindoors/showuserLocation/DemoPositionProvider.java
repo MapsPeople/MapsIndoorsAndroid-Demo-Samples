@@ -25,11 +25,9 @@ import java.util.TimerTask;
 
  Create a class `DemoPositionProvider` that implements `PositionProvider`.
  ***/
-public class DemoPositionProvider  implements
-        PositionProvider
+public class DemoPositionProvider implements PositionProvider
 //
 {
-
     /***
      Add some member variables to `DemoPositionProvider`.
 
@@ -38,7 +36,6 @@ public class DemoPositionProvider  implements
      * `mLatestPosition`: The latest positioning result
      * `mPositionUpdateTimer`: A timer so we can update the position of the user within an time interval
      ***/
-
     OnPositionUpdateListener mPositionUpdateListener;
     boolean isRunning = false;
 
@@ -68,7 +65,6 @@ public class DemoPositionProvider  implements
         }
     }
 
-
     /***
      Implement the `isPSEnabled` method to check is the Positioning system is working or not, in this case the PS is always working since it's a mocked positioning provider.
      ***/
@@ -76,6 +72,7 @@ public class DemoPositionProvider  implements
     public boolean isPSEnabled() {
         return true ;
     }
+
     /***
      Implement the `startPositioning` method. We set the `running` boolean to true and schedule the repeating task of updating the user position by calling the updatePosition every 3 seconds.
      ***/
@@ -172,7 +169,6 @@ public class DemoPositionProvider  implements
     public String[] getRequiredPermissions() {
         return new String[0];
     }
-
 
     /***
      In [Part 2](showuserlocationshowuserlocationfragment) we will create the map fragment that displays the blue dot.

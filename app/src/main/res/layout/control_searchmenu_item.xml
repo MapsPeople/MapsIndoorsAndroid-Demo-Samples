@@ -23,8 +23,8 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
-			android:maxHeight="40dp"
 			android:maxWidth="40dp"
+			android:maxHeight="40dp"
 			tools:src="@drawable/menu_placeholder"
 			/>
 
@@ -42,8 +42,8 @@
 		android:id="@+id/ctrl_mainmenu_textitem"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:layout_marginEnd="16dp"
 		android:layout_marginStart="52dp"
+		android:layout_marginEnd="16dp"
 		android:gravity="start|center_vertical"
 		android:textAlignment="textStart"
 		android:textAppearance="@style/TextAppearance.AppCompat.Medium"

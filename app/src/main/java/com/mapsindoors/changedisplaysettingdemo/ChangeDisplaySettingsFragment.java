@@ -35,6 +35,7 @@ public class ChangeDisplaySettingsFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @NonNull
     public static ChangeDisplaySettingsFragment newInstance()
     {
         return new ChangeDisplaySettingsFragment();
@@ -42,12 +43,12 @@ public class ChangeDisplaySettingsFragment extends Fragment {
 
 
     //region FRAGMENT LIFECYCLE
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView( @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
+    {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        return inflater.inflate( R.layout.fragment_map, container, false );
     }
 
     @Override
@@ -69,6 +70,7 @@ public class ChangeDisplaySettingsFragment extends Fragment {
         super.onDestroyView();
     }
     //endregion
+
 
     private void setupView( View rootView )
     {
@@ -111,13 +113,11 @@ public class ChangeDisplaySettingsFragment extends Fragment {
 
             if( miError == null )
             {
-                Activity context = getActivity();
+                final Activity context = getActivity();
                 if( context != null )
                 {
-                    context.runOnUiThread(() -> {
-                        mMapControl.selectFloor( 0 );
-                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
-                    });
+                    mMapControl.selectFloor( 0 );
+                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
                 }
             }
         });

@@ -1,25 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                tools:context=".customfloorselectordemo.floorselectorcomponent.MapFloorSelector">
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    tools:context=".customfloorselectordemo.floorselectorcomponent.MapFloorSelector"
+	>
 
-
-		<ListView
-
-			android:id="@+id/mapspeople_floor_selector_list"
-			android:layout_width="40dp"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center_horizontal"
-			android:animateLayoutChanges="true"
-			android:background="@android:color/white"
-			android:divider="@null"
-			android:focusable="false"
-			tools:listitem="@layout/control_mapsindoors_floor_selector_button"
-
-			/>
-
-
+	<ListView
+		android:id="@+id/mapspeople_floor_selector_list"
+		android:layout_width="40dp"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_horizontal"
+		android:animateLayoutChanges="true"
+		android:background="@android:color/white"
+		android:divider="@null"
+		android:focusable="false"
+		tools:listitem="@layout/control_mapsindoors_floor_selector_button"
+		/>
 </RelativeLayout>

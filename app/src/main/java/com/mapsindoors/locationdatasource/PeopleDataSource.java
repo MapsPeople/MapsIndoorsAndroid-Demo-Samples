@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import com.google.android.gms.maps.model.LatLng;
 import com.mapsindoors.mapssdk.Building;
 import com.mapsindoors.mapssdk.BuildingCollection;
-import com.mapsindoors.mapssdk.Convert;
 import com.mapsindoors.mapssdk.Floor;
 import com.mapsindoors.mapssdk.MPLocation;
 import com.mapsindoors.mapssdk.MPLocationSource;
@@ -35,6 +34,12 @@ import java.util.TimerTask;
  ***/
 public class PeopleDataSource implements MPLocationSource {
 
+
+    static final int SOURCE_ID = 0x0EFACAFE;
+
+    static final int PEOPLE_COUNT = 100;
+
+
     /***
      Add some member variables to `PeopleLocationsDataSource`.
 
@@ -42,7 +47,7 @@ public class PeopleDataSource implements MPLocationSource {
      * `locationsList`: A list of MPLocation - Will have the list of the MPLocations up to date
      * `locationsBuilders`: A list of MPLocation.Builder - the MPLocation builders
      * `status`: will hold the status of the Datasource
-     * `peoplesNumber`: The number of people to mock
+     * `PEOPLE_COUNT`: The number of people to mock
      ***/
 
     @NonNull
@@ -53,10 +58,9 @@ public class PeopleDataSource implements MPLocationSource {
 
     MPLocationSourceStatus status;
     BuildingCollection buildingCollection;
-    int peoplesNumber = 100;
-
 
     String type;
+
     /***
      Create a Constructor that takes a type string. Call `generatePeoplesLocations` and `startMockingPersonsPositions`.
      ***/
@@ -64,70 +68,88 @@ public class PeopleDataSource implements MPLocationSource {
 
         status = MPLocationSourceStatus.NOT_INITIALIZED;
 
-
         this.type = type;
-
-
-
     }
+
     /***
      Create a method called `startMockingPersonsPositions` that simply just calls `updatePositions` in the future.
      ***/
-    Timer mDataUpdateTimer = new Timer();
+    Timer mDataUpdateTimer;
 
-    private void startMockingPersonsPositions()
+    public void startMockingPeoplePositions()
     {
+        if( mDataUpdateTimer != null ) {
+            mDataUpdateTimer.cancel();
+            mDataUpdateTimer = null;
+        }
+
+        mDataUpdateTimer = new Timer();
+
         mDataUpdateTimer.scheduleAtFixedRate( new TimerTask() {
             @Override
             public void run()
             {
-                updatePeoplesPositionsRandomly();
+                updatePeoplePositionsRandomly();
             }
-        }, 0, 5000 );
+        }, 2000, 5000 );
     }
+
+    public void stopMockingPeoplePositions()
+    {
+        if( mDataUpdateTimer != null ) {
+            mDataUpdateTimer.cancel();
+            mDataUpdateTimer.purge();
+        }
+    }
+
 
     /***
      Create a method called `getRandomPosition` that simply just returns a random LatLng (here within proximity of the demo venue)
      ***/
     Random random = new Random();
-    private LatLng getRandomPosition(){
-        double lat = 57.058037 + (-4 + random.nextInt(9)) * 0.000005 ;
-        double lng = 9.950572 + (-4 + random.nextInt(9)) * 0.000010;
 
-        return new LatLng(lat, lng) ;
+    private LatLng getRandomPosition()
+    {
+        final double lat = 57.058037 + (-4 + random.nextInt( 9 )) * 0.000005;
+        final double lng = 9.950572 + (-4 + random.nextInt( 9 )) * 0.000010;
+
+        return new LatLng( lat, lng );
     }
 
-
-    public void createMockMPLocations(){
+    public void createMockMPLocations()
+    {
         buildingCollection = MapsIndoors.getBuildings();
-        locationsList.addAll(generatePeoplesLocations( type));
-        startMockingPersonsPositions();
-        status = MPLocationSourceStatus.AVAILABLE;
+        locationsList.clear();
+        locationsList.addAll( generatePeoplesLocations( type ) );
 
+        startMockingPeoplePositions();
+
+        status = MPLocationSourceStatus.AVAILABLE;
     }
+
     /***
-     Create a method called `updatePeoplesPositionsRandomly`. Iterate numberOfPeople again and for each iteration:
+     Create a method called `updatePeoplePositionsRandomly`. Iterate numberOfPeople again and for each iteration:
      * Get the corresponding MPLocation Builder
      * Set a new position
      * Generate MPLocation from the MPLocation.Builder
      * Call the notifyUpdateLocations with the updated list
      ***/
-    public void updatePeoplesPositionsRandomly() {
+    public void updatePeoplePositionsRandomly() {
 
-        List<MPLocation> updatedList = new ArrayList<>();
+        final List<MPLocation> updatedList = new ArrayList<>();
 
-        for( int locID = 0; locID < locationsList.size(); locID++ ) {
-            MPLocation.Builder updateBuilder = locationsBuilders.get( locID );
+        for( int locID = 0, locCount = locationsList.size(); locID < locCount; locID++ ) {
+
+            final MPLocation.Builder updateBuilder = locationsBuilders.get( locID );
 
             updateBuilder.setPosition( getRandomPosition() );
-
             updatedList.add( updateBuilder.build() );
         }
 
         locationsList.clear();
-        locationsList.addAll(updatedList);
+        locationsList.addAll( updatedList );
 
-        notifyUpdateLocations(updatedList);
+        notifyUpdateLocations( updatedList );
     }
 
     /***
@@ -140,29 +162,33 @@ public class PeopleDataSource implements MPLocationSource {
      * A floor Index
      * A building
      ***/
-    private List<MPLocation> generatePeoplesLocations( String type) {
+    private List<MPLocation> generatePeoplesLocations( String type )
+    {
         status = MPLocationSourceStatus.INITIALISING;
 
         List<MPLocation> res = new ArrayList<>();
 
-        for (int locID = 0; locID < peoplesNumber; locID++) {
+        for( int locID = 0; locID < PEOPLE_COUNT; locID++ ) {
 
-            String personName = getPersonName();
+            final String personName = getPersonName();
+            final LatLng personPosition = getRandomPosition();
 
-            LatLng personPosition = getRandomPosition();
+            final Building building = buildingCollection.getBuilding( personPosition );
+            if( building == null ) {
+                continue;
+            }
 
-            Building building = buildingCollection.getBuilding(personPosition);
-            Floor initialFloor = building.getInitFloor();
-            MPLocation.Builder locBuilder = new MPLocation.Builder(""+locID);
-            locBuilder.setPosition(personPosition).
-                    setName(personName).
-                    setType(type).
-                    setFloor(initialFloor.getZIndex()).
-                    setBuilding(building.getName());
+            final Floor initialFloor = building.getInitFloor();
+            final MPLocation.Builder locBuilder = new MPLocation.Builder( "" + locID );
+            locBuilder.setPosition( personPosition ).
+                    setName( personName ).
+                    setType( type ).
+                    setFloor( (initialFloor != null) ? initialFloor.getZIndex() : 0 ).
+                    setBuilding( building.getName() );
 
-            locationsBuilders.add(locBuilder);
+            locationsBuilders.add( locBuilder );
 
-            res.add(locBuilder.build());
+            res.add( locBuilder.build() );
         }
 
         return res;
@@ -174,24 +200,21 @@ public class PeopleDataSource implements MPLocationSource {
     private final String[] FIRST_NAMES = {"John", "Joe", "Javier", "Mike", "Janet", "Susan", "Cristina", "Michelle"};
     private final String[] LAST_NAMES = {"Smith", "Jones", "Andersson", "Perry", "Brown", "Hill", "Moore", "Baker"};
 
-    private String getPersonName() {
+    private String getPersonName()
+    {
+        final int firstNameIndex = random.nextInt( FIRST_NAMES.length );
+        final int lastNameIndex = random.nextInt( LAST_NAMES.length );
 
-        int firstNameIndex = random.nextInt(FIRST_NAMES.length);
-        int lastNameIndex = random.nextInt(LAST_NAMES.length);
-
-        return  String.format("%1s %2s", FIRST_NAMES[firstNameIndex], LAST_NAMES[lastNameIndex]);
+        return String.format( "%1s %2s", FIRST_NAMES[firstNameIndex], LAST_NAMES[lastNameIndex] );
     }
 
     /***
      Create a method called `notifyUpdateLocations` to loop all the observers and notify them with an update
      ***/
-    private void notifyUpdateLocations(List<MPLocation> updatedLocations) {
-
-        for (int i = observers.size(); --i >= 0; ) {
-            observers.get(i).onLocationsUpdated(
-                    updatedLocations,
-                    this
-            );
+    private void notifyUpdateLocations( List<MPLocation> updatedLocations )
+    {
+        for( int i = observers.size(); --i >= 0; ) {
+            observers.get( i ).onLocationsUpdated( updatedLocations, this );
         }
     }
 
@@ -203,14 +226,16 @@ public class PeopleDataSource implements MPLocationSource {
     public List<MPLocation> getLocations() {
         return locationsList;
     }
+
     /***
      Implement the MPLocationSource method `addLocationObserver`.
      ***/
     @Override
-    public void addLocationsObserver(@Nullable MPLocationsObserver observer) {
-        if (observer != null) {
-            observers.remove(observer);
-            observers.add(observer);
+    public void addLocationsObserver( @Nullable MPLocationsObserver observer )
+    {
+        if( observer != null ) {
+            observers.remove( observer );
+            observers.add( observer );
         }
     }
 
@@ -218,11 +243,13 @@ public class PeopleDataSource implements MPLocationSource {
      Implement the MPLocationSource method `removeLocationObserver`.
      ***/
     @Override
-    public void removeLocationsObserver(@Nullable MPLocationsObserver observer) {
-        if (observer != null) {
-            observers.remove(observer);
+    public void removeLocationsObserver( @Nullable MPLocationsObserver observer )
+    {
+        if( observer != null ) {
+            observers.remove( observer );
         }
     }
+
     /***
      Implement the MPLocationSource method `getStatus`.
      ***/
@@ -232,15 +259,11 @@ public class PeopleDataSource implements MPLocationSource {
         return status;
     }
 
-
     /***
      Implement the MPLocationSource method `getSourceId`.
      ***/
     @Override
     public int getSourceId() {
-        return 0;
+        return SOURCE_ID;
     }
-
-
-
 }

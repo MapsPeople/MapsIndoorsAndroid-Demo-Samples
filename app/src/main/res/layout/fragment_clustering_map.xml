@@ -1,33 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".showlocationdemo.ShowLocationFragment">
 
+	<fragment
+		android:id="@+id/mapfragment"
+		android:name="com.google.android.gms.maps.SupportMapFragment"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:clickable="true"
+		tools:context=".MainActivity"
+		/>
 
-    <fragment
-        android:id="@+id/mapfragment"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        tools:context=".ui.activitymain.MapsIndoorsActivity"
-         />
-
-
-    <ToggleButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/clustering_toggle_button"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:textOn="Clustering On"
-        android:textOff="Clustering Off"
-        android:checked="true"
-
-        />
-
-
-
+	<ToggleButton
+		android:id="@+id/clustering_toggle_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:layout_centerHorizontal="true"
+		android:checked="true"
+		android:textOff="Clustering Off"
+		android:textOn="Clustering On"
+		/>
 </RelativeLayout>

@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".showlocationdemo.ShowLocationFragment">
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".showlocationdemo.ShowLocationFragment">
 
+	<fragment
+		android:id="@+id/mapfragment"
+		android:name="com.google.android.gms.maps.SupportMapFragment"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:clickable="true"
+		tools:context=".MainActivity"
+		/>
 
-    <fragment
-        android:id="@+id/mapfragment"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        tools:context=".ui.activitymain.MapsIndoorsActivity"
-         />
+	<TextView
+		android:id="@+id/details_text_view"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom"
+		android:layout_marginBottom="40dp"
+		android:background="@android:color/white"
 
-    <TextView
-        android:id="@+id/details_text_view"
-        android:background="@android:color/white"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:visibility="gone"
-
-        tools:layout_height="40dp"
-        tools:layout_width="match_parent"
-        tools:text="details\nfdzfefefefef"
-        android:layout_marginBottom="40dp"
-        />
-
+		android:visibility="gone"
+		tools:layout_height="40dp"
+		tools:layout_width="match_parent"
+		tools:text="details\nfdzfefefefef"
+		/>
 </FrameLayout>

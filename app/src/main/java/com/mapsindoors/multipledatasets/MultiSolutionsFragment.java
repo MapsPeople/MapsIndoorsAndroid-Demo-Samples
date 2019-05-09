@@ -36,13 +36,13 @@ public class MultiSolutionsFragment extends Fragment
     GoogleMap mGoogleMap;
 
 
-    final        LatLng MAPSPEOPLE_CORPORATE_HQ_LOCATION       = new LatLng( 57.05813067, 9.95058065 );
-    static final float  MAPSPEOPLE_CORPORATE_HQ_ZOOM           = 19f;
-    static final int    MAPSPEOPLE_CORPORATE_HQ_SELECTED_FLOOR = 1;
+    static final LatLng MAPSPEOPLE_CORPORATE_HQ_LOCATION        = new LatLng( 57.05813067, 9.95058065 );
+    static final float  MAPSPEOPLE_CORPORATE_HQ_ZOOM            = 19f;
+    static final int    MAPSPEOPLE_CORPORATE_HQ_SELECTED_FLOOR  = 1;
 
-    final        LatLng AAU_CREATE_BUILDING_LOCATION       = new LatLng( 57.04807056, 9.92998432 );
-    static final float  AAU_CREATE_BUILDING_ZOOM           = 18f;
-    static final int    AAU_CREATE_BUILDING_SELECTED_FLOOR = 0;
+    static final LatLng AAU_CREATE_BUILDING_LOCATION            = new LatLng( 57.04807056, 9.92998432 );
+    static final float  AAU_CREATE_BUILDING_ZOOM                = 18f;
+    static final int    AAU_CREATE_BUILDING_SELECTED_FLOOR      = 0;
 
     LatLng selectedCameraPosition = MAPSPEOPLE_CORPORATE_HQ_LOCATION;
     float  selectedCameraCloseUpZoom = MAPSPEOPLE_CORPORATE_HQ_ZOOM;
@@ -54,6 +54,7 @@ public class MultiSolutionsFragment extends Fragment
         // Required empty public constructor
     }
 
+    @NonNull
     public static MultiSolutionsFragment newInstance()
     {
         return new MultiSolutionsFragment();
@@ -63,8 +64,8 @@ public class MultiSolutionsFragment extends Fragment
     //region FRAGMENT LIFECYCLE
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView( @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState ) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_map, container, false);
     }
@@ -74,13 +75,15 @@ public class MultiSolutionsFragment extends Fragment
     {
         super.onViewCreated( view, savedInstanceState );
 
-        if( MapsIndoors.getAPIKey().equalsIgnoreCase( "57e4e4992e74800ef8b69718" ) )
+        final String miApiKey = MapsIndoors.getAPIKey();
+
+        if( miApiKey.equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
         {
             selectedCameraPosition = MAPSPEOPLE_CORPORATE_HQ_LOCATION;
             selectedCameraCloseUpZoom = MAPSPEOPLE_CORPORATE_HQ_ZOOM;
             selectedFloorIndex = MAPSPEOPLE_CORPORATE_HQ_SELECTED_FLOOR;
         }
-        else if( MapsIndoors.getAPIKey().equalsIgnoreCase( "5667325fc1843a06bca1dd2b" ) )
+        else if( miApiKey.equalsIgnoreCase( getString( R.string.aau_api_key ) ) )
         {
             selectedCameraPosition = AAU_CREATE_BUILDING_LOCATION;
             selectedCameraCloseUpZoom = AAU_CREATE_BUILDING_ZOOM;
@@ -93,14 +96,13 @@ public class MultiSolutionsFragment extends Fragment
     @Override
     public void onDestroyView()
     {
-
-
         if( mMapControl != null )
         {
             mMapControl.onDestroy();
         }
 
         MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
+
         super.onDestroyView();
     }
     //endregion
@@ -140,14 +142,11 @@ public class MultiSolutionsFragment extends Fragment
 
             if( miError == null )
             {
-                Activity context = getActivity();
+                final Activity context = getActivity();
                 if( context != null )
                 {
-                    context.runOnUiThread( () -> {
-
-                        mMapControl.selectFloor( 1 );
-                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( selectedCameraPosition, selectedCameraCloseUpZoom ) );
-                    });
+                    mMapControl.selectFloor( 1 );
+                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( selectedCameraPosition, selectedCameraCloseUpZoom ) );
                 }
             }
         });

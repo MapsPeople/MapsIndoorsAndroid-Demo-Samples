@@ -50,18 +50,19 @@ public class ShowRouteFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @NonNull
     public static ShowRouteFragment newInstance() {
         return new ShowRouteFragment();
     }
 
 
     //region FRAGMENT LIFECYCLE
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView( @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
+    {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        return inflater.inflate( R.layout.fragment_map, container, false );
     }
 
     @Override
@@ -83,6 +84,7 @@ public class ShowRouteFragment extends Fragment {
         super.onDestroyView();
     }
     //endregion
+
 
     private void setupView( View rootView) {
 
@@ -111,36 +113,34 @@ public class ShowRouteFragment extends Fragment {
             MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
         }
 
-        if( getActivity() == null )
+        final Activity context = getActivity();
+        if( context == null )
         {
             return;
         }
 
         mRoutingProvider = new MPRoutingProvider();
 
-        mMapControl = new MapControl( getActivity() );
+        mMapControl = new MapControl( context );
         mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
-        mRoutingRenderer = new MPDirectionsRenderer( getContext(), mGoogleMap, mMapControl, null);
+        mRoutingRenderer = new MPDirectionsRenderer( context, mGoogleMap, mMapControl, null);
 
         mMapControl.init( miError -> {
 
             if( miError == null )
             {
-                Activity context = getActivity();
-                if( context != null )
+                final Activity _context = getActivity();
+                if( _context != null )
                 {
-                    context.runOnUiThread( () -> {
+                    // Setting the floor level programmatically
+                    mMapControl.selectFloor( 1 );
 
-                        // Setting the floor level programmatically
-                        mMapControl.selectFloor( 1 );
+                    // Make the route
+                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 19f ) );
 
-                        // Make the route
-                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 19f ) );
-
-                        // Wait a bit before create/render the route
-                        new Handler( context.getMainLooper() ).postDelayed( this::routing, 2000 );
-                    });
+                    // Wait a bit before create/render the route
+                    new Handler( _context.getMainLooper() ).postDelayed( this::routing, 2000 );
                 }
             }
         });
@@ -153,9 +153,10 @@ public class ShowRouteFragment extends Fragment {
             {
                 mRoutingRenderer.setRoute( route );
 
-                if( getActivity() != null )
+                Activity activity  = getActivity();
+                if( activity != null )
                 {
-                    getActivity().runOnUiThread( () -> mRoutingRenderer.setRouteLegIndex( 0 ) );
+                    activity.runOnUiThread( () -> mRoutingRenderer.setRouteLegIndex( 0 ) );
                 }
             } else
             {
@@ -163,8 +164,8 @@ public class ShowRouteFragment extends Fragment {
             }
         });
 
-        Point origin = new Point( 57.057917, 9.950361 );
-        Point destination = new Point( 57.058038, 9.950509 );
+        final Point origin = new Point( 57.057917, 9.950361 );
+        final Point destination = new Point( 57.058038, 9.950509 );
 
         mRoutingProvider.query( origin, destination );
     }

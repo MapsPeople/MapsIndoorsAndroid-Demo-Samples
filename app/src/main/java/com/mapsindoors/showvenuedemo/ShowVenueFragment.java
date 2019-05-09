@@ -2,6 +2,8 @@ package com.mapsindoors.showvenuedemo;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -41,25 +43,43 @@ public class ShowVenueFragment extends Fragment {
         // Required empty public constructor
     }
 
-
+    @NonNull
     public static ShowVenueFragment newInstance() {
         return new ShowVenueFragment();
     }
 
 
-    //region FRAGMENT
-
+    //region FRAGMENT LIFECYCLE
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView( @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
+    {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_map, container, false);
-        setupView(rootView);
-
-        return rootView;
+        return inflater.inflate( R.layout.fragment_map, container, false );
     }
 
-    private void setupView(View rootView) {
+    @Override
+    public void onViewCreated( @NonNull View view, @Nullable Bundle savedInstanceState )
+    {
+        super.onViewCreated( view, savedInstanceState );
+
+        setupView( view );
+    }
+
+    @Override
+    public void onDestroyView()
+    {
+        if( mMapControl != null )
+        {
+            mMapControl.onDestroy();
+        }
+
+        super.onDestroyView();
+    }
+    //endregion
+
+
+    private void setupView( View rootView ) {
 
         FragmentManager fm = getChildFragmentManager();
 
@@ -78,7 +98,6 @@ public class ShowVenueFragment extends Fragment {
             setupMapsIndoors();
         }
     };
-    //endregion
 
 
     void setupMapsIndoors()
@@ -100,30 +119,27 @@ public class ShowVenueFragment extends Fragment {
 
             if( miError == null )
             {
-                Activity context = getActivity();
+                final Activity context = getActivity();
                 if( context != null )
                 {
-                    context.runOnUiThread(() -> {
+                    mMapControl.selectFloor( 1 );
 
-                        mMapControl.selectFloor( 1 );
+                    final VenueCollection venues = MapsIndoors.getVenues();
 
-                        VenueCollection venues = MapsIndoors.getVenues();
+                    if( venues != null )
+                    {
+                        final Venue currentVenue = venues.getCurrentVenue();
 
-                        if( venues != null )
+                        if( currentVenue != null )
                         {
-                            Venue currentVenue = venues.getCurrentVenue();
+                            final LatLngBounds latLngBounds = currentVenue.getLatLngBoundingBox();
 
-                            if( currentVenue != null )
+                            if( (mGoogleMap != null) && (latLngBounds != null) )
                             {
-                                LatLngBounds latLngBounds = currentVenue.getLatLngBoundingBox();
-
-                                if( (mGoogleMap != null) && (latLngBounds != null) )
-                                {
-                                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngBounds( latLngBounds, 10 ) );
-                                }
+                                mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngBounds( latLngBounds, 10 ) );
                             }
                         }
-                    });
+                    }
                 }
             }
         });

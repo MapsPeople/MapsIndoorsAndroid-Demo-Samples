@@ -44,9 +44,9 @@ public class MapFloorSelector extends FrameLayout
 	private static final int FADE_IN_ANIM_TIME_IN_MS = 500;
 	private static final int FADE_OUT_ANIM_TIME_IN_MS = 500;
 
-	public static final int FLAG_PREVENT_SHOW_HIDE_FROM_CONTROL = (1 << 0); // 0001
-	public static final int FLAG_DISABLE_AUTO_POPULATE          = (1 << 1); // 0010
-	public static final int FLAG_DISABLE_AUTO_FLOOR_CHANGE      = (1 << 2); // 0100
+	public static final int FLAG_PREVENT_SHOW_HIDE_FROM_CONTROL = (1 << 0);
+	public static final int FLAG_DISABLE_AUTO_POPULATE          = (1 << 1);
+	public static final int FLAG_DISABLE_AUTO_FLOOR_CHANGE      = (1 << 2);
 
 
 	OnFloorSelectedListener mFloorSelectedListener;
@@ -103,29 +103,24 @@ public class MapFloorSelector extends FrameLayout
 		mAnimator = null;
 		mFlags = 0;
 
-		{
+		mFloorSelectorListView = findViewById( R.id.mapspeople_floor_selector_list );
+		mListAdapter = new MapFloorSelectorAdapter( context, R.layout.control_mapsindoors_floor_selector_button );
 
-			mFloorSelectorListView = findViewById( R.id.mapspeople_floor_selector_list );
-			mListAdapter = new MapFloorSelectorAdapter( context, R.layout.control_mapsindoors_floor_selector_button );
+		mFloorSelectorListView.setAdapter( mListAdapter );
 
+		mFloorSelectorListView.setOnItemClickListener( ( parent, view, position, id ) -> {
+			final int newIndex = (int) view.getTag();
+			if( newIndex != mCurrentFloorIndex ) {
 
-			mFloorSelectorListView.setAdapter( mListAdapter );
+				setFloorInternal( newIndex );
 
-
-			mFloorSelectorListView.setOnItemClickListener( ( parent, view, position, id ) -> {
-				int newIndex = (int) view.getTag();
-				if( newIndex != mCurrentFloorIndex ) {
-
-					setFloorInternal( newIndex );
-
-					if( mFloorSelectedListener != null) {
-						mFloorSelectedListener.onFloorSelected( newIndex );
-					}
+				if( mFloorSelectedListener != null) {
+					mFloorSelectedListener.onFloorSelected( newIndex );
 				}
-			} );
+			}
+		} );
 
-			show( false, false );
-		}
+		show( false, false );
 	}
 
 

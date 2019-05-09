@@ -2,6 +2,7 @@ package com.mapsindoors;
 
 import android.app.Application;
 import android.content.res.Configuration;
+import android.support.annotation.NonNull;
 
 import com.mapsindoors.mapssdk.MapsIndoors;
 import com.mapsindoors.mapssdk.dbglog;
@@ -31,7 +32,7 @@ public class DemoApplication extends Application
         MapsIndoors.initialize( getApplicationContext(), getString( R.string.mi_api_key ) );
 
         // Your Google Maps API key
-        //   MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
+        MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
 
         sInstance = this;
     }
@@ -55,6 +56,7 @@ public class DemoApplication extends Application
         MapsIndoors.onApplicationConfigurationChanged( newConfig );
     }
 
+    @NonNull
     public static Application getInstance()
     {
         return sInstance;

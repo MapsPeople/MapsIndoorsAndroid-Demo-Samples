@@ -1,28 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".showlocationdemo.ShowLocationFragment">
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".showlocationdemo.ShowLocationFragment">
 
+	<fragment
+		android:id="@+id/mapfragment"
+		android:name="com.google.android.gms.maps.SupportMapFragment"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:clickable="true"
+		tools:context=".MainActivity"/>
 
-    <fragment
-        android:id="@+id/mapfragment"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        tools:context=".ui.activitymain.MapsIndoorsActivity"/>
-
-
-
-    <com.mapsindoors.customfloorselectordemo.floorselectorcomponent.MapFloorSelector
-        android:id="@+id/mp_floor_selector"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:elevation="2dp"
-        android:layout_marginTop="10dp"
-        />
+	<com.mapsindoors.customfloorselectordemo.floorselectorcomponent.MapFloorSelector
+		android:id="@+id/mp_floor_selector"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="6dp"
+		android:layout_marginTop="10dp"
+		android:elevation="2dp"
+		/>
 </RelativeLayout>

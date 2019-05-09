@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +37,7 @@ public class SolutionSelectorFragment extends Fragment {
 
 
     // TODO: Rename and change types and number of parameters
+    @NonNull
     public static SolutionSelectorFragment newInstance() {
         final SolutionSelectorFragment fragment = new SolutionSelectorFragment();
 
@@ -45,9 +48,9 @@ public class SolutionSelectorFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    @Nullable
+    public View onCreateView( @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
+    {
         // Inflate the layout for this fragment
         mainView = inflater.inflate( R.layout.fragment_solution_selector, container, false );
 
@@ -80,36 +83,36 @@ public class SolutionSelectorFragment extends Fragment {
 
             MapsIndoors.synchronizeContent( this::dataSyncDone);
         });
-
     }
 
     void dataSyncDone( MIError error )
     {
-        new Handler( Looper.getMainLooper() ).post( () -> {
+        //new Handler( Looper.getMainLooper() ).post( () -> {
 
             // if(error == null){
-            mListener.onSolutionChoosen();
-           /* }else {
-                Toast.makeText(getContext() , "An error occurred with the message: " + error.message, Toast.LENGTH_SHORT).show();
-            }*/
-
-        } );
+            mListener.onSolutionChosen();
+            //}else {
+            //    Toast.makeText(getContext() , "An error occurred with the message: " + error.message, Toast.LENGTH_SHORT).show();
+            //}
+        //} );
     }
 
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
+    public void onAttach( Context context )
+    {
+        super.onAttach( context );
+
+        if( context instanceof OnFragmentInteractionListener ) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            throw new RuntimeException( context.toString() + " must implement OnFragmentInteractionListener" );
         }
     }
 
     @Override
-    public void onDetach() {
+    public void onDetach()
+    {
         super.onDetach();
         mListener = null;
     }
@@ -117,6 +120,6 @@ public class SolutionSelectorFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-         void onSolutionChoosen();
+         void onSolutionChosen();
     }
 }

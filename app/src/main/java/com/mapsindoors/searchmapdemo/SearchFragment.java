@@ -1,10 +1,13 @@
 package com.mapsindoors.searchmapdemo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -47,13 +50,15 @@ import java.util.List;
  ***/
 public class SearchFragment extends Fragment {
 
+    static final int VIEW_FLIPPER_ITEM_LIST    = 0;
+    static final int VIEW_FLIPPER_PROGRESS_BAR = 1;
+
     /***
      Setup member variables for `SearchFragment`:
      * The selection listener
      * A List View to show the search result
      * Some view components
      ***/
-
     OnFragmentInteractionListener mListener;
     ListView mMainMenuList;
 
@@ -77,9 +82,9 @@ public class SearchFragment extends Fragment {
         // Required empty public constructor
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView( @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState ) {
 
         if (mMainView == null) {
             mMainView = inflater.inflate(R.layout.fragment_search, container, false);
@@ -88,12 +93,11 @@ public class SearchFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated( @NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mViewFlipper = view.findViewById(R.id.directionsfullmenu_itemlist_viewflipper);
         mMainMenuList = view.findViewById(R.id.directionsfullmenu_itemlist);
-
 
         mSearchEditTextView = view.findViewById(R.id.search_fragment_edittext_search);
 
@@ -102,7 +106,6 @@ public class SearchFragment extends Fragment {
         mBackButton = view.findViewById(R.id.directionsfullmenusearch_back_button);
 
         init();
-
     }
     //endregion
 
@@ -111,7 +114,6 @@ public class SearchFragment extends Fragment {
         /***
          Init and setup the listView.
          ***/
-
         mListAdapter = new IconTextListAdapter(getContext(),new ArrayList<>());
 
         mMainMenuList.setAdapter(mListAdapter);
@@ -124,7 +126,7 @@ public class SearchFragment extends Fragment {
          Init and setup the view components for a better search experience.
          ***/
         //
-        /*** Note: Creating a textwatcher as it's needed for software keyboard support. ***/
+        /*** Note: Creating a TextWatcher as it's needed for software keyboard support. ***/
         mSearchEditTextView.addTextChangedListener(mEditTextViewTextWatcher);
         mSearchEditTextView.setOnFocusChangeListener(mEditTextViewOnFocusChangeListener);
 
@@ -141,10 +143,7 @@ public class SearchFragment extends Fragment {
         //
 
         mIsMenuCleared = true;
-
     }
-
-
 
     TextWatcher mEditTextViewTextWatcher = new TextWatcher() {
         @Override
@@ -152,11 +151,12 @@ public class SearchFragment extends Fragment {
         }
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        public void onTextChanged( CharSequence s, int start, int before, int count )
+        {
             String text = mSearchEditTextView.getText().toString();
-            if ( !TextUtils.isEmpty( text ) ) {
-                if (text.startsWith(" ")) {
-                    mSearchEditTextView.setText(text.trim());
+            if( !TextUtils.isEmpty( text ) ) {
+                if( !text.isEmpty() && text.charAt( 0 ) == ' ' ) {
+                    mSearchEditTextView.setText( text.trim() );
                 }
             } else {
                 runClearSearchButtonClickAction();
@@ -176,18 +176,18 @@ public class SearchFragment extends Fragment {
         }
     };
 
-
-    View.OnFocusChangeListener mEditTextViewOnFocusChangeListener = new View.OnFocusChangeListener() {
+    View.OnFocusChangeListener mEditTextViewOnFocusChangeListener = new View.OnFocusChangeListener()
+    {
         @Override
-        public void onFocusChange(View view, boolean hasFocus) {
-            if (hasFocus) {
+        public void onFocusChange( View view, boolean hasFocus )
+        {
+            if( hasFocus ) {
                 mSearchEditTextView.getText().clear();
-                setSearchClearBtnActive(true);
+                setSearchClearBtnActive( true );
                 openKeyboard();
             }
         }
     };
-
 
     // Close keyboard and search when user presses search on the keyboard
     TextView.OnEditorActionListener mEditTextViewOnEditorActionListener = ( v, actionId, event ) -> {
@@ -205,13 +205,11 @@ public class SearchFragment extends Fragment {
         if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
             switch (keyCode) {
                 case KeyEvent.KEYCODE_DPAD_CENTER:
-                case KeyEvent.KEYCODE_ENTER: {
+                case KeyEvent.KEYCODE_ENTER:
                     closeKeyboard();
                     return true;
-                }
-                case KeyEvent.KEYCODE_BACK: {
+                case KeyEvent.KEYCODE_BACK:
                     break;
-                }
                 default:
                     startSearchTimer();
             }
@@ -222,12 +220,19 @@ public class SearchFragment extends Fragment {
     private void setFocusOnSearchBox() {
         mSearchEditTextView.post( () -> {
             mSearchEditTextView.requestFocusFromTouch();
-            InputMethodManager lManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            lManager.showSoftInput(mSearchEditTextView, 0);
+
+            final Activity context = getActivity();
+            if( context != null ) {
+                final InputMethodManager lManager = (InputMethodManager) context.getSystemService( Context.INPUT_METHOD_SERVICE );
+
+                if( lManager != null ) {
+                    lManager.showSoftInput( mSearchEditTextView, 0 );
+                }
+            }
         } );
     }
-
     //endregion
+
 
     public void setSearchClearBtnActive(boolean exitActive) {
         mSearchClearBtn.setVisibility(exitActive ? View.VISIBLE : View.INVISIBLE);
@@ -272,37 +277,50 @@ public class SearchFragment extends Fragment {
     //endregion
 
 
-    void closeKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mMainView.getWindowToken(), 0);
+    void closeKeyboard()
+    {
+        final Activity context = getActivity();
+        if( context != null ) {
+            final InputMethodManager imm = (InputMethodManager) context.getSystemService( Context.INPUT_METHOD_SERVICE );
+
+            if( imm != null ) {
+                imm.hideSoftInputFromWindow( mMainView.getWindowToken(), 0 );
+            }
+        }
     }
 
-    void openKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-      //  imm.hideSoftInputFromWindow(mMainView.getWindowToken(), 0);
-        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+    void openKeyboard()
+    {
+        final Activity context = getActivity();
+        if( context != null ) {
+            final InputMethodManager imm = (InputMethodManager) context.getSystemService( Context.INPUT_METHOD_SERVICE );
 
+            if( imm != null ) {
+                //  imm.hideSoftInputFromWindow(mMainView.getWindowToken(), 0);
+                imm.toggleSoftInput( InputMethodManager.SHOW_IMPLICIT, 0 );
+            }
+        }
     }
-
 
     //Only search after a second of delay. Any search requests before one sec should replace the search and restart the timer.
-    void startSearchTimer() {
-        if (searchHandler != null) {
-            searchHandler.removeCallbacks(searchRunner);
+    void startSearchTimer()
+    {
+        if( searchHandler != null ) {
+            searchHandler.removeCallbacks( searchRunner );
         }
 
         searchHandler = new Handler();
-        searchHandler.postDelayed(searchRunner, 1000);
+        searchHandler.postDelayed( searchRunner, 1000 );
     }
 
-    void startClearListTimer() {
-        if (searchHandler != null) {
-            searchHandler.removeCallbacks(searchRunner);
+    void startClearListTimer()
+    {
+        if( searchHandler != null ) {
+            searchHandler.removeCallbacks( searchRunner );
 
         }
         searchHandler = new Handler();
     }
-
 
     /**
      * Non-empty search string
@@ -314,48 +332,46 @@ public class SearchFragment extends Fragment {
         @Override
         public void run()
         {
-            String searchString = mSearchEditTextView.getText().toString();
+            final String searchString = mSearchEditTextView.getText().toString();
 
-            if( !TextUtils.isEmpty( searchString ) )
-            {
-
+            if( !TextUtils.isEmpty( searchString ) ) {
                 mCSearchString = searchString.trim();
                 mLastSearchText = mCSearchString;
 
-                if( !mCSearchString.isEmpty() )
-                {
+                if( !mCSearchString.isEmpty() ) {
                     // Show as busy
-                    mViewFlipper.setDisplayedChild(1);
+                    mViewFlipper.setDisplayedChild( VIEW_FLIPPER_PROGRESS_BAR );
 
+                    final MPQuery q = new MPQuery.Builder().
+                            setQuery( mCSearchString ).
+                            build();
 
-                    MPQuery q = new MPQuery.Builder().setQuery(mCSearchString).build();
-                    MPFilter f = new MPFilter.Builder().setTake(10).build();
+                    final MPFilter f = new MPFilter.Builder().
+                            setTake( 10 ).
+                            build();
 
-                    MapsIndoors.getLocationsAsync(q, f, (locs, err) -> {
-                        mViewFlipper.setDisplayedChild(0);
-                        if(locs != null){
-                            mListAdapter.setList(locs);
+                    MapsIndoors.getLocationsAsync( q, f, ( locs, err ) -> {
+                        mViewFlipper.setDisplayedChild( VIEW_FLIPPER_ITEM_LIST );
+                        if( locs != null ) {
+                            mListAdapter.setList( locs );
                         }
-                  });
+                    } );
                 }
             }
-
         }
     };
-
-
 
     /***
      Whenever a user clicks a search result the 'onUserSelectedLocation' of the FragmentInteractionListener is called .
      ***/
-    AdapterView.OnItemClickListener mAdapterViewOnItemClickListener = new AdapterView.OnItemClickListener() {
+    AdapterView.OnItemClickListener mAdapterViewOnItemClickListener = new AdapterView.OnItemClickListener()
+    {
         @Override
-        public void onItemClick( AdapterView< ? > parent, View view, int position, long id )
+        public void onItemClick( AdapterView<?> parent, View view, int position, long id )
         {
             closeKeyboard();
 
-            if( mListener != null )
-            {
+            if( mListener != null ) {
                 mListener.onUserSelectedLocation( (MPLocation) mListAdapter.getItem( position ) );
             }
         }
@@ -363,22 +379,23 @@ public class SearchFragment extends Fragment {
 //
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
+    public void onAttach( Context context )
+    {
+        super.onAttach( context );
+        if( context instanceof OnFragmentInteractionListener ) {
             mListener = (OnFragmentInteractionListener) context;
         }
     }
 
-
     /***
      Declare an interface that will handle the communication between the fragment and the activity.
      ***/
-    public interface OnFragmentInteractionListener {
-        void onUserSelectedLocation(MPLocation loc);
+    public interface OnFragmentInteractionListener
+    {
+        void onUserSelectedLocation( @Nullable MPLocation loc );
     }
 
-
+    @NonNull
     public static SearchFragment newInstance()
     {
         return new SearchFragment();

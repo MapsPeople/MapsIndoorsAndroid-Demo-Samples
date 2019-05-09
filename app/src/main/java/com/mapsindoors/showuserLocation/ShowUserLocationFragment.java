@@ -28,8 +28,6 @@ import com.mapsindoors.mapssdk.MapsIndoors;
 
  Create a class `ShowUserLocationFragment` that inherits from `Fragment`.
  ***/
-
-
 public class ShowUserLocationFragment extends Fragment {
 
     /***
@@ -54,7 +52,7 @@ public class ShowUserLocationFragment extends Fragment {
         // Required empty public constructor
     }
 
-
+    @NonNull
     public static ShowUserLocationFragment newInstance()
     {
         return new ShowUserLocationFragment();
@@ -62,12 +60,12 @@ public class ShowUserLocationFragment extends Fragment {
 
 
     //region FRAGMENT LIFECYCLE
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView( @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
+    {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        return inflater.inflate( R.layout.fragment_map, container, false );
     }
 
     @Override
@@ -78,6 +76,22 @@ public class ShowUserLocationFragment extends Fragment {
         setupView( view );
     }
 
+    @Override
+    public void onDestroyView()
+    {
+        if( mMapControl != null )
+        {
+            mMapControl.onDestroy();
+        }
+        /***
+         In the 'onDestroyView' method, we need to free the MapsIndoors PositionProvider
+         ***/
+        MapsIndoors.setPositionProvider( null );
+        //
+
+        super.onDestroyView();
+    }
+    //endregion
 
 
     private void setupView( View rootView )
@@ -107,7 +121,6 @@ public class ShowUserLocationFragment extends Fragment {
          ***/
         if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
         {
-
             MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
         }
 
@@ -130,12 +143,12 @@ public class ShowUserLocationFragment extends Fragment {
         /***
          * Assign the `DemoPositionProvider` instance to the `MapsIndoors.positionProvider` by calling the 'MapsIndoors.setPositionProvider'
          ***/
-        MapsIndoors.setPositionProvider(demoPositionProvider);
+        MapsIndoors.setPositionProvider( demoPositionProvider );
 
         /***
          * Tell the mapControl to show the users location
          ***/
-        mMapControl.showUserPosition(true);
+        mMapControl.showUserPosition( true );
 
         /***
          Init the mapControl object
@@ -144,38 +157,18 @@ public class ShowUserLocationFragment extends Fragment {
 
             if( miError == null )
             {
-                Activity context = getActivity();
+                final Activity context = getActivity();
                 if( context != null )
                 {
-                    context.runOnUiThread( () -> {
-                        mMapControl.selectFloor( 1 );
-                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
+                    mMapControl.selectFloor( 1 );
+                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
 
-
-                        /***
-                         * Start positioning
-                         ***/
-                        demoPositionProvider.startPositioning(null);
-                    });
+                    /***
+                     * Start positioning
+                     ***/
+                    demoPositionProvider.startPositioning(null);
                 }
             }
         });
     }
-
-    @Override
-    public void onDestroyView()
-    {
-        if( mMapControl != null )
-        {
-            mMapControl.onDestroy();
-        }
-        /***
-         In the 'onDestroyView' method, we need to free the MapsIndoors PositionProvider
-         ***/
-        MapsIndoors.setPositionProvider(null);
-        //
-
-        super.onDestroyView();
-    }
-
 }

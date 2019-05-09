@@ -33,7 +33,6 @@ import com.mapsindoors.mapssdk.MapsIndoors;
 
  Start by creating a `Fragment or an Activity` class that contains the google map fragment
  ***/
-
 public class LocationDetailsFragment extends Fragment
 //
 {
@@ -47,7 +46,6 @@ public class LocationDetailsFragment extends Fragment
     /***
      Add other needed views for this example
      ***/
-
     SupportMapFragment mMapFragment;
     TextView detailsTextView;
 
@@ -62,19 +60,20 @@ public class LocationDetailsFragment extends Fragment
         // Required empty public constructor
     }
 
+    @NonNull
     public static LocationDetailsFragment newInstance()
     {
         return new LocationDetailsFragment();
     }
 
 
-    //Region FRAGMENT LIFECYCLE
-
+    //region FRAGMENT LIFECYCLE
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView( @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
+    {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_show_location_details, container, false);
+        return inflater.inflate( R.layout.fragment_show_location_details, container, false );
     }
 
     @Override
@@ -88,14 +87,14 @@ public class LocationDetailsFragment extends Fragment
     @Override
     public void onDestroyView()
     {
-        if( mMapControl != null )
-        {
+        if( mMapControl != null ) {
             mMapControl.onDestroy();
         }
 
         super.onDestroyView();
     }
     //endregion
+
 
     /***
      Setup the needed views for this example
@@ -110,6 +109,7 @@ public class LocationDetailsFragment extends Fragment
 
         mMapFragment.getMapAsync( mOnMapReadyCallback );
     }
+
     /***
      Once the map is ready move the camera to the venue location and call the setupMapsIndoors
      ***/
@@ -123,7 +123,6 @@ public class LocationDetailsFragment extends Fragment
             setupMapsIndoors();
         }
     };
-
 
     /***
      Setup MapsIndoors
@@ -151,7 +150,7 @@ public class LocationDetailsFragment extends Fragment
          Instantiate and init the MapControl object which will sync data
          ***/
         mMapControl = new MapControl( getActivity() );
-        mMapControl.setGoogleMap(mGoogleMap, mMapFragment.getView());
+        mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
         /***
          When a marker is clicked, get the related MapsIndoors location object and set the label text based on the name and description of the location
@@ -177,7 +176,6 @@ public class LocationDetailsFragment extends Fragment
             return true;
         } );
 
-
         /***
          Init the MapControl object which will sync data
          ***/
@@ -185,17 +183,11 @@ public class LocationDetailsFragment extends Fragment
 
             if( miError == null )
             {
-                Activity context = getActivity();
-                if( context != null )
-                {
-                    context.runOnUiThread( () -> {
-                        /***
-                         Select a floor and animate the camera to the venue position
-                         ***/
-                        mMapControl.selectFloor( 1 );
-                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
-                    });
-                }
+                /***
+                 Select a floor and animate the camera to the venue position
+                 ***/
+                mMapControl.selectFloor( 1 );
+                mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
             }
         });
     }

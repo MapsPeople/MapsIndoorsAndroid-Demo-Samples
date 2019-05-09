@@ -40,6 +40,7 @@ public class CustomFloorSelectorFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @NonNull
     public static CustomFloorSelectorFragment newInstance()
     {
         return new CustomFloorSelectorFragment();
@@ -48,10 +49,11 @@ public class CustomFloorSelectorFragment extends Fragment {
 
     //region FRAGMENT LIFECYCLE
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView( @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
+    {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map_with_floor_selector, container, false);
+        return inflater.inflate( R.layout.fragment_map_with_floor_selector, container, false );
     }
 
     @Override
@@ -119,15 +121,13 @@ public class CustomFloorSelectorFragment extends Fragment {
 
             if( miError == null )
             {
-                Activity context = getActivity();
+                final Activity context = getActivity();
                 if( context != null )
                 {
-                    context.runOnUiThread( () -> {
-                        //setting the floor level programmatically
-                        mMapControl.selectFloor( 1 );
+                    //setting the floor level programmatically
+                    mMapControl.selectFloor( 1 );
 
-                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
-                    } );
+                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
                 }
             }
         });

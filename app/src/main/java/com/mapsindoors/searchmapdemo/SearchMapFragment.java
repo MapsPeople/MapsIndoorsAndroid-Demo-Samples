@@ -65,10 +65,10 @@ public class SearchMapFragment extends Fragment
         // Required empty public constructor
     }
 
+    @NonNull
     public static SearchMapFragment newInstance() {
         return new SearchMapFragment();
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,11 +78,11 @@ public class SearchMapFragment extends Fragment
         }
     }
 
-    //region FRAGMENT LIFECYCLE
 
+    //region FRAGMENT LIFECYCLE
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView( @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState ) {
         return inflater.inflate(R.layout.fragment_search_map, container, false);
     }
 
@@ -104,6 +104,8 @@ public class SearchMapFragment extends Fragment
 
         super.onDestroyView();
     }
+    //endregion
+
 
     private void setupView( View rootView) {
 
@@ -147,7 +149,7 @@ public class SearchMapFragment extends Fragment
          Instantiate the MapControl object
          ***/
         mMapControl = new MapControl( getActivity() );
-        mMapControl.setGoogleMap(mGoogleMap, mMapFragment.getView());
+        mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
         /***
          * init the MapControl object which will sync data.
@@ -157,24 +159,20 @@ public class SearchMapFragment extends Fragment
 
             if( miError == null )
             {
-
-                Activity context = getActivity();
+                final Activity context = getActivity();
                 if( context != null )
                 {
-                    context.runOnUiThread(() -> {
+                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
 
-                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
-
-                        if( locationToSelect != null )
-                        {
-                            mMapControl.selectLocation( locationToSelect );
-                            locationToSelect = null;
-                        }
-                        else
-                        {
-                            mMapControl.selectFloor( 1 );
-                        }
-                    });
+                    if( locationToSelect != null )
+                    {
+                        mMapControl.selectLocation( locationToSelect );
+                        locationToSelect = null;
+                    }
+                    else
+                    {
+                        mMapControl.selectFloor( 1 );
+                    }
                 }
             }
         });
@@ -184,17 +182,21 @@ public class SearchMapFragment extends Fragment
     public interface OnFragmentInteractionListener {
         void onSearchButtonClick();
     }
+
     /***
      A public method to select a location
      ***/
-    public void selectLocation(MPLocation loc){
+    public void selectLocation( MPLocation loc )
+    {
         locationToSelect = loc;
     }
     //
+
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
+    public void onAttach( Context context )
+    {
+        super.onAttach( context );
+        if( context instanceof OnFragmentInteractionListener ) {
             mListener = (OnFragmentInteractionListener) context;
         }
     }

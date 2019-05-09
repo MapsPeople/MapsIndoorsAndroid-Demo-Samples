@@ -32,7 +32,6 @@ import com.mapsindoors.mapssdk.MPLocationClusterImageAdapter;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
 import com.mapsindoors.mapssdk.OnLocationClusterClickListener;
-import com.mapsindoors.mapssdk.OnSingleImageLoadedListener;
 
 import java.util.List;
 
@@ -43,10 +42,9 @@ import java.util.List;
 
  This is an example of enabling and disabling location grouping on the map as well as providing custom cluster tapping behavior and custom cluster images.
 
- Create a class `locationClusteringFragment` that extends `Fragment`.
+ Create a class `LocationClusteringFragment` that extends `Fragment`.
  ***/
-
-public class locationClusteringFragment extends Fragment {
+public class LocationClusteringFragment extends Fragment {
 
     /***
      Add a `GoogleMap` and a `MapControl` to the class
@@ -54,10 +52,10 @@ public class locationClusteringFragment extends Fragment {
     MapControl mMapControl;
     GoogleMap mGoogleMap;
     ToggleButton clusteringToggleButton;
+
     /***
      Add other needed views for this example
      ***/
-
     SupportMapFragment mMapFragment;
 
     /***
@@ -66,24 +64,25 @@ public class locationClusteringFragment extends Fragment {
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     //
 
-    public locationClusteringFragment()
+    public LocationClusteringFragment()
     {
         // Required empty public constructor
     }
 
-    public static locationClusteringFragment newInstance()
+    @NonNull
+    public static LocationClusteringFragment newInstance()
     {
-        return new locationClusteringFragment();
+        return new LocationClusteringFragment();
     }
 
 
-    //Region FRAGMENT LIFECYCLE
-
+    //region FRAGMENT LIFECYCLE
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView( @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
+    {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_clustering_map, container, false);
+        return inflater.inflate( R.layout.fragment_clustering_map, container, false );
     }
 
     @Override
@@ -106,6 +105,7 @@ public class locationClusteringFragment extends Fragment {
     }
     //endregion
 
+
     /***
      Setup the needed views for this example
      ***/
@@ -113,22 +113,19 @@ public class locationClusteringFragment extends Fragment {
     {
         FragmentManager fm = getChildFragmentManager();
 
-        clusteringToggleButton = rootView.findViewById(R.id.clustering_toggle_button);
+        clusteringToggleButton = rootView.findViewById( R.id.clustering_toggle_button );
 
-
-        clusteringToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(mMapControl!= null){
-                    mMapControl.setLocationClusteringEnabled(b);
-                }
+        clusteringToggleButton.setOnCheckedChangeListener( ( compoundButton, b ) -> {
+            if( mMapControl != null ) {
+                mMapControl.setLocationClusteringEnabled( b );
             }
-        });
+        } );
 
         mMapFragment = (SupportMapFragment) fm.findFragmentById( R.id.mapfragment );
 
         mMapFragment.getMapAsync( mOnMapReadyCallback );
     }
+
     /***
      Once the map is ready move the camera to the venue location and call the setupMapsIndoors
      ***/
@@ -143,7 +140,6 @@ public class locationClusteringFragment extends Fragment {
         }
     };
 
-
     /***
      Setup MapsIndoors
      ***/
@@ -153,125 +149,107 @@ public class locationClusteringFragment extends Fragment {
          Setting the API key to the desired solution
          ***/
 
-            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
+        MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
 
         /***
          Setting the Google API key
          ***/
         MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
-        if( getActivity() == null )
-        {
+        if( getActivity() == null ) {
             return;
         }
-
 
         /***
          Instantiate and init the MapControl object which will sync data
          ***/
         mMapControl = new MapControl( getActivity() );
-        mMapControl.setGoogleMap(mGoogleMap, mMapFragment.getView());
+        mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
-        mMapControl.setLocationClusteringEnabled(true);
+        mMapControl.setLocationClusteringEnabled( true );
 
-
-       mMapControl.setLocationClusterImageAdapter(new MPLocationClusterImageAdapter() {
+        mMapControl.setLocationClusterImageAdapter( new MPLocationClusterImageAdapter() {
             @Nullable
             @Override
-            public Bitmap getImage(@NonNull String clusterId, @NonNull List<MPLocation> locations, @NonNull ImageSize imageSize) {
-                int textSize = Convert.getPixels(15);
+            public Bitmap getImage( @NonNull String clusterId, @NonNull List<MPLocation> locations, @NonNull ImageSize imageSize )
+            {
+                int textSize = Convert.getPixels( 15 );
 
-                return getCircularImageWithText(""+ locations.size(),textSize,imageSize.width, imageSize.height );
+                return getCircularImageWithText( "" + locations.size(), textSize, imageSize.width, imageSize.height );
             }
 
             @NonNull
             @Override
-            public ImageSize getImageSize(@NonNull String clusterId, int count) {
-                return new ImageSize(Convert.getPixels(25),Convert.getPixels(25));
-            }
-        });
+            public ImageSize getImageSize( @NonNull String clusterId, int count )
+            {
+                final int imageSizeInPixels = Convert.getPixels( 25 );
 
+                return new ImageSize( imageSizeInPixels, imageSizeInPixels );
+            }
+        } );
 
         /***
          Define the delegate method `didTap` that will receive tap events from a cluster marker
-
          * Check if zoom is possible and increment map zoom
          * Return true to indicate that you handle the event and do not want default behavior to happen
          ***/
+        mMapControl.setOnLocationClusterClickListener( ( marker, locations ) -> {
 
-        mMapControl.setOnLocationClusterClickListener(new OnLocationClusterClickListener() {
-            @Override
-            public boolean onLocationClusterClick(@NonNull Marker marker, @Nullable List<MPLocation> locations) {
+            mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 13.0f ) );
 
-                mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 13.0f ) );
-
-                return true;
-            }
-        });
+            return true;
+        } );
 
         /***
          Init the MapControl object which will sync data
          ***/
         mMapControl.init( miError -> {
-
-            if( miError == null )
-            {
-                Activity context = getActivity();
-                if( context != null )
-                {
-                    context.runOnUiThread( () -> {
-                        /***
-                         Select a floor and animate the camera to the venue position
-                         ***/
-                        mMapControl.selectFloor( 1 );
-                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
-                    });
+            if( miError == null ) {
+                final Activity context = getActivity();
+                if( context != null ) {
+                    /***
+                     Select a floor and animate the camera to the venue position
+                     ***/
+                    mMapControl.selectFloor( 1 );
+                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
                 }
             }
-        });
+        } );
     }
 
-
-    public static Bitmap getCircularImageWithText(String text, int textSize, int width, int height){
-
-        Paint background = new Paint();
+    public static Bitmap getCircularImageWithText( String text, int textSize, int width, int height )
+    {
+        final Paint background = new Paint();
         background.setColor( Color.WHITE );
 
-
         // Now add the icon on the left side of the background rect
-        Bitmap result = Bitmap.createBitmap( width, height, Bitmap.Config.ARGB_8888 );
-        Canvas canvas = new Canvas( result );
-        int radius = width/2;
+        final Bitmap result = Bitmap.createBitmap( width, height, Bitmap.Config.ARGB_8888 );
+        final Canvas canvas = new Canvas( result );
+
+        final int radius = width >> 1;
         canvas.drawCircle( radius, radius, radius, background );
 
         background.setColor( Color.BLACK );
-        background.setStyle(Paint.Style.STROKE);
-        background.setStrokeWidth(3);
+        background.setStyle( Paint.Style.STROKE );
+        background.setStrokeWidth( 3 );
 
+        canvas.drawCircle( radius, radius, radius - 2, background );
 
-        canvas.drawCircle( radius, radius, radius-2, background );
-
-
-        TextPaint tp = new TextPaint();
-        tp.setTextSize( textSize);
+        final TextPaint tp = new TextPaint();
+        tp.setTextSize( textSize );
         tp.setColor( Color.BLACK );
 
-        Rect bounds = new Rect();
+        final Rect bounds = new Rect();
 
-        int text_height = 0;
-        int text_width = 0;
+        tp.getTextBounds( text, 0, text.length(), bounds );
 
-        tp.getTextBounds(text, 0, text.length(), bounds);
+        final int text_height = bounds.height();
+        final int text_width = bounds.width();
 
-        text_height =  bounds.height();
-        text_width =  bounds.width();
+        final int textpos_x = (width - text_width) >> 1;
+        final int textpos_y = (height + text_height) >> 1;
 
-        int textpos_x = (width - text_width) /2;
-        int textpos_y =  (height+ text_height)/2;
         canvas.drawText( text, textpos_x, textpos_y, tp );
-
 
         return result;
     }
-
-
 }

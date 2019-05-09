@@ -35,18 +35,19 @@ public class ChangeFloorFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @NonNull
     public static ChangeFloorFragment newInstance() {
         return new ChangeFloorFragment();
     }
 
 
     //region FRAGMENT LIFECYCLE
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    @Nullable
+    public View onCreateView( @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
+    {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map, container, false);
+        return inflater.inflate( R.layout.fragment_map, container, false );
     }
 
     @Override
@@ -69,10 +70,10 @@ public class ChangeFloorFragment extends Fragment {
     }
     //endregion
 
+
     private void setupView( View rootView)
     {
         FragmentManager fm = getChildFragmentManager();
-
 
         mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
 
@@ -109,17 +110,13 @@ public class ChangeFloorFragment extends Fragment {
 
             if( miError == null )
             {
-                Activity context = getActivity();
+                final Activity context = getActivity();
                 if( context != null )
                 {
-                    context.runOnUiThread( () -> {
+                    // Set the floor level programmatically
+                    mMapControl.selectFloor( 1 );
 
-                        // Set the floor level programmatically
-                        mMapControl.selectFloor( 1 );
-
-                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
-
-                    });
+                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
                 }
             }
         });
