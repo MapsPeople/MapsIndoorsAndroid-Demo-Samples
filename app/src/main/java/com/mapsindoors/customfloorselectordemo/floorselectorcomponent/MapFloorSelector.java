@@ -28,20 +28,11 @@ import java.util.Collections;
 import java.util.List;
 
 
-/**
- * MapFloorSelector
- * MapsIndoorsDemo
- *
- * Created by Jose J Varó on 2/28/2017.
- * Copyright © 2017 MapsPeople A/S. All rights reserved.
- */
-public class MapFloorSelector extends FrameLayout
-		implements
-		IFloorSelector
+public class MapFloorSelector extends FrameLayout implements IFloorSelector
 {
 	public final String TAG = MapFloorSelector.class.getSimpleName();
 
-	private static final int FADE_IN_ANIM_TIME_IN_MS = 500;
+	private static final int FADE_IN_ANIM_TIME_IN_MS  = 500;
 	private static final int FADE_OUT_ANIM_TIME_IN_MS = 500;
 
 	public static final int FLAG_PREVENT_SHOW_HIDE_FROM_CONTROL = (1 << 0);

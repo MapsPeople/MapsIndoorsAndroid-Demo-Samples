@@ -20,9 +20,6 @@ import com.mapsindoors.mapssdk.FloorBase;
 
 import java.util.ArrayList;
 
-/**
- * Created by Jose J Varó (jjv@mapspeople.com) on 2/28/2017.
- */
 
 public class MapFloorSelectorAdapter extends ArrayAdapter<String> {
 

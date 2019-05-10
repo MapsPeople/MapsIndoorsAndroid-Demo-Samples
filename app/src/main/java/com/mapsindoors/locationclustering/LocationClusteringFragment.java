@@ -172,9 +172,14 @@ public class LocationClusteringFragment extends Fragment {
             @Override
             public Bitmap getImage( @NonNull String clusterId, @NonNull List<MPLocation> locations, @NonNull ImageSize imageSize )
             {
-                int textSize = Convert.getPixels( 15 );
+                final int textSize = Convert.getPixels( 15 );
 
-                return getCircularImageWithText( "" + locations.size(), textSize, imageSize.width, imageSize.height );
+                return getCircularImageWithText(
+                        "" + locations.size(),
+                        textSize,
+                        imageSize.width,
+                        imageSize.height
+                );
             }
 
             @NonNull
@@ -216,7 +221,8 @@ public class LocationClusteringFragment extends Fragment {
         } );
     }
 
-    public static Bitmap getCircularImageWithText( String text, int textSize, int width, int height )
+    @NonNull
+    public static Bitmap getCircularImageWithText( @NonNull String text, int textSize, int width, int height )
     {
         final Paint background = new Paint();
         background.setColor( Color.WHITE );

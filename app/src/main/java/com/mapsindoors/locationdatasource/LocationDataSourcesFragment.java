@@ -21,13 +21,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.mapsindoors.DemoApplication;
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.LocationDisplayRule;
+import com.mapsindoors.mapssdk.MPLocation;
 import com.mapsindoors.mapssdk.MPLocationSource;
 import com.mapsindoors.mapssdk.MPLocationSourceOnStatusChangedListener;
 import com.mapsindoors.mapssdk.MPLocationSourceStatus;
+import com.mapsindoors.mapssdk.MPLocationsObserver;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /***
@@ -66,9 +69,9 @@ public class LocationDataSourcesFragment  extends Fragment {
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     //
 
-    Set<MPLocationSource> locationDataSources;
-    MPLocationSource mpLocationSource;
-    PeopleDataSource peopleDataSource;
+    @Nullable Set<MPLocationSource> locationDataSources;
+    @Nullable MPLocationSource mpLocationSource;
+    @Nullable PeopleDataSource peopleDataSource;
 
 
 
@@ -105,6 +108,11 @@ public class LocationDataSourcesFragment  extends Fragment {
     public void onDestroyView()
     {
         if( mMapControl != null ) {
+
+            if( peopleDataSource != null ) {
+                peopleDataSource.stopMockingPeoplePositions();
+            }
+
             MapsIndoors.removeLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
             mMapControl.onDestroy();
         }
@@ -167,8 +175,8 @@ public class LocationDataSourcesFragment  extends Fragment {
         mpLocationSource = MapsIndoors.getMapsIndoorsLocationSource();
         locationDataSources.add( mpLocationSource );
 
-        peopleDataSource = new PeopleDataSource( PEOPLE_TYPE );
-        locationDataSources.add( peopleDataSource );
+//        peopleDataSource = new PeopleDataSource( PEOPLE_TYPE );
+//        locationDataSources.add( peopleDataSource );
 
         /***
          Set the location sources to `PeopleDataSource` and `MapsIndoorsLocationSource`
@@ -179,7 +187,9 @@ public class LocationDataSourcesFragment  extends Fragment {
             if( context != null ) {
                 context.runOnUiThread( () -> {
                     if( error == null ) {
+
                         setupMapControl();
+
                     } else {
                         Toast.makeText( context, "Error occurred when setting the Datasources", Toast.LENGTH_SHORT ).show();
                     }
@@ -233,6 +243,10 @@ public class LocationDataSourcesFragment  extends Fragment {
                 if( context != null ) {
                     context.runOnUiThread( () -> {
 
+                        if( peopleDataSource != null ) {
+                            peopleDataSource.startMockingPeoplePositions();
+                        }
+
                         /***
                          Select a floor and animate the camera to the venue position
                          ***/
@@ -243,5 +257,4 @@ public class LocationDataSourcesFragment  extends Fragment {
             }
         }
     };
-
 }

@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.mapsindoors.BuildConfig;
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.MPDirectionsRenderer;
 import com.mapsindoors.mapssdk.MPRoutingProvider;
@@ -25,6 +29,7 @@ import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
 import com.mapsindoors.mapssdk.RoutingProvider;
 import com.mapsindoors.mapssdk.Point;
+import com.mapsindoors.mapssdk.TravelMode;
 
 
 /**
@@ -34,16 +39,17 @@ import com.mapsindoors.mapssdk.Point;
  * Use the {@link ShowRouteFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ShowRouteFragment extends Fragment {
+public class ShowRouteFragment extends Fragment
+{
 
+    static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
 
     MapControl mMapControl;
     SupportMapFragment mMapFragment;
     GoogleMap mGoogleMap;
     RoutingProvider mRoutingProvider ;
     MPDirectionsRenderer mRoutingRenderer;
-    static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
-    //query objects
+
 
 
     public ShowRouteFragment() {
@@ -119,12 +125,12 @@ public class ShowRouteFragment extends Fragment {
             return;
         }
 
-        mRoutingProvider = new MPRoutingProvider();
-
         mMapControl = new MapControl( context );
         mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
-        mRoutingRenderer = new MPDirectionsRenderer( context, mGoogleMap, mMapControl, null);
+        mRoutingProvider = new MPRoutingProvider();
+
+        setupRouteRenderer( context );
 
         mMapControl.init( miError -> {
 
@@ -137,13 +143,24 @@ public class ShowRouteFragment extends Fragment {
                     mMapControl.selectFloor( 1 );
 
                     // Make the route
-                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 19f ) );
+                    //mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 19f ) );
 
                     // Wait a bit before create/render the route
                     new Handler( _context.getMainLooper() ).postDelayed( this::routing, 2000 );
                 }
             }
         });
+    }
+
+    void setupRouteRenderer( @NonNull Context context )
+    {
+        mRoutingRenderer = new MPDirectionsRenderer( context, mGoogleMap, mMapControl, null );
+
+        mRoutingRenderer.setPrimaryColor( ContextCompat.getColor( context, R.color.colorPrimary ) );
+        mRoutingRenderer.setAccentColor( ContextCompat.getColor( context, R.color.colorAccent ) );
+        mRoutingRenderer.setTextColor( ContextCompat.getColor( context, R.color.white ) );
+
+        mRoutingRenderer.setAnimated( true );
     }
 
     void routing()
@@ -156,7 +173,9 @@ public class ShowRouteFragment extends Fragment {
                 Activity activity  = getActivity();
                 if( activity != null )
                 {
-                    activity.runOnUiThread( () -> mRoutingRenderer.setRouteLegIndex( 0 ) );
+                    activity.runOnUiThread( () -> {
+                        mRoutingRenderer.setRouteLegIndex( 0 );
+                    });
                 }
             } else
             {
@@ -164,9 +183,10 @@ public class ShowRouteFragment extends Fragment {
             }
         });
 
-        final Point origin = new Point( 57.057917, 9.950361 );
-        final Point destination = new Point( 57.058038, 9.950509 );
+        final Point origin = new Point( 57.057917, 9.950361, 1 );
+        final Point destination = new Point( 57.058038, 9.950509, 1 );
 
+        mRoutingProvider.setTravelMode( TravelMode.WALKING );
         mRoutingProvider.query( origin, destination );
     }
 }

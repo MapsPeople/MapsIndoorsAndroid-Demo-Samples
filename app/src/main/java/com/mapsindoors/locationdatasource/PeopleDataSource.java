@@ -69,6 +69,10 @@ public class PeopleDataSource implements MPLocationSource {
         status = MPLocationSourceStatus.NOT_INITIALIZED;
 
         this.type = type;
+
+        createMockMPLocations();
+
+        status = MPLocationSourceStatus.AVAILABLE;
     }
 
     /***
@@ -116,15 +120,12 @@ public class PeopleDataSource implements MPLocationSource {
         return new LatLng( lat, lng );
     }
 
-    public void createMockMPLocations()
+    private void createMockMPLocations()
     {
-        buildingCollection = MapsIndoors.getBuildings();
         locationsList.clear();
         locationsList.addAll( generatePeoplesLocations( type ) );
 
-        startMockingPeoplePositions();
-
-        status = MPLocationSourceStatus.AVAILABLE;
+        //startMockingPeoplePositions();
     }
 
     /***
@@ -164,30 +165,40 @@ public class PeopleDataSource implements MPLocationSource {
      ***/
     private List<MPLocation> generatePeoplesLocations( String type )
     {
-        status = MPLocationSourceStatus.INITIALISING;
+        final List<MPLocation> res = new ArrayList<>();
 
-        List<MPLocation> res = new ArrayList<>();
+        buildingCollection = MapsIndoors.getBuildings();
+        final boolean gotBuildings = buildingCollection != null;
+
 
         for( int locID = 0; locID < PEOPLE_COUNT; locID++ ) {
 
             final String personName = getPersonName();
             final LatLng personPosition = getRandomPosition();
 
-            final Building building = buildingCollection.getBuilding( personPosition );
-            if( building == null ) {
-                continue;
-            }
-
-            final Floor initialFloor = building.getInitFloor();
             final MPLocation.Builder locBuilder = new MPLocation.Builder( "" + locID );
             locBuilder.setPosition( personPosition ).
                     setName( personName ).
-                    setType( type ).
-                    setFloor( (initialFloor != null) ? initialFloor.getZIndex() : 0 ).
-                    setBuilding( building.getName() );
+                    setType( type )
+                    ;
+
+            if( gotBuildings )
+            {
+                final Building building = buildingCollection.getBuilding( personPosition );
+                if( building != null ) {
+
+                    final Floor initialFloor = building.getInitFloor();
+                    locBuilder.setFloor( (initialFloor != null) ? initialFloor.getZIndex() : 0 );
+                    locBuilder.setBuilding( building.getName() );
+                } else {
+                    locBuilder.setFloor( Floor.DEFAULT_GROUND_FLOOR_INDEX );
+                }
+            } else
+            {
+                locBuilder.setFloor( Floor.DEFAULT_GROUND_FLOOR_INDEX );
+            }
 
             locationsBuilders.add( locBuilder );
-
             res.add( locBuilder.build() );
         }
 
