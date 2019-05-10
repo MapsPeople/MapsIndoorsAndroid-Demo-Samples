@@ -15,7 +15,10 @@
 		tools:context=".MainActivity"
 		/>
 
-	<ToggleButton
+	<!--
+		Runtime Marker clustering enable/disable doesn't work yet in the current SDK version
+	-->
+	<!--<ToggleButton
 		android:id="@+id/clustering_toggle_button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -24,5 +27,5 @@
 		android:checked="true"
 		android:textOff="Clustering Off"
 		android:textOn="Clustering On"
-		/>
+		/>-->
 </RelativeLayout>

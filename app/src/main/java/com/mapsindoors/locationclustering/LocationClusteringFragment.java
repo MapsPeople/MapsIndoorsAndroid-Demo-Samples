@@ -113,13 +113,9 @@ public class LocationClusteringFragment extends Fragment {
     {
         FragmentManager fm = getChildFragmentManager();
 
-        clusteringToggleButton = rootView.findViewById( R.id.clustering_toggle_button );
-
-        clusteringToggleButton.setOnCheckedChangeListener( ( compoundButton, b ) -> {
-            if( mMapControl != null ) {
-                mMapControl.setLocationClusteringEnabled( b );
-            }
-        } );
+        // Runtime Marker clustering enable/disable doesn't work yet in the current SDK version
+        //clusteringToggleButton = rootView.findViewById( R.id.clustering_toggle_button );
+        //clusteringToggleButton.setOnCheckedChangeListener( onCheckedChangeListener );
 
         mMapFragment = (SupportMapFragment) fm.findFragmentById( R.id.mapfragment );
 
@@ -148,7 +144,6 @@ public class LocationClusteringFragment extends Fragment {
         /***
          Setting the API key to the desired solution
          ***/
-
         MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
 
         /***
@@ -165,32 +160,13 @@ public class LocationClusteringFragment extends Fragment {
         mMapControl = new MapControl( getActivity() );
         mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
+        // Currently, on Android, we can enable/disable clustering
+        // - via our CMS
+        // - calling MapControl.setLocationClusteringEnabled( true/false ) BEFORE MapControl.init()
+        // Runtime clustering enable/disable is not currently supported
         mMapControl.setLocationClusteringEnabled( true );
 
-        mMapControl.setLocationClusterImageAdapter( new MPLocationClusterImageAdapter() {
-            @Nullable
-            @Override
-            public Bitmap getImage( @NonNull String clusterId, @NonNull List<MPLocation> locations, @NonNull ImageSize imageSize )
-            {
-                final int textSize = Convert.getPixels( 15 );
-
-                return getCircularImageWithText(
-                        "" + locations.size(),
-                        textSize,
-                        imageSize.width,
-                        imageSize.height
-                );
-            }
-
-            @NonNull
-            @Override
-            public ImageSize getImageSize( @NonNull String clusterId, int count )
-            {
-                final int imageSizeInPixels = Convert.getPixels( 25 );
-
-                return new ImageSize( imageSizeInPixels, imageSizeInPixels );
-            }
-        } );
+        mMapControl.setLocationClusterImageAdapter( locationClusterImageAdapter );
 
         /***
          Define the delegate method `didTap` that will receive tap events from a cluster marker
@@ -220,6 +196,48 @@ public class LocationClusteringFragment extends Fragment {
             }
         } );
     }
+
+
+    //region EVENT HANDLERS
+
+    CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged( @NonNull CompoundButton buttonView, boolean isChecked )
+        {
+            if( mMapControl != null ) {
+                mMapControl.setLocationClusteringEnabled( isChecked );
+            }
+        }
+    };
+
+    MPLocationClusterImageAdapter locationClusterImageAdapter = new MPLocationClusterImageAdapter() {
+        @Nullable
+        @Override
+        public Bitmap getImage( @NonNull String clusterId, @NonNull List<MPLocation> locations, @NonNull ImageSize imageSize )
+        {
+            final int textSize = Convert.getPixels( 15 );
+
+            return getCircularImageWithText(
+                    "" + locations.size(),
+                    textSize,
+                    imageSize.width,
+                    imageSize.height
+            );
+        }
+
+        @NonNull
+        @Override
+        public ImageSize getImageSize( @NonNull String clusterId, int count )
+        {
+            final int imageSizeInPixels = Convert.getPixels( 25 );
+
+            return new ImageSize( imageSizeInPixels, imageSizeInPixels );
+        }
+    };
+
+
+    //endregion
+
 
     @NonNull
     public static Bitmap getCircularImageWithText( @NonNull String text, int textSize, int width, int height )
