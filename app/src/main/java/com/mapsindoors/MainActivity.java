@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity
 
     public static final int DEMO_ITEM_SHOW_LOCATION           = 0;
     public static final int DEMO_ITEM_LOCATION_DETAILS        = 1;
+    //public static final int DEMO_ITEM_MAPVIEW                 = 2;
     public static final int DEMO_ITEM_SHOW_MULTIPLE_LOCATIONS = 2;
     public static final int DEMO_ITEM_SHOW_ROUTE              = 3;
     public static final int DEMO_ITEM_SHOW_VENUE              = 4;
@@ -73,7 +74,9 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar( toolbar );
 
         DrawerLayout drawer = findViewById( R.id.drawer_layout );
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle( this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close );
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle( this, drawer, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        );
         drawer.addDrawerListener( toggle );
         toggle.syncState();
 
@@ -81,7 +84,7 @@ public class MainActivity extends AppCompatActivity
         mNavigationView.setNavigationItemSelectedListener( this );
 
         // showing the first demo
-        onNavigationItemSelected( mNavigationView.getMenu().getItem( DEMO_ITEM_SHOW_LOCATION ) );
+        onNavigationItemSelected( mNavigationView.getMenu().getItem( DEMO_ITEM_LOCATIONS_DATA_SOURCES ) );
     }
 
     @Override

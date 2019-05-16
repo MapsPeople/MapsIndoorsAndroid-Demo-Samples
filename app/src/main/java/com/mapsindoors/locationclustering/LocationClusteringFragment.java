@@ -162,7 +162,7 @@ public class LocationClusteringFragment extends Fragment {
 
         // Currently, on Android, we can enable/disable clustering
         // - via our CMS
-        // - calling MapControl.setLocationClusteringEnabled( true/false ) BEFORE MapControl.init()
+        // - by calling MapControl.setLocationClusteringEnabled( true/false ) BEFORE MapControl.init()
         // Runtime clustering enable/disable is not currently supported
         mMapControl.setLocationClusteringEnabled( true );
 

@@ -22,6 +22,7 @@ import com.mapsindoors.mapssdk.LocationPropertyNames;
 import com.mapsindoors.mapssdk.MPLocation;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
+import com.mapsindoors.mapssdk.dbglog;
 
 
 /***

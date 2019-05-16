@@ -18,19 +18,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
-import com.mapsindoors.DemoApplication;
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.LocationDisplayRule;
-import com.mapsindoors.mapssdk.MPLocation;
 import com.mapsindoors.mapssdk.MPLocationSource;
 import com.mapsindoors.mapssdk.MPLocationSourceOnStatusChangedListener;
 import com.mapsindoors.mapssdk.MPLocationSourceStatus;
-import com.mapsindoors.mapssdk.MPLocationsObserver;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /***
@@ -44,12 +40,12 @@ import java.util.Set;
 
  Create a class `LocationDataSourcesFragment` that extends `Fragment`.
  ***/
+public class LocationDataSourcesFragment extends Fragment
+{
+    public static final String PEOPLE_TYPE_1     = "People1";
+    public static final String PEOPLE_TYPE_2     = "People2";
 
-public class LocationDataSourcesFragment  extends Fragment {
-
-
-    final String PEOPLE_TYPE = "People";
-     final int POI_GROUP_ID = 1;
+    public static final int    POI_GROUP_ID = 1;
 
     /***
      Add a `GoogleMap` and a `MapControl` to the class
@@ -60,7 +56,6 @@ public class LocationDataSourcesFragment  extends Fragment {
     /***
      Add other needed views for this example
      ***/
-
     SupportMapFragment mMapFragment;
 
     /***
@@ -72,7 +67,6 @@ public class LocationDataSourcesFragment  extends Fragment {
     @Nullable Set<MPLocationSource> locationDataSources;
     @Nullable MPLocationSource mpLocationSource;
     @Nullable PeopleDataSource peopleDataSource;
-
 
 
     public LocationDataSourcesFragment()
@@ -114,6 +108,7 @@ public class LocationDataSourcesFragment  extends Fragment {
             }
 
             MapsIndoors.removeLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
+
             mMapControl.onDestroy();
         }
 
@@ -153,30 +148,38 @@ public class LocationDataSourcesFragment  extends Fragment {
      ***/
     void setupMapsIndoors()
     {
-        MapsIndoors.onApplicationTerminate();
-
-        MapsIndoors.initialize( DemoApplication.getInstance(), getString( R.string.mi_api_key ) );
-
-        // Your Google Maps API key
-        MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
+        {
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
+        }
 
         if( getActivity() == null )
         {
             return;
         }
+//        MapsIndoors.onApplicationTerminate();
+//
+//        MapsIndoors.initialize( DemoApplication.getInstance(), getString( R.string.mi_api_key ) );
+//
+//        // Your Google Maps API key
+//        MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
 
-        setupLocationDataSources();
+        //setupLocationDataSources();
     }
 
     void setupLocationDataSources()
     {
         locationDataSources = new HashSet<>( 2 );
 
+        //
         mpLocationSource = MapsIndoors.getMapsIndoorsLocationSource();
         locationDataSources.add( mpLocationSource );
 
-//        peopleDataSource = new PeopleDataSource( PEOPLE_TYPE );
-//        locationDataSources.add( peopleDataSource );
+        //
+        peopleDataSource = new PeopleDataSource( PEOPLE_TYPE_1 );
+        locationDataSources.add( peopleDataSource );
+
+
 
         /***
          Set the location sources to `PeopleDataSource` and `MapsIndoorsLocationSource`
@@ -214,7 +217,7 @@ public class LocationDataSourcesFragment  extends Fragment {
         /***
          Setup a display setting that refers to the type of locations that your location source operates with.
          ***/
-        final LocationDisplayRule peopleTypeDisplayRule = new LocationDisplayRule.Builder( PEOPLE_TYPE ).
+        final LocationDisplayRule peopleTypeDisplayRule = new LocationDisplayRule.Builder( PEOPLE_TYPE_1 ).
                 setBitmapDrawableIcon( R.drawable.generic_user ).
                 setVisible( true ).
                 setShowLabel( false ).
@@ -224,6 +227,18 @@ public class LocationDataSourcesFragment  extends Fragment {
                 build();
 
         mMapControl.addDisplayRule( peopleTypeDisplayRule );
+
+        final LocationDisplayRule blaDR = new LocationDisplayRule.Builder( PEOPLE_TYPE_2 ).
+                setVectorDrawableIcon( R.drawable.ic_whatshot_black_24dp ).
+                setVisible( true ).
+                setShowLabel( false ).
+                setZoomLevelOn( 18 ).
+                setLocationClusterId( 2 ).
+                setDisplayRank( 1 ).
+                build();
+
+        mMapControl.addDisplayRule( blaDR );
+
 
         MapsIndoors.addLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
 
