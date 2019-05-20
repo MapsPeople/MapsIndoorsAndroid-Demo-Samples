@@ -3,13 +3,24 @@ package com.mapsindoors;
 
 import android.app.Application;
 import android.content.res.Configuration;
+import android.os.StrictMode;
+import android.support.annotation.Nullable;
 
 import com.mapsindoors.mapssdk.MapsIndoors;
+import com.mapsindoors.mapssdk.OnSyncDataReadyListener;
 import com.mapsindoors.mapssdk.dbglog;
+import com.mapsindoors.mapssdk.errors.MIError;
+import com.squareup.leakcanary.LeakCanary;
 
 public class DemoApplication extends Application
 {
     public static final String      TAG = DemoApplication.class.getSimpleName();
+
+    //region DEBUG
+    static final boolean ENABLE_LEAK_CANARY    = BuildConfig.DEBUG && false;
+    static final boolean ENABLE_OS_STRICT_MODE = BuildConfig.DEBUG && false;
+    //endregion
+
     private static      Application sInstance;
 
     // Called when the application is starting, before any other application objects have been created.
@@ -24,6 +35,11 @@ public class DemoApplication extends Application
             dbglog.useDebug( true );
             dbglog.setCustomTagPrefix( TAG + "_" );
         }
+
+        //region DEBUG
+        enableLeakCanary();
+        enableOSStrictMode();
+        //endregion
 
         // Initialize the MapsIndoors SDK here by providing:
         // - The application context
@@ -61,4 +77,38 @@ public class DemoApplication extends Application
         return sInstance;
     }
 
+
+    //region DEBUG
+    private void enableLeakCanary()
+    {
+        if( ENABLE_LEAK_CANARY )
+        {
+            // Leak canary
+            if( LeakCanary.isInAnalyzerProcess( this ) ) {
+                return;
+            }
+            LeakCanary.install( this );
+        }
+    }
+
+    private void enableOSStrictMode()
+    {
+        if( ENABLE_OS_STRICT_MODE )
+        {
+            StrictMode.setThreadPolicy(
+                    new StrictMode.ThreadPolicy.Builder().
+                            detectAll().
+                            penaltyLog().
+                            penaltyFlashScreen().
+                            build()
+            );
+            StrictMode.setVmPolicy(
+                    new StrictMode.VmPolicy.Builder().
+                            detectAll().
+                            penaltyLog().
+                            build()
+            );
+        }
+    }
+    //endregion
 }
