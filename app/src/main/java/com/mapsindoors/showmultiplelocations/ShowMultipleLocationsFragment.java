@@ -17,7 +17,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.mapsindoors.BuildConfig;
 import com.mapsindoors.R;
-import com.mapsindoors.mapssdk.Location;
 import com.mapsindoors.mapssdk.MPFilter;
 import com.mapsindoors.mapssdk.MPLocation;
 import com.mapsindoors.mapssdk.MPLocationSourceOnStatusChangedListener;
@@ -25,8 +24,6 @@ import com.mapsindoors.mapssdk.MPLocationSourceStatus;
 import com.mapsindoors.mapssdk.MPQuery;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
-import com.mapsindoors.mapssdk.OnLocationsReadyListener;
-import com.mapsindoors.mapssdk.errors.MIError;
 
 import java.util.List;
 

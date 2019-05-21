@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.mapsindoors.R;
-import com.mapsindoors.mapssdk.Location;
 import com.mapsindoors.mapssdk.MPLocation;
 
 import java.util.ArrayList;

@@ -27,7 +27,6 @@ import com.mapsindoors.mapssdk.MPLocationSourceStatus;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
 import com.mapsindoors.mapssdk.OnResultReadyListener;
-import com.mapsindoors.mapssdk.errors.MIError;
 
 import java.util.HashSet;
 import java.util.Set;

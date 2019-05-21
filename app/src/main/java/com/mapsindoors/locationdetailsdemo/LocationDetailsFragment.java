@@ -1,6 +1,5 @@
 package com.mapsindoors.locationdetailsdemo;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,12 +16,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.mapsindoors.R;
-import com.mapsindoors.mapssdk.Location;
-import com.mapsindoors.mapssdk.LocationPropertyNames;
 import com.mapsindoors.mapssdk.MPLocation;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
-import com.mapsindoors.mapssdk.dbglog;
 
 
 /***

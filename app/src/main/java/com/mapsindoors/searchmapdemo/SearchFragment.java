@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -25,17 +24,13 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import com.mapsindoors.R;
-import com.mapsindoors.mapssdk.Location;
 import com.mapsindoors.mapssdk.MPFilter;
 import com.mapsindoors.mapssdk.MPLocation;
 import com.mapsindoors.mapssdk.MPQuery;
 import com.mapsindoors.mapssdk.MapsIndoors;
-import com.mapsindoors.mapssdk.OnLocationsReadyListener;
-import com.mapsindoors.mapssdk.errors.MIError;
 import com.mapsindoors.searchmapdemo.adapter.IconTextListAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /***
  ---

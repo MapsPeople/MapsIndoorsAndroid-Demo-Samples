@@ -19,15 +19,11 @@ import com.mapsindoors.BuildConfig;
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.MPFilter;
 import com.mapsindoors.mapssdk.MPLocation;
-import com.mapsindoors.mapssdk.MPLocationSource;
 import com.mapsindoors.mapssdk.MPLocationSourceOnStatusChangedListener;
 import com.mapsindoors.mapssdk.MPLocationSourceStatus;
-import com.mapsindoors.mapssdk.MPLocationsObserver;
 import com.mapsindoors.mapssdk.MPQuery;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
-import com.mapsindoors.mapssdk.OnLoadingDataReadyListener;
-import com.mapsindoors.mapssdk.errors.MIError;
 
 import java.util.List;
 
