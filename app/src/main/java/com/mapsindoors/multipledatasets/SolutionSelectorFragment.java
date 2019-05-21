@@ -1,5 +1,6 @@
 package com.mapsindoors.multipledatasets;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,9 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.mapsindoors.BuildConfig;
 import com.mapsindoors.R;
+import com.mapsindoors.mapssdk.MPLocation;
+import com.mapsindoors.mapssdk.MPLocationSourceOnStatusChangedListener;
+import com.mapsindoors.mapssdk.MPLocationSourceStatus;
 import com.mapsindoors.mapssdk.MapsIndoors;
 import com.mapsindoors.mapssdk.errors.MIError;
+
+import java.util.List;
 
 
 public class SolutionSelectorFragment extends Fragment {
@@ -59,44 +66,52 @@ public class SolutionSelectorFragment extends Fragment {
         return mainView;
     }
 
+    @Override
+    public void onDestroyView()
+    {
+        //MapsIndoors.removeLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
+
+        super.onDestroyView();
+    }
+
     void setupView()
     {
-        buttonMP  = mainView.findViewById( R.id.btn_mp );
-        buttonAAU  = mainView.findViewById( R.id.btn_aau );
+        buttonMP = mainView.findViewById( R.id.btn_mp );
+        buttonAAU = mainView.findViewById( R.id.btn_aau );
 
         buttonMP.setOnClickListener( v -> {
 
-            if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key) ) )
-            {
-                MapsIndoors.setAPIKey( getString( R.string.mi_api_key)  );
+            if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) ) {
+                MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
             }
 
-            MapsIndoors.synchronizeContent( this::dataSyncDone);
-        });
+            MapsIndoors.addLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
+            MapsIndoors.synchronizeContent( this::dataSyncDone );
+        } );
 
         buttonAAU.setOnClickListener( v -> {
 
-            if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.aau_api_key) ) )
-            {
-                MapsIndoors.setAPIKey( getString( R.string.aau_api_key)  );
+            if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.aau_api_key ) ) ) {
+                MapsIndoors.setAPIKey( getString( R.string.aau_api_key ) );
             }
 
-            MapsIndoors.synchronizeContent( this::dataSyncDone);
-        });
+            MapsIndoors.addLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
+            MapsIndoors.synchronizeContent( this::dataSyncDone );
+        } );
     }
 
-    void dataSyncDone( MIError error )
+    void dataSyncDone( @Nullable MIError error )
     {
-        //new Handler( Looper.getMainLooper() ).post( () -> {
-
-            // if(error == null){
-            mListener.onSolutionChosen();
-            //}else {
-            //    Toast.makeText(getContext() , "An error occurred with the message: " + error.message, Toast.LENGTH_SHORT).show();
-            //}
-        //} );
+        final List<MPLocation> locations = MapsIndoors.getLocations();
+        mListener.onSolutionChosen();
     }
 
+    final MPLocationSourceOnStatusChangedListener locationSourceOnStatusChangedListener = ( status, sourceId ) -> {
+        if( status == MPLocationSourceStatus.AVAILABLE )
+        {
+            if( BuildConfig.DEBUG ) {}
+        }
+    };
 
     @Override
     public void onAttach( Context context )
@@ -114,6 +129,8 @@ public class SolutionSelectorFragment extends Fragment {
     public void onDetach()
     {
         super.onDetach();
+
+        MapsIndoors.removeLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
         mListener = null;
     }
 

@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity
 
     public static final int DEMO_ITEM_SHOW_LOCATION           = 0;
     public static final int DEMO_ITEM_LOCATION_DETAILS        = 1;
-    //public static final int DEMO_ITEM_MAPVIEW                 = 2;
     public static final int DEMO_ITEM_SHOW_MULTIPLE_LOCATIONS = 2;
     public static final int DEMO_ITEM_SHOW_ROUTE              = 3;
     public static final int DEMO_ITEM_SHOW_VENUE              = 4;
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    protected void onCreate( Bundle savedInstanceState )
+    protected void onCreate( @Nullable Bundle savedInstanceState )
     {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
@@ -84,7 +83,7 @@ public class MainActivity extends AppCompatActivity
         mNavigationView.setNavigationItemSelectedListener( this );
 
         // showing the first demo
-        onNavigationItemSelected( mNavigationView.getMenu().getItem( DEMO_ITEM_LOCATIONS_DATA_SOURCES ) );
+        onNavigationItemSelected( mNavigationView.getMenu().getItem( DEMO_ITEM_SHOW_LOCATION ) );
     }
 
     @Override
@@ -103,7 +102,6 @@ public class MainActivity extends AppCompatActivity
     {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate( R.menu.main, menu );
-
         return true;
     }
 

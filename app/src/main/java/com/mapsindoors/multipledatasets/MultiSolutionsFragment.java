@@ -101,7 +101,9 @@ public class MultiSolutionsFragment extends Fragment
             mMapControl.onDestroy();
         }
 
-        MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) ) {
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
+        }
 
         super.onDestroyView();
     }

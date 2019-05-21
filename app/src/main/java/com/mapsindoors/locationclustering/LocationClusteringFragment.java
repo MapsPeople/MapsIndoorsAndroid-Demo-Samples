@@ -141,15 +141,19 @@ public class LocationClusteringFragment extends Fragment {
      ***/
     void setupMapsIndoors()
     {
-        /***
-         Setting the API key to the desired solution
-         ***/
-        MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
+        {
+            /***
+             Setting the API key to the desired solution
+             ***/
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
+        }
 
         /***
          Setting the Google API key
          ***/
         MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
+
         if( getActivity() == null ) {
             return;
         }

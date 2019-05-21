@@ -18,6 +18,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
+import com.mapsindoors.DemoApplication;
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.LocationDisplayRule;
 import com.mapsindoors.mapssdk.MPLocationSource;
@@ -25,6 +26,8 @@ import com.mapsindoors.mapssdk.MPLocationSourceOnStatusChangedListener;
 import com.mapsindoors.mapssdk.MPLocationSourceStatus;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
+import com.mapsindoors.mapssdk.OnResultReadyListener;
+import com.mapsindoors.mapssdk.errors.MIError;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -148,26 +151,22 @@ public class LocationDataSourcesFragment extends Fragment
      ***/
     void setupMapsIndoors()
     {
-        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
-        {
-            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
-        }
-
         if( getActivity() == null )
         {
             return;
         }
-//        MapsIndoors.onApplicationTerminate();
-//
-//        MapsIndoors.initialize( DemoApplication.getInstance(), getString( R.string.mi_api_key ) );
+
+        MapsIndoors.onApplicationTerminate();
+
+        MapsIndoors.initialize( DemoApplication.getInstance(), getString( R.string.mi_api_key ) );
 //
 //        // Your Google Maps API key
 //        MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
 
-        //setupLocationDataSources();
+        setupLocationDataSources( error -> setupMapControl() );
     }
 
-    void setupLocationDataSources()
+    void setupLocationDataSources( @NonNull OnResultReadyListener listener )
     {
         locationDataSources = new HashSet<>( 2 );
 
@@ -179,8 +178,6 @@ public class LocationDataSourcesFragment extends Fragment
         peopleDataSource = new PeopleDataSource( PEOPLE_TYPE_1 );
         locationDataSources.add( peopleDataSource );
 
-
-
         /***
          Set the location sources to `PeopleDataSource` and `MapsIndoorsLocationSource`
          ***/
@@ -189,13 +186,11 @@ public class LocationDataSourcesFragment extends Fragment
             final FragmentActivity context = getActivity();
             if( context != null ) {
                 context.runOnUiThread( () -> {
-                    if( error == null ) {
-
-                        setupMapControl();
-
-                    } else {
+                    if( error != null ) {
                         Toast.makeText( context, "Error occurred when setting the Datasources", Toast.LENGTH_SHORT ).show();
                     }
+
+                    listener.onResultReady( error );
                 } );
             }
         } );
