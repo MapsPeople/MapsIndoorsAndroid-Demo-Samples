@@ -154,10 +154,10 @@ public class ShowLocationFragment extends Fragment
                 if( context != null ) {
                     context.runOnUiThread( () -> {
 
-                        final List<MPLocation> locations = MapsIndoors.getLocations();
-                        if( locations.size() == 0 ) {
-                            if(BuildConfig.DEBUG){}
-                        }
+//                        final List<MPLocation> locations = MapsIndoors.getLocations();
+//                        if( locations.size() == 0 ) {
+//                            if(BuildConfig.DEBUG){}
+//                        }
 
                         //
                         mMapControl.selectFloor( 1 );

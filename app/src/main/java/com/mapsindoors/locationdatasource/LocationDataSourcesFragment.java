@@ -28,7 +28,9 @@ import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
 import com.mapsindoors.mapssdk.OnResultReadyListener;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /***
@@ -44,10 +46,14 @@ import java.util.Set;
  ***/
 public class LocationDataSourcesFragment extends Fragment
 {
-    public static final String PEOPLE_TYPE_1     = "People1";
-    public static final String PEOPLE_TYPE_2     = "People2";
+    public static final String POI_TYPE_1               = "PoiType1";
+    public static final String POI_TYPE_2               = "PoiType2";
+    public static final String POI_TYPE_AVAILABLE       = "LocationAvailable";
+    public static final String POI_TYPE_NOT_AVAILABLE   = "LocationNotAvailable";
 
-    public static final int    POI_GROUP_ID = 1;
+    public static final int    POI_GROUP_ID_1   = 1;
+    public static final int    POI_GROUP_ID_2   = 2;
+    public static final int    POI_GROUP_ID_3   = 3;
 
     /***
      Add a `GoogleMap` and a `MapControl` to the class
@@ -66,9 +72,9 @@ public class LocationDataSourcesFragment extends Fragment
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     //
 
-    @Nullable Set<MPLocationSource> locationDataSources;
-    @Nullable MPLocationSource mpLocationSource;
-    @Nullable PeopleDataSource peopleDataSource;
+    @Nullable Set<MPLocationSource>         locationDataSources;
+    @Nullable MPLocationSource              mpLocationSource;
+    @Nullable List<ExternalPOIDataSource>   externalPOIDataSources;
 
 
     public LocationDataSourcesFragment()
@@ -105,8 +111,10 @@ public class LocationDataSourcesFragment extends Fragment
     {
         if( mMapControl != null ) {
 
-            if( peopleDataSource != null ) {
-                peopleDataSource.stopMockingPeoplePositions();
+            if( externalPOIDataSources != null ) {
+                for( final ExternalPOIDataSource s : externalPOIDataSources ) {
+                    s.stopMockingPOIsPositions();
+                }
             }
 
             MapsIndoors.removeLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
@@ -169,16 +177,36 @@ public class LocationDataSourcesFragment extends Fragment
     {
         locationDataSources = new HashSet<>( 2 );
 
-        //
+        // Data coming from MapsPeople's servers
         mpLocationSource = MapsIndoors.getMapsIndoorsLocationSource();
         locationDataSources.add( mpLocationSource );
 
-        //
-        peopleDataSource = new PeopleDataSource( PEOPLE_TYPE_1 );
-        locationDataSources.add( peopleDataSource );
+        externalPOIDataSources = new ArrayList<>();
+//        externalPOIDataSources.add(
+//                new ExternalPOIDataSource(
+//                        ExternalPOIDataSource.DEMO_MODE_MOVING_POIS,
+//                        ExternalPOIDataSource.SOURCE_ID + externalPOIDataSources.size()
+//                )
+//        );
+
+        externalPOIDataSources.add(
+                new ExternalPOIDataSource(
+                        ExternalPOIDataSource.DEMO_MODE_ANIMATED_TYPES,
+                        ExternalPOIDataSource.SOURCE_ID + externalPOIDataSources.size()
+                )
+        );
+
+//        externalPOIDataSources.add(
+//                new ExternalPOIDataSource(
+//                        ExternalPOIDataSource.DEMO_MODE_ANIMATED_MARKER_ICONS_AND_COLORS,
+//                        ExternalPOIDataSource.SOURCE_ID + externalPOIDataSources.size()
+//                )
+//        );
+
+        locationDataSources.addAll( externalPOIDataSources );
 
         /***
-         Set the location sources to `PeopleDataSource` and `MapsIndoorsLocationSource`
+         Set the location sources to `ExternalPOIDataSource` and `MapsIndoorsLocationSource`
          ***/
         MapsIndoors.setLocationSources( locationDataSources.toArray( new MPLocationSource[0] ), error -> {
 
@@ -198,7 +226,7 @@ public class LocationDataSourcesFragment extends Fragment
     void setupMapControl()
     {
         final Activity activityContext = getActivity();
-        if( activityContext == null ) {
+        if( (activityContext == null) || (mMapFragment == null) ) {
             return;
         }
 
@@ -211,30 +239,67 @@ public class LocationDataSourcesFragment extends Fragment
         /***
          Setup a display setting that refers to the type of locations that your location source operates with.
          ***/
-        final LocationDisplayRule peopleTypeDisplayRule = new LocationDisplayRule.Builder( PEOPLE_TYPE_1 ).
+        final LocationDisplayRule poiDisplayRule = new LocationDisplayRule.Builder( POI_TYPE_1 ).
                 setBitmapDrawableIcon( R.drawable.generic_user ).
                 setVisible( true ).
                 setShowLabel( false ).
                 setZoomLevelOn( 18 ).
-                setLocationClusterId( POI_GROUP_ID ).
+                setLocationClusterId( POI_GROUP_ID_1 ).
                 setDisplayRank( 1 ).
                 build();
 
-        mMapControl.addDisplayRule( peopleTypeDisplayRule );
+        mMapControl.addDisplayRule( poiDisplayRule );
 
-        final LocationDisplayRule blaDR = new LocationDisplayRule.Builder( PEOPLE_TYPE_2 ).
-                setVectorDrawableIcon( R.drawable.ic_whatshot_black_24dp ).
-                setVisible( true ).
-                setShowLabel( false ).
-                setZoomLevelOn( 18 ).
-                setLocationClusterId( 2 ).
-                setDisplayRank( 1 ).
-                build();
 
-        mMapControl.addDisplayRule( blaDR );
+        final List<LocationDisplayRule> dispRules = new ArrayList<>( 2 );
+
+        //
+        {
+            final LocationDisplayRule dr = new LocationDisplayRule.Builder( POI_TYPE_2 ).
+                    setVectorDrawableIcon( R.drawable.ic_battery_60_black_24dp ).
+                    setVisible( true ).
+                    setShowLabel( false ).
+                    setZoomLevelOn( 16 ).
+                    setLocationClusterId( POI_GROUP_ID_2 ).
+                    setDisplayRank( 1 ).
+                    build();
+            dispRules.add( dr );
+        }
+
+        //
+        {
+            final LocationDisplayRule dr = new LocationDisplayRule.Builder( POI_TYPE_AVAILABLE ).
+                    setVectorDrawableIcon( R.drawable.ic_whatshot_black_24dp ).
+                    setTint( 0xff2DD855 ).
+                    setVisible( true ).
+                    setShowLabel( false ).
+                    setZoomLevelOn( 18 ).
+                    setLocationClusterId( POI_GROUP_ID_3 ).
+                    setDisplayRank( 1 ).
+                    build();
+            dispRules.add( dr );
+        }
+
+        //
+        {
+            final LocationDisplayRule dr = new LocationDisplayRule.Builder( POI_TYPE_NOT_AVAILABLE ).
+                    setVectorDrawableIcon( R.drawable.ic_whatshot_black_24dp ).
+                    setTint( 0xffFF3700 ).
+                    setVisible( true ).
+                    setShowLabel( false ).
+                    setZoomLevelOn( 18 ).
+                    setLocationClusterId( POI_GROUP_ID_3 ).
+                    setDisplayRank( 1 ).
+                    build();
+            dispRules.add( dr );
+        }
+
+        mMapControl.addDisplayRules( dispRules );
 
 
         MapsIndoors.addLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
+
+        mMapControl.setLocationClusteringEnabled( false );
 
         /***
          Init the MapControl object which will sync data
@@ -242,8 +307,7 @@ public class LocationDataSourcesFragment extends Fragment
         mMapControl.init( null );
     }
 
-    final MPLocationSourceOnStatusChangedListener locationSourceOnStatusChangedListener = new MPLocationSourceOnStatusChangedListener()
-    {
+    final MPLocationSourceOnStatusChangedListener locationSourceOnStatusChangedListener = new MPLocationSourceOnStatusChangedListener() {
         @Override
         public void onStatusChanged( @NonNull MPLocationSourceStatus status, int sourceId )
         {
@@ -252,8 +316,10 @@ public class LocationDataSourcesFragment extends Fragment
                 if( context != null ) {
                     context.runOnUiThread( () -> {
 
-                        if( peopleDataSource != null ) {
-                            peopleDataSource.startMockingPeoplePositions();
+                        if( externalPOIDataSources != null ) {
+                            for( final ExternalPOIDataSource s : externalPOIDataSources ) {
+                                s.startMockingPOIsPositions();
+                            }
                         }
 
                         /***
