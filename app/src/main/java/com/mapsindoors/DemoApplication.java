@@ -14,7 +14,7 @@ public class DemoApplication extends Application
     public static final String      TAG = DemoApplication.class.getSimpleName();
 
     //region DEBUG
-    static final boolean ENABLE_LEAK_CANARY    = BuildConfig.DEBUG && false;
+    static final boolean ENABLE_LEAK_CANARY    = BuildConfig.DEBUG && true;
     static final boolean ENABLE_OS_STRICT_MODE = BuildConfig.DEBUG && false;
     //endregion
 

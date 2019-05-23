@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity
         mNavigationView.setNavigationItemSelectedListener( this );
 
         // showing the first demo
-        onNavigationItemSelected( mNavigationView.getMenu().getItem( DEMO_ITEM_SHOW_LOCATION ) );
+        onNavigationItemSelected( mNavigationView.getMenu().getItem( DEMO_ITEM_LOCATIONS_DATA_SOURCES ) );
     }
 
     @Override

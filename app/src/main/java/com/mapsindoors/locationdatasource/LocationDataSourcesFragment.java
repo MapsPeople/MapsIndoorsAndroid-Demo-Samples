@@ -59,7 +59,7 @@ public class LocationDataSourcesFragment extends Fragment
      Add a `GoogleMap` and a `MapControl` to the class
      ***/
     MapControl mMapControl;
-    GoogleMap mGoogleMap;
+    GoogleMap  mGoogleMap;
 
     /***
      Add other needed views for this example
@@ -95,7 +95,7 @@ public class LocationDataSourcesFragment extends Fragment
     public View onCreateView( @NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
     {
         // Inflate the layout for this fragment
-        return inflater.inflate( R.layout.fragment_show_location_details, container, false );
+        return inflater.inflate( R.layout.fragment_location_data_sources, container, false );
     }
 
     @Override
@@ -177,18 +177,20 @@ public class LocationDataSourcesFragment extends Fragment
     {
         locationDataSources = new HashSet<>( 2 );
 
-        // Data coming from MapsPeople's servers
+        // Data coming from MapsPeople's servers.
         mpLocationSource = MapsIndoors.getMapsIndoorsLocationSource();
         locationDataSources.add( mpLocationSource );
 
+        // A custom source of dynamic POIs where only their position changes over time
         externalPOIDataSources = new ArrayList<>();
-//        externalPOIDataSources.add(
-//                new ExternalPOIDataSource(
-//                        ExternalPOIDataSource.DEMO_MODE_MOVING_POIS,
-//                        ExternalPOIDataSource.SOURCE_ID + externalPOIDataSources.size()
-//                )
-//        );
+        externalPOIDataSources.add(
+                new ExternalPOIDataSource(
+                        ExternalPOIDataSource.DEMO_MODE_MOVING_POIS,
+                        ExternalPOIDataSource.SOURCE_ID + externalPOIDataSources.size()
+                )
+        );
 
+        // A custom source where only the POI display rule type changes over time
         externalPOIDataSources.add(
                 new ExternalPOIDataSource(
                         ExternalPOIDataSource.DEMO_MODE_ANIMATED_TYPES,
@@ -196,12 +198,13 @@ public class LocationDataSourcesFragment extends Fragment
                 )
         );
 
-//        externalPOIDataSources.add(
-//                new ExternalPOIDataSource(
-//                        ExternalPOIDataSource.DEMO_MODE_ANIMATED_MARKER_ICONS_AND_COLORS,
-//                        ExternalPOIDataSource.SOURCE_ID + externalPOIDataSources.size()
-//                )
-//        );
+        // A custom source where only the POI icon and tint color changes over time
+        externalPOIDataSources.add(
+                new ExternalPOIDataSource(
+                        ExternalPOIDataSource.DEMO_MODE_ANIMATED_MARKER_ICONS_AND_COLORS,
+                        ExternalPOIDataSource.SOURCE_ID + externalPOIDataSources.size()
+                )
+        );
 
         locationDataSources.addAll( externalPOIDataSources );
 
@@ -250,8 +253,23 @@ public class LocationDataSourcesFragment extends Fragment
 
         mMapControl.addDisplayRule( poiDisplayRule );
 
+        //
+        setupOtherDisplayRules();
 
-        final List<LocationDisplayRule> dispRules = new ArrayList<>( 2 );
+        //
+        MapsIndoors.addLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
+
+        mMapControl.setLocationClusteringEnabled( false );
+
+        /***
+         Init the MapControl object which will sync data
+         ***/
+        mMapControl.init( null );
+    }
+
+    void setupOtherDisplayRules()
+    {
+        final List<LocationDisplayRule> dispRules = new ArrayList<>();
 
         //
         {
@@ -273,7 +291,7 @@ public class LocationDataSourcesFragment extends Fragment
                     setTint( 0xff2DD855 ).
                     setVisible( true ).
                     setShowLabel( false ).
-                    setZoomLevelOn( 18 ).
+                    setZoomLevelOn( 17 ).
                     setLocationClusterId( POI_GROUP_ID_3 ).
                     setDisplayRank( 1 ).
                     build();
@@ -283,11 +301,11 @@ public class LocationDataSourcesFragment extends Fragment
         //
         {
             final LocationDisplayRule dr = new LocationDisplayRule.Builder( POI_TYPE_NOT_AVAILABLE ).
-                    setVectorDrawableIcon( R.drawable.ic_whatshot_black_24dp ).
+                    setVectorDrawableIcon( R.drawable.ic_whatshot_black_24dp, 32,32 ).
                     setTint( 0xffFF3700 ).
                     setVisible( true ).
                     setShowLabel( false ).
-                    setZoomLevelOn( 18 ).
+                    setZoomLevelOn( 17 ).
                     setLocationClusterId( POI_GROUP_ID_3 ).
                     setDisplayRank( 1 ).
                     build();
@@ -295,16 +313,6 @@ public class LocationDataSourcesFragment extends Fragment
         }
 
         mMapControl.addDisplayRules( dispRules );
-
-
-        MapsIndoors.addLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
-
-        mMapControl.setLocationClusteringEnabled( false );
-
-        /***
-         Init the MapControl object which will sync data
-         ***/
-        mMapControl.init( null );
     }
 
     final MPLocationSourceOnStatusChangedListener locationSourceOnStatusChangedListener = new MPLocationSourceOnStatusChangedListener() {

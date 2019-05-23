@@ -1,7 +1,6 @@
 package com.mapsindoors.locationdatasource;
 
 import android.support.annotation.DrawableRes;
-import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.ColorUtils;
@@ -16,6 +15,7 @@ import com.mapsindoors.mapssdk.MPLocationSource;
 import com.mapsindoors.mapssdk.MPLocationSourceStatus;
 import com.mapsindoors.mapssdk.MPLocationsObserver;
 import com.mapsindoors.mapssdk.MapsIndoors;
+import com.mapsindoors.mapssdk.SphericalUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +41,15 @@ public class ExternalPOIDataSource implements MPLocationSource {
 
     static final int SOURCE_ID = 0x0EFACAFE;
 
-    static final int POI_COUNT = 30;
+    static final int POI_COUNT = 20;
 
     static final LatLng BASE_POSITION = new LatLng( 57.0579814,9.9504668 );
+
+    static final LatLng MOVING_POIS_BASE_POSITION = new LatLng( 57.0582502,9.9504788 );
+
+    static final double RANGE_MAX_LAT_OFFSET = 0.000626 / 4;
+    static final double RANGE_MAX_LNG_OFFSET = 0.0003384 / 2;
+
 
     // Position updated
     static final int DEMO_MODE_MOVING_POIS                      = 0;
@@ -72,19 +78,37 @@ public class ExternalPOIDataSource implements MPLocationSource {
 
     // Each instance of this class must get a different sourceId
     int locationDataSourceId;
+
+    // Display rule type to use
     String type;
+
+    //
     int selectedDemoMode;
+
     // Time in ms
     int timerUpdatePeriod;
+
+    //
+    LatLng movingPOIsAnchorPosition;
 
     // Static id so each id created here will be unique...
     static int cPOIId = 1;
 
+    // People (moving POIs) avatar icons
+    @DrawableRes final int[] peopleAvatars = new int[]{
+            R.drawable.ic_avatar_1,
+            R.drawable.ic_avatar_2,
+            R.drawable.ic_avatar_3,
+            R.drawable.ic_avatar_4,
+            R.drawable.ic_avatar_5
+    };
+
+
     // Types (Display rules)
     @NonNull
     final String[] drTypes = new String[]{
-            LocationDataSourcesFragment.POI_TYPE_1,
-            LocationDataSourcesFragment.POI_TYPE_3
+            LocationDataSourcesFragment.POI_TYPE_AVAILABLE,
+            LocationDataSourcesFragment.POI_TYPE_NOT_AVAILABLE
     };
 
     // Icons
@@ -97,6 +121,10 @@ public class ExternalPOIDataSource implements MPLocationSource {
             R.drawable.ic_battery_90_black_24dp,
             R.drawable.ic_battery_full_black_24dp
     };
+
+    int iconCurrentIndex   = 0;
+    int nextTypeIndex      = 0;
+    int avatarCurrentIndex = 0;
 
 
 
@@ -111,17 +139,20 @@ public class ExternalPOIDataSource implements MPLocationSource {
         switch( selectedDemoMode ) {
             case DEMO_MODE_MOVING_POIS: {
                 this.type = LocationDataSourcesFragment.POI_TYPE_1;
-                this.timerUpdatePeriod = 1500;
+                this.timerUpdatePeriod = 1000;
+                this.movingPOIsAnchorPosition = MOVING_POIS_BASE_POSITION;
                 break;
             }
             case DEMO_MODE_ANIMATED_TYPES: {
-                this.type = LocationDataSourcesFragment.POI_TYPE_2;
+                this.type = LocationDataSourcesFragment.POI_TYPE_AVAILABLE;
                 this.timerUpdatePeriod = 3000;
+                this.movingPOIsAnchorPosition = BASE_POSITION;
                 break;
             }
             case DEMO_MODE_ANIMATED_MARKER_ICONS_AND_COLORS: {
-                this.type = LocationDataSourcesFragment.POI_TYPE_3;
-                this.timerUpdatePeriod = 250;
+                this.type = LocationDataSourcesFragment.POI_TYPE_2;
+                this.timerUpdatePeriod = 500;
+                this.movingPOIsAnchorPosition = BASE_POSITION;
                 break;
             }
         }
@@ -149,7 +180,18 @@ public class ExternalPOIDataSource implements MPLocationSource {
             return false;
         }
 
-        createMockMPLocations();
+        switch( selectedDemoMode ) {
+            case DEMO_MODE_MOVING_POIS: {
+                createMockMPLocations( false );
+                break;
+            }
+            case DEMO_MODE_ANIMATED_TYPES:
+            case DEMO_MODE_ANIMATED_MARKER_ICONS_AND_COLORS: {
+                createMockMPLocations( true );
+                break;
+            }
+        }
+
         notifyUpdateLocations( locationsList );
         setStatus( MPLocationSourceStatus.AVAILABLE );
 
@@ -204,20 +246,19 @@ public class ExternalPOIDataSource implements MPLocationSource {
 
     private LatLng getRandomPosition()
     {
-        final double lat = BASE_POSITION.latitude  + (-4 + random.nextInt( 20 )) * 0.000005;
-        final double lng = BASE_POSITION.longitude + (-4 + random.nextInt( 20 )) * 0.000010;
+        final double lat = movingPOIsAnchorPosition.latitude  + (-4 + random.nextInt( 20 )) * 0.000005;
+        final double lng = movingPOIsAnchorPosition.longitude + (-4 + random.nextInt( 20 )) * 0.000010;
 
         return new LatLng( lat, lng );
     }
 
 
-    private void createMockMPLocations()
+    private void createMockMPLocations( boolean randomizeStartingPosition )
     {
         locationsList.clear();
-        locationsList.addAll( generatePOIs( type ) );
+        locationsList.addAll( generatePOIs( type, randomizeStartingPosition ) );
     }
 
-    int iconCurrentIndex = 0;
 
     /***
      Create a method called `updatePeoplePositions`. Iterate numberOfPeople again and for each iteration:
@@ -235,27 +276,89 @@ public class ExternalPOIDataSource implements MPLocationSource {
         final int locCount = locationsList.size();
         final List<MPLocation> updatedList = new ArrayList<>( locCount );
 
-        // Pick a random type
-        final int availableTypesCount = drTypes.length;
-        final String currentType = drTypes[ random.nextInt( availableTypesCount )];
+        String currentType = "";
+        int iColor = 0;
+        @DrawableRes int currentIcon = 0;
 
-        // Icon and tint color (animated)
-        final int availableIconsCount = icons.length;
-        final int iColor = ColorUtils.blendARGB( 0xff2DD855, 0xffFF3700, ((1f * iconCurrentIndex) / availableIconsCount) );
-        @DrawableRes final int currentIcon = icons[iconCurrentIndex];
-        iconCurrentIndex = (iconCurrentIndex < (availableIconsCount - 1)) ? (iconCurrentIndex + 1) : 0;
-
-
-        for( final MPLocation p : locationsList )
+        switch( selectedDemoMode )
         {
+            case DEMO_MODE_MOVING_POIS:{
+                // First time, generate info
+                final int locationListSize = locationsList.size();
+                if( (dynamicPOIs == null) && (locationListSize > 0) ) {
+                    dynamicPOIs = new ArrayList<>( locationListSize );
+
+                    for( int i = 0; i < locationListSize; i++ ) {
+                        final MPLocation poi = locationsList.get( i );
+
+                        double ang;
+
+                        // RANDOM HEADING
+                        {
+                            //ang = Math.random() * 360.0;
+                        }
+
+                        // RADIAL HEADING
+                        {
+                            ang = (i * 10.0);
+                            while( ang > 360 ) { ang -= 360.0; }
+                        }
+
+                        dynamicPOIs.add( i, new DynaPOI( poi.getLatLng(), ang ) );
+                    }
+                }
+                break;
+            }
+            case DEMO_MODE_ANIMATED_TYPES:
+            {
+                // Alternate/random type
+                final int availableTypesCount = drTypes.length;
+                //final String currentType = drTypes[ random.nextInt( availableTypesCount )];
+                currentType = drTypes[ nextTypeIndex++ ];
+                nextTypeIndex = (nextTypeIndex >= availableTypesCount) ? 0 : nextTypeIndex;
+                break;
+            }
+            case DEMO_MODE_ANIMATED_MARKER_ICONS_AND_COLORS:
+            {
+                // Icon and tint color (animated)
+                final int availableIconsCount = icons.length;
+                iColor = ColorUtils.blendARGB( 0xff2DD855, 0xffFF3700, ((1f * iconCurrentIndex) / availableIconsCount) );
+                currentIcon = icons[iconCurrentIndex];
+                iconCurrentIndex = (iconCurrentIndex < (availableIconsCount - 1)) ? (iconCurrentIndex + 1) : 0;
+                break;
+            }
+        }
+
+        for( int i = 0, poiCount = locationsList.size(); i < poiCount; i++ )
+        {
+            final MPLocation p = locationsList.get( i );
+
+            // "Update" a POI MPLocation by using the copy/edit builder
             final MPLocation.Builder updatedLoc = new MPLocation.Builder( p );
 
             switch( selectedDemoMode )
             {
                 case DEMO_MODE_MOVING_POIS:
                 {
-                    // Change the position
-                    updatedLoc.setPosition( getRandomPosition() );
+                    // Animate
+                    final DynaPOI dp = dynamicPOIs.get( i );
+                    final LatLng dpOldPos = dp.pos;
+                    double newHeading = dp.heading;
+                    LatLng newPos = SphericalUtil.computeOffset( dpOldPos, 2, dp.heading );
+
+                    // Check limits
+                    if( (Math.abs( movingPOIsAnchorPosition.latitude  - newPos.latitude  ) > RANGE_MAX_LAT_OFFSET) ||
+                        (Math.abs( movingPOIsAnchorPosition.longitude - newPos.longitude ) > RANGE_MAX_LNG_OFFSET) )
+                    {
+                        newHeading += (180.0 + (Math.random() * 15));
+                        newHeading = (newHeading > 360) ? (newHeading - 360) : newHeading;
+                        newPos = SphericalUtil.computeOffset( newPos, 1, newHeading );
+                    }
+
+                    dp.pos = newPos;
+                    dp.heading = newHeading;
+
+                    updatedLoc.setPosition( dp.pos, 1000 );
                     break;
                 }
                 case DEMO_MODE_ANIMATED_TYPES:
@@ -268,12 +371,15 @@ public class ExternalPOIDataSource implements MPLocationSource {
                 {
                     // Change the icon & tint color
                     updatedLoc.
-                            // Use the default icon size
-                            //setVectorDrawableIcon( currentIcon ).
-                            // Specify a size
-                            setVectorDrawableIcon( currentIcon, 32, 32 ).
-                            // Specify the tint color
-                            setTint( iColor )
+
+                        // Use the default icon size
+                        //setVectorDrawableIcon( currentIcon ).
+
+                        // Specify a size
+                        setVectorDrawableIcon( currentIcon, 32, 32 ).
+
+                        // Specify the tint color
+                        setTint( iColor )
                     ;
                     break;
                 }
@@ -299,23 +405,39 @@ public class ExternalPOIDataSource implements MPLocationSource {
      * A building
      ***/
     @NonNull
-    private List<MPLocation> generatePOIs( @NonNull String type )
+    private List<MPLocation> generatePOIs( @NonNull String type, boolean randomizeStartingPosition )
     {
         final List<MPLocation> peoplePOIs = new ArrayList<>( POI_COUNT );
 
         final BuildingCollection buildingCollection = MapsIndoors.getBuildings();
         final boolean gotBuildingData = buildingCollection != null;
 
+        final int avatarIconsCount = peopleAvatars.length;
+
         for( int i = 0; i < POI_COUNT; i++ ) {
 
             final String personName = getPersonName();
-            final LatLng personPosition = getRandomPosition();
+            final LatLng personPosition;
+            if( randomizeStartingPosition ) {
+                personPosition = getRandomPosition();
+            } else {
+                personPosition = movingPOIsAnchorPosition;
+            }
 
             final MPLocation.Builder locBuilder = new MPLocation.Builder( "" + cPOIId++ );
             locBuilder.setPosition( personPosition ).
                     setName( personName ).
                     setType( type )
                     ;
+
+            switch( selectedDemoMode ) {
+                case DEMO_MODE_MOVING_POIS:
+                    final @DrawableRes int currentAvatarIcon = peopleAvatars[avatarCurrentIndex];
+                    avatarCurrentIndex = (avatarCurrentIndex < (avatarIconsCount - 1)) ? (avatarCurrentIndex + 1) : 0;
+
+                    locBuilder.setVectorDrawableIcon( currentAvatarIcon, 32, 32 );
+                    break;
+            }
 
             if( gotBuildingData ) {
                 // Find a building at this location (personPosition)
@@ -326,10 +448,10 @@ public class ExternalPOIDataSource implements MPLocationSource {
                     final List<Floor> floors = building.getFloors();
 
                     // Choose a random floor
-                    final Floor floor = floors.get( (int) (Math.random() * (floors.size() - 1)) );
+                    final Floor floor = floors.get( (int) (Math.random() * (floors.size())) );
 
                     // Set the POI floor
-                    locBuilder.setFloor( (floor != null) ? floor.getZIndex() : 0 );
+                    locBuilder.setFloor( (floor != null) ? floor.getZIndex() : Floor.DEFAULT_GROUND_FLOOR_INDEX );
 
                     // Set the building name where this POI is in
                     locBuilder.setBuilding( building.getName() );
@@ -443,4 +565,17 @@ public class ExternalPOIDataSource implements MPLocationSource {
     public int getSourceId() {
         return locationDataSourceId;
     }
+
+    class DynaPOI
+    {
+        public LatLng pos;
+        public double heading;
+
+        public DynaPOI( @NonNull LatLng pos, double heading )
+        {
+            this.pos = pos;
+            this.heading = heading;
+        }
+    }
+    List<DynaPOI> dynamicPOIs;
 }
