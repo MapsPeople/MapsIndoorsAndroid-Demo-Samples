@@ -158,7 +158,9 @@ public class LocationDataSourcesFragment extends Fragment
      ***/
     void setupMapsIndoors()
     {
-        if( getActivity() == null )
+        final Activity context = getActivity();
+
+        if( (context == null) || (mMapFragment == null) || (mMapFragment.getView() == null) )
         {
             return;
         }

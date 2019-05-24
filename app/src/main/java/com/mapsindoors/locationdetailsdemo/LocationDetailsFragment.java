@@ -1,5 +1,6 @@
 package com.mapsindoors.locationdetailsdemo;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.MPLocation;
 import com.mapsindoors.mapssdk.MapControl;
@@ -126,6 +128,13 @@ public class LocationDetailsFragment extends Fragment
      ***/
     void setupMapsIndoors()
     {
+        final Activity context = getActivity();
+
+        if( (context == null) || (mMapFragment == null) || (mMapFragment.getView() == null) )
+        {
+            return;
+        }
+
         /***
          Setting the API key to the desired solution
          ***/
@@ -138,15 +147,11 @@ public class LocationDetailsFragment extends Fragment
          Setting the Google API key
          ***/
         MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
-        if( getActivity() == null )
-        {
-            return;
-        }
 
         /***
          Instantiate and init the MapControl object which will sync data
          ***/
-        mMapControl = new MapControl( getActivity() );
+        mMapControl = new MapControl( context );
         mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
         /***
@@ -161,16 +166,23 @@ public class LocationDetailsFragment extends Fragment
 
                 if( detailsTextView.getVisibility() != View.VISIBLE )
                 {
+                    /***
+                     Show the Name and the description of a POI in a label
+                     ***/
+                    detailsTextView.setText( "Name: " + loc.getName() + "\nDescription: " + loc.getDescription() );
+
                     detailsTextView.setVisibility( View.VISIBLE );
                 }
-
-                /***
-                 Show the Name and the description of a POI in a label
-                 ***/
-                detailsTextView.setText( "Name: " + loc.getName() + "\nDescription: " + loc.getDescription() );
             }
 
             return true;
+        } );
+
+        mMapControl.setOnMarkerInfoWindowCloseListener( marker -> {
+            if( detailsTextView.getVisibility() == View.VISIBLE )
+            {
+                detailsTextView.setVisibility( View.INVISIBLE );
+            }
         } );
 
         /***

@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity
     public static final int DEMO_ITEM_MARKER_CLUSTERING       = 13;
 
 
+
     NavigationView mNavigationView;
     SearchMapFragment mSearchMapFragment;
 
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity
         mNavigationView.setNavigationItemSelectedListener( this );
 
         // showing the first demo
-        onNavigationItemSelected( mNavigationView.getMenu().getItem( DEMO_ITEM_LOCATIONS_DATA_SOURCES ) );
+        onNavigationItemSelected( mNavigationView.getMenu().getItem( DEMO_ITEM_SHOW_LOCATION ) );
     }
 
     @Override
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected( @NonNull MenuItem item )
     {
         // Handle navigation view item clicks here.
-        Fragment fragment;
+        final Fragment fragment;
 
         switch(item.getItemId()) {
             case R.id.show_location_item:

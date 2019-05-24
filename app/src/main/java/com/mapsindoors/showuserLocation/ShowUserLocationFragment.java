@@ -116,6 +116,13 @@ public class ShowUserLocationFragment extends Fragment {
 
     void setupMapsIndoors()
     {
+        final Activity context = getActivity();
+
+        if( (context == null) || (mMapFragment == null) || (mMapFragment.getView() == null) )
+        {
+            return;
+        }
+
         /***
          Set the API key to the MI solution
          ***/
@@ -124,15 +131,10 @@ public class ShowUserLocationFragment extends Fragment {
             MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
         }
 
-        if( getActivity() == null )
-        {
-            return;
-        }
-
         /***
          Instantiate the mapControl object
          ***/
-        mMapControl = new MapControl( getActivity() );
+        mMapControl = new MapControl( context );
         mMapControl.setGoogleMap(mGoogleMap, mMapFragment.getView());
 
         /***
@@ -157,8 +159,8 @@ public class ShowUserLocationFragment extends Fragment {
 
             if( miError == null )
             {
-                final Activity context = getActivity();
-                if( context != null )
+                final Activity _context = getActivity();
+                if( _context != null )
                 {
                     mMapControl.selectFloor( 1 );
                     mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );

@@ -1,39 +1,33 @@
 <resources>
-    <string name="app_name">MI Showcase</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+	<string name="app_name" translatable="false">MI Showcase</string>
+	<string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+	<string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+	<string name="nav_header_title" translatable="false">Android Studio</string>
+	<string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
+	<string name="nav_header_desc" translatable="false">Navigation header</string>
+	<string name="action_settings" translatable="false">Settings</string>
 
-    <string name="show_location_item_title">Show Location Demo</string>
-    <string name="show_location_details_item_title">Location Details Demo</string>
-    <string name="show_multiple_locations_item_title">Show Multiple Locations Demo</string>
-    <string name="show_route_item_title">Show Route Demo</string>
-    <string name="show_venue_item_title">Show Venue Demo</string>
-    <string name="show_building_item_title">Show Building Demo</string>
-    <string name="show_floor_item_title">Show Floor Demo</string>
+	<string name="show_location_item_title" translatable="false">Show Location Demo</string>
+	<string name="show_location_details_item_title" translatable="false">Location Details Demo</string>
+	<string name="show_multiple_locations_item_title" translatable="false">Show Multiple Locations Demo</string>
+	<string name="show_route_item_title" translatable="false">Show Route Demo</string>
+	<string name="show_venue_item_title" translatable="false">Show Venue Demo</string>
+	<string name="show_building_item_title" translatable="false">Show Building Demo</string>
+	<string name="show_floor_item_title" translatable="false">Show Floor Demo</string>
 
-    <string name="change_displ_sett_item_title">Change Display Setting Demo</string>
+	<string name="change_displ_sett_item_title" translatable="false">Change Display Setting Demo</string>
 
-    <string name="custom_floor_selector_item_title">Custom Floor Selector Demo</string>
+	<string name="custom_floor_selector_item_title" translatable="false">Custom Floor Selector Demo</string>
 
-    <string name="show_my_location_item_title">Show My Location Demo</string>
-    <string name="multiple_dataset_item_title">Multiple Datasets Demo</string>
+	<string name="show_my_location_item_title" translatable="false">Show My Location Demo</string>
+	<string name="multiple_dataset_item_title" translatable="false">Multiple Datasets Demo</string>
 
-    <string name="Search_map_item_title">Search Map Demo</string>
-    <string name="clustering_item_title">Clustering Demo</string>
-    <string name="location_data_source_item_title">Location data sources Demo</string>
+	<string name="Search_map_item_title" translatable="false">Search Map Demo</string>
+	<string name="clustering_item_title" translatable="false">Clustering Demo</string>
+	<string name="location_data_source_item_title" translatable="false">Location data sources Demo</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
-    <string name="search_button_label">Search</string>
-
-    <string name="search_for">Search for</string>
-
-
+	<string name="search_button_label" translatable="false">Search</string>
+	<string name="search_for" translatable="false">Search for</string>
 </resources>
 
 

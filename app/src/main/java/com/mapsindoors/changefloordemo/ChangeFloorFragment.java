@@ -93,25 +93,27 @@ public class ChangeFloorFragment extends Fragment {
 
     void setupMapsIndoors()
     {
+        final Activity context = getActivity();
+
+        if( (context == null) || (mMapFragment == null) || (mMapFragment.getView() == null) )
+        {
+            return;
+        }
+
         if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
         {
             MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
         }
 
-        if( getActivity() == null )
-        {
-            return;
-        }
-
-        mMapControl = new MapControl( getActivity() );
+        mMapControl = new MapControl( context );
         mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
         mMapControl.init( miError -> {
 
             if( miError == null )
             {
-                final Activity context = getActivity();
-                if( context != null )
+                final Activity _context = getActivity();
+                if( _context != null )
                 {
                     // Set the floor level programmatically
                     mMapControl.selectFloor( 1 );

@@ -132,20 +132,22 @@ public class MultiSolutionsFragment extends Fragment
 
     void setupMapsIndoors()
     {
-        if( getActivity() == null )
+        final Activity context = getActivity();
+
+        if( (context == null) || (mMapFragment == null) || (mMapFragment.getView() == null) )
         {
             return;
         }
 
-        mMapControl = new MapControl( getActivity() );
+        mMapControl = new MapControl( context );
         mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
         mMapControl.init( miError -> {
 
             if( miError == null )
             {
-                final Activity context = getActivity();
-                if( context != null )
+                final Activity _context = getActivity();
+                if( _context != null )
                 {
                     mMapControl.selectFloor( 1 );
                     mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( selectedCameraPosition, selectedCameraCloseUpZoom ) );

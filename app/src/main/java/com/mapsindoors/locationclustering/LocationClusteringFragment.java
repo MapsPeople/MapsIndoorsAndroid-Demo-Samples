@@ -139,6 +139,13 @@ public class LocationClusteringFragment extends Fragment {
      ***/
     void setupMapsIndoors()
     {
+        final Activity context = getActivity();
+
+        if( (context == null) || (mMapFragment == null) || (mMapFragment.getView() == null) )
+        {
+            return;
+        }
+
         if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
         {
             /***
@@ -152,14 +159,10 @@ public class LocationClusteringFragment extends Fragment {
          ***/
         MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
 
-        if( getActivity() == null ) {
-            return;
-        }
-
         /***
          Instantiate and init the MapControl object which will sync data
          ***/
-        mMapControl = new MapControl( getActivity() );
+        mMapControl = new MapControl( context );
         mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
         // Currently, on Android, we can enable/disable clustering
@@ -187,8 +190,8 @@ public class LocationClusteringFragment extends Fragment {
          ***/
         mMapControl.init( miError -> {
             if( miError == null ) {
-                final Activity context = getActivity();
-                if( context != null ) {
+                final Activity _context = getActivity();
+                if( _context != null ) {
                     /***
                      Select a floor and animate the camera to the venue position
                      ***/

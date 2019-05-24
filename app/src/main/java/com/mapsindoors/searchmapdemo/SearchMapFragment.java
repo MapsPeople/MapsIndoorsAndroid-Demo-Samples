@@ -133,6 +133,13 @@ public class SearchMapFragment extends Fragment
 
     void setupMapsIndoors()
     {
+        final Activity context = getActivity();
+
+        if( (context == null) || (mMapFragment == null) || (mMapFragment.getView() == null) )
+        {
+            return;
+        }
+
         /***
          Setting the API key to the desired solution
          ***/
@@ -141,15 +148,10 @@ public class SearchMapFragment extends Fragment
             MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
         }
 
-        if( (getActivity() == null) || (mMapFragment == null) || (mMapFragment.getView() == null) )
-        {
-            return;
-        }
-
         /***
          Instantiate the MapControl object
          ***/
-        mMapControl = new MapControl( getActivity() );
+        mMapControl = new MapControl( context );
         mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
         // Enable the search button as soon as location data becomes available
@@ -163,8 +165,8 @@ public class SearchMapFragment extends Fragment
 
             if( miError == null )
             {
-                final Activity context = getActivity();
-                if( context != null )
+                final Activity _context = getActivity();
+                if( _context != null )
                 {
                     mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
 
