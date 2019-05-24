@@ -19,6 +19,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.mapsindoors.R;
 import com.mapsindoors.mapssdk.MPLocation;
+import com.mapsindoors.mapssdk.MPLocationSourceOnStatusChangedListener;
+import com.mapsindoors.mapssdk.MPLocationSourceStatus;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
 
@@ -112,6 +114,7 @@ public class SearchMapFragment extends Fragment
         searchButton = rootView.findViewById(R.id.search_button);
 
         searchButton.setOnClickListener( v -> mListener.onSearchButtonClick() );
+        searchButton.setEnabled( false );
 
         mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
 
@@ -138,8 +141,7 @@ public class SearchMapFragment extends Fragment
             MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
         }
 
-
-        if( getActivity() == null )
+        if( (getActivity() == null) || (mMapFragment == null) || (mMapFragment.getView() == null) )
         {
             return;
         }
@@ -149,6 +151,9 @@ public class SearchMapFragment extends Fragment
          ***/
         mMapControl = new MapControl( getActivity() );
         mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
+
+        // Enable the search button as soon as location data becomes available
+        MapsIndoors.addLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
 
         /***
          * init the MapControl object which will sync data.
@@ -199,4 +204,13 @@ public class SearchMapFragment extends Fragment
             mListener = (OnFragmentInteractionListener) context;
         }
     }
+
+    final MPLocationSourceOnStatusChangedListener locationSourceOnStatusChangedListener = ( status, sourceId ) -> {
+        if( status == MPLocationSourceStatus.AVAILABLE ) {
+            final Activity context = getActivity();
+            if( context != null ) {
+                context.runOnUiThread( () -> searchButton.setEnabled( true ) );
+            }
+        }
+    };
 }
