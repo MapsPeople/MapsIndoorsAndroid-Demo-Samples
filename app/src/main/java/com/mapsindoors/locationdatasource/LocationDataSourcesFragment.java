@@ -120,6 +120,10 @@ public class LocationDataSourcesFragment extends Fragment
             MapsIndoors.removeLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
 
             mMapControl.onDestroy();
+
+            MapsIndoors.onApplicationTerminate();
+
+            MapsIndoors.initialize( DemoApplication.getInstance(), getString( R.string.mi_api_key ) );
         }
 
         super.onDestroyView();
