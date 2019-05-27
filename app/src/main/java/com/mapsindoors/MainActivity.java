@@ -54,9 +54,14 @@ public class MainActivity extends AppCompatActivity
     public static final int DEMO_ITEM_CHANGE_DISPLAY_SETTING  = 7;
     public static final int DEMO_ITEM_CUSTOM_FLOOR_SELECTOR   = 8;
     public static final int DEMO_ITEM_SHOW_MY_LOCATION        = 9;
-    public static final int DEMO_ITEM_MULTIPLE_DATASETS       = 10;
+
+    // TODO: To be reimplemented
+    //public static final int DEMO_ITEM_MULTIPLE_DATASETS     = 10;
+
     public static final int DEMO_ITEM_SEARCH_MAP              = 11;
-    public static final int DEMO_ITEM_LOCATIONS_DATA_SOURCES  = 12;
+
+    // TODO: To be reimplemented
+    //public static final int DEMO_ITEM_LOCATIONS_DATA_SOURCES = 12;
     public static final int DEMO_ITEM_MARKER_CLUSTERING       = 13;
 
 
@@ -128,72 +133,78 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         final Fragment fragment;
 
-        switch(item.getItemId()) {
+        switch( item.getItemId() ) {
             case R.id.show_location_item:
             default:
                 fragment = ShowLocationFragment.newInstance();
-                break;
-
-            case R.id.show_multiple_locations_item:
-                fragment = ShowMultipleLocationsFragment.newInstance();
                 break;
 
             case R.id.show_location_details_item:
                 fragment = LocationDetailsFragment.newInstance();
                 break;
 
-            case R.id.show_building_item:
-                fragment = ShowBuildingFragment.newInstance();
-                break;
-
-            case R.id.show_venue_item:
-                fragment = ShowVenueFragment.newInstance();
-                break;
-
-            case R.id.show_my_location_item:
-                fragment = ShowUserLocationFragment.newInstance();
-                break;
-
-            case R.id.show_floor_item:
-                fragment = ChangeFloorFragment.newInstance();
+            case R.id.show_multiple_locations_item:
+                fragment = ShowMultipleLocationsFragment.newInstance();
                 break;
 
             case R.id.show_route_demo_item:
                 fragment = ShowRouteFragment.newInstance();
                 break;
 
-            case R.id.custom_floor_selector_item:
-                fragment = CustomFloorSelectorFragment.newInstance();
+            case R.id.show_venue_item:
+                fragment = ShowVenueFragment.newInstance();
+                break;
+
+            case R.id.show_building_item:
+                fragment = ShowBuildingFragment.newInstance();
+                break;
+
+            case R.id.show_floor_item:
+                fragment = ChangeFloorFragment.newInstance();
                 break;
 
             case R.id.change_display_setting_item:
                 fragment = ChangeDisplaySettingsFragment.newInstance();
                 break;
 
+            case R.id.custom_floor_selector_item:
+                fragment = CustomFloorSelectorFragment.newInstance();
+                break;
+
+            case R.id.show_my_location_item:
+                fragment = ShowUserLocationFragment.newInstance();
+                break;
+
+            case R.id.multiple_dataset_item:
+                //fragment  = SolutionSelectorFragment.newInstance();
+                fragment = null;
+                break;
+
             case R.id.search_map_item:
                 fragment = mSearchMapFragment = SearchMapFragment.newInstance();
                 break;
 
-            case R.id.multiple_dataset_item :
-                fragment  = SolutionSelectorFragment.newInstance();
+            case R.id.location_data_source_item:
+                //fragment  = LocationDataSourcesFragment.newInstance();
+                fragment = null;
                 break;
 
-            case R.id.location_data_source_item :
-                fragment  = LocationDataSourcesFragment.newInstance();
-                break;
-
-            case R.id.clustering_item :
-                fragment  = LocationClusteringFragment.newInstance();
+            case R.id.clustering_item:
+                fragment = LocationClusteringFragment.newInstance();
                 break;
         }
 
-        attachFragmentToActivity( fragment );
+        if( fragment != null ) {
+            attachFragmentToActivity( fragment );
 
-        // Set action bar title
-        setTitle( item.getTitle() );
-        DrawerLayout drawer = findViewById( R.id.drawer_layout );
-        drawer.closeDrawer( GravityCompat.START );
-        return true;
+            // Set action bar title
+            setTitle( item.getTitle() );
+            DrawerLayout drawer = findViewById( R.id.drawer_layout );
+            drawer.closeDrawer( GravityCompat.START );
+            return true;
+        }
+
+        return false;
     }
 
     @Override

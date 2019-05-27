@@ -100,6 +100,8 @@ public class SearchMapFragment extends Fragment
     {
         if( mMapControl != null )
         {
+            MapsIndoors.removeLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
+
             mMapControl.onDestroy();
         }
 
@@ -110,8 +112,8 @@ public class SearchMapFragment extends Fragment
 
     private void setupView( View rootView) {
 
-        FragmentManager fm = getChildFragmentManager();
-        searchButton = rootView.findViewById(R.id.search_button);
+        final FragmentManager fm = getChildFragmentManager();
+        searchButton = rootView.findViewById( R.id.search_button );
 
         searchButton.setOnClickListener( v -> mListener.onSearchButtonClick() );
         searchButton.setEnabled( false );
@@ -154,7 +156,7 @@ public class SearchMapFragment extends Fragment
         mMapControl = new MapControl( context );
         mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
-        // Enable the search button as soon as location data becomes available
+        // Enable the search button only once location data becomes available
         MapsIndoors.addLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
 
         /***

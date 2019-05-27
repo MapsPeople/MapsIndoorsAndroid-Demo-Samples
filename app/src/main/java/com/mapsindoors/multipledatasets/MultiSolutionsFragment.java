@@ -29,8 +29,6 @@ import com.mapsindoors.mapssdk.MapsIndoors;
  */
 public class MultiSolutionsFragment extends Fragment
 {
-
-
     MapControl mMapControl;
     SupportMapFragment mMapFragment;
     GoogleMap mGoogleMap;
