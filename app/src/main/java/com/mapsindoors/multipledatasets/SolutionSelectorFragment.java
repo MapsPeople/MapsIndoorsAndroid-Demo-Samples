@@ -99,13 +99,13 @@ public class SolutionSelectorFragment extends Fragment {
 
     void dataSyncDone( @Nullable MIError error )
     {
-        final List<MPLocation> locations = MapsIndoors.getLocations();
         mListener.onSolutionChosen();
     }
 
     final MPLocationSourceOnStatusChangedListener locationSourceOnStatusChangedListener = ( status, sourceId ) -> {
         if( status == MPLocationSourceStatus.AVAILABLE )
         {
+            // Once here, location data will be available
             if( BuildConfig.DEBUG ) {}
         }
     };

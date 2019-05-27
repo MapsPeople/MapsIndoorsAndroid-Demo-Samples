@@ -82,6 +82,7 @@ public class ShowMultipleLocationsFragment extends Fragment {
     {
         if( mMapControl != null )
         {
+            MapsIndoors.removeLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
             mMapControl.onDestroy();
         }
 
@@ -136,12 +137,12 @@ public class ShowMultipleLocationsFragment extends Fragment {
 
     void queryLocation()
     {
-        /*** Init the query builder and build a query, in this case we will query for all to toilets***/
+        /*** Init the query builder and build a query, in this case we will query for all to toilets ***/
         MPQuery query = new MPQuery.Builder().
                 setQuery("Toilet").
                 build();
 
-        /*** Init the filter builder and build a filter, the criteria in this case we want maximum 50 toilets from the 1st floor***/
+        /*** Init the filter builder and build a filter, the criteria in this case we want maximum 50 toilets from the 1st floor ***/
         MPFilter filter = new MPFilter.Builder().
                 setTake( 50 ).
                 setFloorIndex( 1 ).
