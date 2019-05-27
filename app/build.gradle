@@ -11,6 +11,7 @@ android {
         versionCode 10
         versionName "3.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
@@ -42,10 +43,7 @@ dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
-
-    //implementation project(':MapsIndoorsSDK')
-    implementation 'com.mapspeople.mapsindoors:mapsindoorssdk:3.1.0@aar'
-
+    implementation 'com.mapspeople.mapsindoors:mapsindoorssdk:3.1.1@aar'
     implementation 'com.google.code.gson:gson:2.8.5'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
