@@ -88,54 +88,54 @@ public class SearchFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated( @NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onViewCreated( @NonNull View view, @Nullable Bundle savedInstanceState )
+    {
+        super.onViewCreated( view, savedInstanceState );
 
-        mViewFlipper = view.findViewById(R.id.directionsfullmenu_itemlist_viewflipper);
-        mMainMenuList = view.findViewById(R.id.directionsfullmenu_itemlist);
-
-        mSearchEditTextView = view.findViewById(R.id.search_fragment_edittext_search);
-
-        mSearchClearBtn = view.findViewById(R.id.directionsfullmenu_search_clear_btn);
-
-        mBackButton = view.findViewById(R.id.directionsfullmenusearch_back_button);
+        mViewFlipper = view.findViewById( R.id.directionsfullmenu_itemlist_viewflipper );
+        mMainMenuList = view.findViewById( R.id.directionsfullmenu_itemlist );
+        mSearchEditTextView = view.findViewById( R.id.search_fragment_edittext_search );
+        mSearchClearBtn = view.findViewById( R.id.directionsfullmenu_search_clear_btn );
+        mBackButton = view.findViewById( R.id.directionsfullmenusearch_back_button );
 
         init();
     }
     //endregion
 
 
-    public void init() {
+    public void init()
+    {
         /***
          Init and setup the listView.
          ***/
-        mListAdapter = new IconTextListAdapter(getContext(),new ArrayList<>());
+        mListAdapter = new IconTextListAdapter( getContext(), new ArrayList<>() );
 
-        mMainMenuList.setAdapter(mListAdapter);
+        mMainMenuList.setAdapter( mListAdapter );
         mMainMenuList.setClickable( true );
-        mMainMenuList.setOnItemClickListener(mAdapterViewOnItemClickListener);
+        mMainMenuList.setOnItemClickListener( mAdapterViewOnItemClickListener );
         mMainMenuList.invalidate();
-
 
         /***
          Init and setup the view components for a better search experience.
          ***/
         //
         /*** Note: Creating a TextWatcher as it's needed for software keyboard support. ***/
-        mSearchEditTextView.addTextChangedListener(mEditTextViewTextWatcher);
-        mSearchEditTextView.setOnFocusChangeListener(mEditTextViewOnFocusChangeListener);
+        mSearchEditTextView.addTextChangedListener( mEditTextViewTextWatcher );
+        mSearchEditTextView.setOnFocusChangeListener( mEditTextViewOnFocusChangeListener );
 
         /*** Close keyboard and search when user presses search on the keyboard: ***/
-        mSearchEditTextView.setOnEditorActionListener(mEditTextViewOnEditorActionListener);
+        mSearchEditTextView.setOnEditorActionListener( mEditTextViewOnEditorActionListener );
 
         /***Close keyboard and search when user presses enter: ***/
-        mSearchEditTextView.setOnKeyListener(mEditTextOnKeyListener);
+        mSearchEditTextView.setOnKeyListener( mEditTextOnKeyListener );
 
         /*** Clear search button ***/
-        mSearchClearBtn.setOnClickListener(mClearSearchButtonClickListener);
-        mSearchClearBtn.setOnFocusChangeListener(mClearSearchButtonFocusChangeListener);
+        mSearchClearBtn.setOnClickListener( mClearSearchButtonClickListener );
+        mSearchClearBtn.setOnFocusChangeListener( mClearSearchButtonFocusChangeListener );
 
         //
+
+        mBackButton.setOnClickListener( mBackButtonClickListener );
 
         mIsMenuCleared = true;
     }
@@ -244,9 +244,21 @@ public class SearchFragment extends Fragment {
      *
      */
     View.OnFocusChangeListener mClearSearchButtonFocusChangeListener = ( view, hasFocus ) -> {
-        if (hasFocus) {
+        if( hasFocus ) {
             //Exit button pressed. Close the keyboard and go back to default - (viewing types)
             runClearSearchButtonClickAction();
+        }
+    };
+
+    View.OnClickListener mBackButtonClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick( final View v )
+        {
+            closeKeyboard();
+
+            if( mListener != null ) {
+                mListener.onUserSelectedLocation( null );
+            }
         }
     };
 

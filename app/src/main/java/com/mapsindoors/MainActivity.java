@@ -170,8 +170,8 @@ public class MainActivity extends AppCompatActivity
                 fragment = ChangeDisplaySettingsFragment.newInstance();
                 break;
 
-            case R.id.search_map_item :
-               fragment =  mSearchMapFragment = SearchMapFragment.newInstance();
+            case R.id.search_map_item:
+                fragment = mSearchMapFragment = SearchMapFragment.newInstance();
                 break;
 
             case R.id.multiple_dataset_item :
@@ -202,7 +202,9 @@ public class MainActivity extends AppCompatActivity
         // Insert the fragment by replacing any existing fragment
         attachFragmentToActivity( mSearchMapFragment );
 
-        mSearchMapFragment.selectLocation( loc );
+        if( loc != null ) {
+            mSearchMapFragment.selectLocation( loc );
+        }
     }
 
     @Override
