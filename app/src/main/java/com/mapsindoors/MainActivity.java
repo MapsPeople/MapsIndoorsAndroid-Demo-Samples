@@ -54,14 +54,9 @@ public class MainActivity extends AppCompatActivity
     public static final int DEMO_ITEM_CHANGE_DISPLAY_SETTING  = 7;
     public static final int DEMO_ITEM_CUSTOM_FLOOR_SELECTOR   = 8;
     public static final int DEMO_ITEM_SHOW_MY_LOCATION        = 9;
-
-    // TODO: To be reimplemented
-    //public static final int DEMO_ITEM_MULTIPLE_DATASETS     = 10;
-
+    public static final int DEMO_ITEM_MULTIPLE_DATASETS       = 10;
     public static final int DEMO_ITEM_SEARCH_MAP              = 11;
-
-    // TODO: To be reimplemented
-    //public static final int DEMO_ITEM_LOCATIONS_DATA_SOURCES = 12;
+    public static final int DEMO_ITEM_LOCATIONS_DATA_SOURCES  = 12;
     public static final int DEMO_ITEM_MARKER_CLUSTERING       = 13;
 
 
@@ -176,8 +171,7 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.multiple_dataset_item:
-                //fragment  = SolutionSelectorFragment.newInstance();
-                fragment = null;
+                fragment  = SolutionSelectorFragment.newInstance();
                 break;
 
             case R.id.search_map_item:
@@ -185,8 +179,7 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.location_data_source_item:
-                //fragment  = LocationDataSourcesFragment.newInstance();
-                fragment = null;
+                fragment  = LocationDataSourcesFragment.newInstance();
                 break;
 
             case R.id.clustering_item:
