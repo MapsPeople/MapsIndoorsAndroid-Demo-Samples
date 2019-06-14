@@ -19,7 +19,7 @@ import com.mapsindoors.changedisplaysettingdemo.ChangeDisplaySettingsFragment;
 import com.mapsindoors.changefloordemo.ChangeFloorFragment;
 import com.mapsindoors.customfloorselectordemo.CustomFloorSelectorFragment;
 import com.mapsindoors.locationclustering.LocationClusteringFragment;
-import com.mapsindoors.locationdatasource.LocationDataSourcesFragment;
+import com.mapsindoors.locationdatasources.LocationDataSourcesFragment;
 import com.mapsindoors.locationdetailsdemo.LocationDetailsFragment;
 import com.mapsindoors.mapssdk.MPLocation;
 import com.mapsindoors.multipledatasets.MultiSolutionsFragment;

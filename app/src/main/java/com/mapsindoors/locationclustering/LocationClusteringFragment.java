@@ -38,7 +38,7 @@ import java.util.List;
  title: Work with location grouping / clustering
  ---
 
- This is an example of enabling and disabling location grouping on the map as well as providing custom cluster tapping behavior and custom cluster images.
+ This is an example of enabling and disabling location clustering on the map as well as providing custom cluster tapping behaviour and custom cluster images.
 
  Create a class `LocationClusteringFragment` that extends `Fragment`.
  ***/
@@ -49,7 +49,10 @@ public class LocationClusteringFragment extends Fragment {
      ***/
     MapControl mMapControl;
     GoogleMap mGoogleMap;
+    //****
+
     ToggleButton clusteringToggleButton;
+
 
     /***
      Add other needed views for this example
@@ -60,7 +63,7 @@ public class LocationClusteringFragment extends Fragment {
      The lat lng of the Venue
      ***/
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
-    //
+    //****
 
     public LocationClusteringFragment()
     {
@@ -104,9 +107,7 @@ public class LocationClusteringFragment extends Fragment {
     //endregion
 
 
-    /***
-     Setup the needed views for this example
-     ***/
+
     private void setupView( View rootView )
     {
         FragmentManager fm = getChildFragmentManager();
@@ -135,85 +136,8 @@ public class LocationClusteringFragment extends Fragment {
     };
 
     /***
-     Setup MapsIndoors
+     Add a `locationImageAdapter` to customize the cluster markers icons and provide their sizes
      ***/
-    void setupMapsIndoors()
-    {
-        final Activity context = getActivity();
-
-        if( (context == null) || (mMapFragment == null) || (mMapFragment.getView() == null) )
-        {
-            return;
-        }
-
-        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
-        {
-            /***
-             Setting the API key to the desired solution
-             ***/
-            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
-        }
-
-        /***
-         Setting the Google API key
-         ***/
-        MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
-
-        /***
-         Instantiate and init the MapControl object which will sync data
-         ***/
-        mMapControl = new MapControl( context );
-        mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
-
-        // Currently, on Android, we can enable/disable clustering
-        // - via our CMS
-        // - by calling MapControl.setLocationClusteringEnabled( true/false ) BEFORE MapControl.init()
-        // Runtime clustering enable/disable is not currently supported
-        mMapControl.setLocationClusteringEnabled( true );
-
-        mMapControl.setLocationClusterImageAdapter( locationClusterImageAdapter );
-
-        /***
-         Define the delegate method `didTap` that will receive tap events from a cluster marker
-         * Check if zoom is possible and increment map zoom
-         * Return true to indicate that you handle the event and do not want default behavior to happen
-         ***/
-        mMapControl.setOnLocationClusterClickListener( ( marker, locations ) -> {
-
-            mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 13.0f ) );
-
-            return true;
-        } );
-
-        /***
-         Init the MapControl object which will sync data
-         ***/
-        mMapControl.init( miError -> {
-            if( miError == null ) {
-                final Activity _context = getActivity();
-                if( _context != null ) {
-                    /***
-                     Select a floor and animate the camera to the venue position
-                     ***/
-                    mMapControl.selectFloor( 1 );
-                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
-                }
-            }
-        } );
-    }
-
-
-    //region EVENT HANDLERS
-
-    CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged( @NonNull CompoundButton buttonView, boolean isChecked )
-        {
-            if( mMapControl != null ) {
-                mMapControl.setLocationClusteringEnabled( isChecked );
-            }
-        }
-    };
 
     MPLocationClusterImageAdapter locationClusterImageAdapter = new MPLocationClusterImageAdapter() {
         @Nullable
@@ -241,8 +165,9 @@ public class LocationClusteringFragment extends Fragment {
     };
 
 
-    //endregion
-
+    /***
+     Create a method `getCircularImageWithText` that creates the custom bitmaps for our cluster icons
+     ***/
 
     @NonNull
     public static Bitmap getCircularImageWithText( @NonNull String text, int textSize, int width, int height )
@@ -281,4 +206,77 @@ public class LocationClusteringFragment extends Fragment {
 
         return result;
     }
+
+    /***
+     Create a method `SetupMapsIndoors` that :
+     * Setting the API key to the desired solution.
+     * Setting the Google API key.
+     * Instantiate and init the MapControl object which will sync data.
+     * Enable clustering.
+     * Set a OnLocationClusterListener so we can handle the cluster markers click
+     * Set the LocationClusterImageAdapter
+     * Init the MapControl object which will synchronize the data
+     * When the init is done select a floor and animate the camera to the venue position
+     ***/
+    void setupMapsIndoors()
+    {
+        final Activity context = getActivity();
+
+        if( (context == null) || (mMapFragment == null) || (mMapFragment.getView() == null) )
+        {
+            return;
+        }
+
+        if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
+        {
+            MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
+        }
+
+        MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
+
+        mMapControl = new MapControl( context );
+        mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
+
+        // Currently, on Android, we can enable/disable clustering
+        // - via our CMS
+        // - by calling MapControl.setLocationClusteringEnabled( true/false ) BEFORE MapControl.init()
+        // Runtime clustering enable/disable is not currently supported
+        mMapControl.setLocationClusteringEnabled( true );
+
+        mMapControl.setLocationClusterImageAdapter( locationClusterImageAdapter );
+
+        // when clicking on a cluster marker zoom in to the maximum trying to break the cluster
+        mMapControl.setOnLocationClusterClickListener( ( marker, locations ) -> {
+
+            mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( marker.getPosition(), 22f  ) );
+
+
+            return true;
+        } );
+
+
+        mMapControl.init( miError -> {
+            if( miError == null ) {
+                final Activity _context = getActivity();
+                if( _context != null ) {
+                    mMapControl.selectFloor( 1 );
+                    mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
+                }
+            }
+        } );
+    }
+
+//****
+
+    CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged( @NonNull CompoundButton buttonView, boolean isChecked )
+        {
+            if( mMapControl != null ) {
+                mMapControl.setLocationClusteringEnabled( isChecked );
+            }
+        }
+    };
+
+
 }
