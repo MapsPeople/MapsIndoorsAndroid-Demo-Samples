@@ -27,6 +27,9 @@ public class DemoApplication extends Application
     public void onCreate()
     {
         super.onCreate();
+
+        sInstance = this;
+
         // Required initialization logic here!
 
         // Enable MapsIndoors debug messages (console)
@@ -47,8 +50,6 @@ public class DemoApplication extends Application
 
         // Your Google Maps API key
         MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
-
-        sInstance = this;
     }
 
     // This is called when the overall system is running low on memory,
