@@ -115,7 +115,6 @@ public class MapFloorSelector extends FrameLayout implements IFloorSelector
 	}
 
 
-
 	//region Implements IFloorSelector
 	@Override
 	public void setOnFloorSelectedListener( @Nullable OnFloorSelectedListener callback )
@@ -313,8 +312,6 @@ public class MapFloorSelector extends FrameLayout implements IFloorSelector
 
 		refreshUI();
 	}
-
-
 
 	private void populateListInternal( List<?> floors )
 	{

@@ -34,7 +34,6 @@ public class MapFloorSelectorAdapter extends ArrayAdapter<String> {
         mContext = context;
         mItemList = new ArrayList<>();
         mSelectedButtonIndex = 0;
-
     }
 
     @NonNull
@@ -83,7 +82,8 @@ public class MapFloorSelectorAdapter extends ArrayAdapter<String> {
         return mItemList.size();
     }
 
-    public void setList(ArrayList<FloorBase> list) {
+    public void setList( ArrayList<FloorBase> list )
+    {
         clear();
         mItemList.clear();
 
@@ -100,11 +100,10 @@ public class MapFloorSelectorAdapter extends ArrayAdapter<String> {
         addAll(iList);
     }
 
-
-
-    public int setSelectedButtonWithFloorValue(int floorValue) {
-        for (int i = 0, aLen = mItemList.size(); i < aLen; i++) {
-            if (mItemList.get(i).getZIndex() == floorValue) {
+    public int setSelectedButtonWithFloorValue( int floorValue )
+    {
+        for( int i = 0, aLen = mItemList.size(); i < aLen; i++ ) {
+            if( mItemList.get( i ).getZIndex() == floorValue ) {
                 mSelectedButtonIndex = i;
                 notifyDataSetChanged();
                 return i;

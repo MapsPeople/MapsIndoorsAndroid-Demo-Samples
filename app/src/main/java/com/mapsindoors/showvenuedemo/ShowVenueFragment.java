@@ -81,7 +81,7 @@ public class ShowVenueFragment extends Fragment {
 
     private void setupView( View rootView ) {
 
-        FragmentManager fm = getChildFragmentManager();
+        final FragmentManager fm = getChildFragmentManager();
 
         mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
 

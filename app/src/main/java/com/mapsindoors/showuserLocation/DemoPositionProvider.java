@@ -23,7 +23,7 @@ import java.util.TimerTask;
 
  We will start by creating our implementation of a positioning provider.
 
- Create a class `DemoPositionProvider` that implements `PositionProvider`.
+ Create the class `DemoPositionProvider` that implements `PositionProvider`.
  ***/
 public class DemoPositionProvider implements PositionProvider
 //

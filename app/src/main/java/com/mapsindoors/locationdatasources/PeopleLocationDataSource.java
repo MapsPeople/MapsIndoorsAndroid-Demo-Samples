@@ -25,54 +25,63 @@ import java.util.TimerTask;
 
 /***
  ---
- title: Creating your own Location Source - Part 1
+ title: Creating your own Location Data Source - Part 1
  ---
 
- In this tutorial we will show how you can build a custom Location Source, representing locations of people. The people locations will be served from a mocked list in the source and displayed on a map.
+ In this tutorial we will show how you can build a custom Location Source, representing locations of people. The people's locations will be served from a mocked list in the source and displayed on a map.
 
  We will start by creating our implementation of a location source.
 
- Create a class `PeopleLocationDataSource` that implements `MPLocationSource`.
+ Create the class `PeopleLocationDataSource` that implements `MPLocationSource`.
  ***/
-
-
 public class PeopleLocationDataSource implements MPLocationSource {
 
     /***
      First we need to predefine some attributes.
      * `BASE_POSITION`: We need a base position as a start for the Locations
      * `RANGE_MAX_LAT_OFFSET`: A max latitude offset to put a limit on how far the Locations can move on the latitude axis.
-     * `RANGE_MAX_LNG_OFFSET`: the same as for latitude but this time it's for longitude
-     * `Location_COUNT`: The number of Locations desired
+     * `RANGE_MAX_LNG_OFFSET`: A max longitude offset to put a limit on how far the Locations can move on the longitude axis.
+     * `LOCATIONS_COUNT`: The number of Locations desired
      * `LOCATION_SOURCE_ID`: a unique  location source ID
-     * `Location_TYPE`: a type for the locations of this source
+     * `LOCATION_TYPE`: a type for the locations of this source
+     * `LOCATION_CLUSTER_ID`: A cluster ID that will let locations from this source cluster together on the map in case of overlap.
+     * `DISPLAY_RULE`: The display rule for the locations of this source.
      ***/
-    private static final LatLng BASE_POSITION = new LatLng(57.0582502, 9.9504788);
+    private static final LatLng BASE_POSITION        = new LatLng( 57.0582502, 9.9504788 );
     private static final double RANGE_MAX_LAT_OFFSET = 0.000626 / 4;
     private static final double RANGE_MAX_LNG_OFFSET = 0.0003384 / 2;
-    private static final int Location_COUNT = 20;
-    private static final int LOCATION_SOURCE_ID = 2000;
-    static final String Location_TYPE = "PeopleLocationType";
-    public static final int    Location_GROUP_ID   = 1;
+    private static final int    LOCATIONS_COUNT      = 20;
+    private static final int    LOCATION_SOURCE_ID   = 2000;
+    private static final String LOCATION_TYPE        = "PeopleLocationType";
+    public static final int     LOCATION_CLUSTER_ID  = 1;
 
-    public static final LocationDisplayRule DISPLAY_RULE = new LocationDisplayRule.Builder(Location_TYPE).
+    static final LocationDisplayRule DISPLAY_RULE = new LocationDisplayRule.Builder( LOCATION_TYPE ).
             setBitmapDrawableIcon( R.drawable.generic_user ).
             setVisible( true ).
             setShowLabel( false ).
             setZoomLevelOn( 18 ).
-            setLocationClusterId( Location_GROUP_ID ).
-
+            setLocationClusterId( LOCATION_CLUSTER_ID ).
             setDisplayRank( 1 ).
             build();
 
+    // People avatar icons
+    @DrawableRes
+    private final int[] peopleAvatars = new int[]{
+            R.drawable.ic_avatar_1,
+            R.drawable.ic_avatar_2,
+            R.drawable.ic_avatar_3,
+            R.drawable.ic_avatar_4,
+            R.drawable.ic_avatar_5
+    };
+
     /***
      Then we need to add some variables.
-     * `observers`: We need a base position as a start for the Locations
+     * `observers`: We need a base position as a start for the Locations.
      * `locationsList`: A max latitude offset to put a limit on how far the Locations can move on the latitude axis.
-     * `status`: will hold the status of the Datasource
-     * `mDataUpdateTimer`: the same as for latitude but this time it's for longitude
-     * `dynamicLocations`: a List of DynaLocations that will carry the dynamic side of the locations
-     * `random`: It's gonna be used to generate some random values in the data creation and editing
+     * `status`: holds the status of the location data source.
+     * `mDataUpdateTimer`: Timer that we will need to plan some recurrent updates.
+     * `dynamicLocations`: a List of DynaLocations that will carry the dynamic side of the locations.
+     * `random`: used to generate some random values in the data creation and editing.
      ***/
     @NonNull
     private List<MPLocationsObserver> observers;
@@ -85,14 +94,15 @@ public class PeopleLocationDataSource implements MPLocationSource {
 
 
     /***
-     Create a class called DynaLocation to represent the moving Locations with a position and a heading
+     Create the DynaLocation class that represents the moving Locations with a position and a heading
      ***/
-
-    class DynaLocation {
+    class DynaLocation
+    {
         LatLng pos;
         double heading;
 
-        DynaLocation(@NonNull LatLng pos, double heading) {
+        DynaLocation( @NonNull LatLng pos, double heading )
+        {
             this.pos = pos;
             this.heading = heading;
         }
@@ -101,13 +111,13 @@ public class PeopleLocationDataSource implements MPLocationSource {
 
     PeopleLocationDataSource() {
 
-        this.locationsList = new ArrayList<>(Location_COUNT);
+        this.locationsList = new ArrayList<>( LOCATIONS_COUNT );
         this.observers = new ArrayList<>();
         this.status = MPLocationSourceStatus.NOT_INITIALIZED;
     }
 
     /***
-     Create a method called `startUpdatingPositions` that simply just calls `updateLocations` every 1 second.
+     Create the `startUpdatingPositions` method that simply calls `updateLocations` every second.
      ***/
     void startUpdatingPositions() {
         if (!setup()) {
@@ -121,18 +131,18 @@ public class PeopleLocationDataSource implements MPLocationSource {
 
         mDataUpdateTimer = new Timer();
 
-        mDataUpdateTimer.scheduleAtFixedRate(new TimerTask() {
+        mDataUpdateTimer.scheduleAtFixedRate( new TimerTask() {
             @Override
             public void run() {
                 updateLocations();
             }
-        }, 2000, 1000);
+        }, 2000, 1000 );
     }
 
     /***
-     Create a stopUpdatingPositions that can stop the positions updates at any time
+     Create a method that can stop the positions updates at any time
      ***/
-    public void stopUpdatingPositions() {
+    void stopUpdatingPositions() {
         if (mDataUpdateTimer != null) {
             mDataUpdateTimer.cancel();
             mDataUpdateTimer.purge();
@@ -140,14 +150,15 @@ public class PeopleLocationDataSource implements MPLocationSource {
     }
 
     /***
-     Create a method called `setup` that will
-     *Make sure that the data source was not already initialized and data are loaded
-     *Create the locations.
+     Create a method called `setup` that will:
+     * Make sure that the data source was not already initialized and data is loaded.
+     * Create the locations.
      * Make the first notification.
      * Change the status to available
      ***/
-    private boolean setup() {
-        if (this.status != MPLocationSourceStatus.NOT_INITIALIZED) {
+    private boolean setup()
+    {
+        if( this.status != MPLocationSourceStatus.NOT_INITIALIZED ) {
             return true;
         }
 
@@ -158,11 +169,11 @@ public class PeopleLocationDataSource implements MPLocationSource {
         }
 
         locationsList.clear();
-        locationsList.addAll(generateLocations(false));
+        locationsList.addAll( generateLocations( false ) );
 
-        notifyUpdateLocations(locationsList);
+        notifyUpdateLocations( locationsList );
 
-        setStatus(MPLocationSourceStatus.AVAILABLE);
+        setStatus( MPLocationSourceStatus.AVAILABLE );
 
         return true;
     }
@@ -170,7 +181,7 @@ public class PeopleLocationDataSource implements MPLocationSource {
     /***
      Create a method called `updateLocations` that will update the position of the Locations.
      ***/
-    private void updateLocations() {
+    void updateLocations() {
 
         // make sure that that the MapsIndoors is ready and that everything is well set
         if (!MapsIndoors.isReady()) {
@@ -229,8 +240,6 @@ public class PeopleLocationDataSource implements MPLocationSource {
 
     }
 
-
-
     /***
      Create a method called `generateLocations`. Iterate numberOfPeople and for each iteration create:
      * An MPLocation Builder with an id
@@ -240,22 +249,10 @@ public class PeopleLocationDataSource implements MPLocationSource {
      * A floor Index
      * A building
      ***/
-
-    // People avatar icons
-    @DrawableRes
-    private final int[] peopleAvatars = new int[]{
-            R.drawable.ic_avatar_1,
-            R.drawable.ic_avatar_2,
-            R.drawable.ic_avatar_3,
-            R.drawable.ic_avatar_4,
-            R.drawable.ic_avatar_5
-    };
-
-
     @NonNull
-    private List<MPLocation> generateLocations(boolean randomizeStartingPosition) {
-
-        final List<MPLocation> peopleLocations = new ArrayList<>(Location_COUNT);
+    private List<MPLocation> generateLocations( boolean randomizeStartingPosition )
+    {
+        final List<MPLocation> peopleLocations = new ArrayList<>( LOCATIONS_COUNT );
 
         final BuildingCollection buildingCollection = MapsIndoors.getBuildings();
         final boolean gotBuildingData = buildingCollection != null;
@@ -263,7 +260,7 @@ public class PeopleLocationDataSource implements MPLocationSource {
         final int avatarIconsCount = peopleAvatars.length;
         int avatarCurrentIndex = 0;
 
-        for (int i = 0; i < Location_COUNT; i++) {
+        for ( int i = 0; i < LOCATIONS_COUNT; i++) {
 
             final String personName = getPersonName();
             final LatLng personPosition;
@@ -273,10 +270,10 @@ public class PeopleLocationDataSource implements MPLocationSource {
                 personPosition = BASE_POSITION;
             }
 
-            final MPLocation.Builder locBuilder = new MPLocation.Builder(""+ this.LOCATION_SOURCE_ID + i);
+            final MPLocation.Builder locBuilder = new MPLocation.Builder(""+ LOCATION_SOURCE_ID + i);
             locBuilder.setPosition(personPosition).
                     setName(personName).
-                    setType(Location_TYPE);
+                    setType( LOCATION_TYPE );
 
             // give an icon to the Location
             final @DrawableRes int currentAvatarIcon = peopleAvatars[avatarCurrentIndex];
@@ -317,7 +314,6 @@ public class PeopleLocationDataSource implements MPLocationSource {
     /***
      Create a method called `getPersonName` that simply just returns a random name selected from the arrays below
      ***/
-
     // lists of names and last names
     private final String[] FIRST_NAMES = {"John", "Joe", "Javier", "Mike", "Janet", "Susan", "Cristina", "Michelle"};
     private final String[] LAST_NAMES = {"Smith", "Jones", "Andersson", "Perry", "Brown", "Hill", "Moore", "Baker"};
@@ -329,11 +325,9 @@ public class PeopleLocationDataSource implements MPLocationSource {
         return String.format("%1s %2s", FIRST_NAMES[firstNameIndex], LAST_NAMES[lastNameIndex]);
     }
 
-
     /***
      Create a method called `getRandomPosition` that simply just returns a random LatLng (here within proximity of the demo venue)
      ***/
-
     private LatLng getRandomPosition() {
         final double lat = BASE_POSITION.latitude + (-4 + random.nextInt(20)) * 0.000005;
         final double lng = BASE_POSITION.longitude + (-4 + random.nextInt(20)) * 0.000010;
@@ -352,13 +346,13 @@ public class PeopleLocationDataSource implements MPLocationSource {
 
     /***
      The same thing for notifying observers with new status
+     Create a method called `notifyLocationStatusChanged` to loop all the observers and notify them with a status change
      ***/
     private void notifyLocationStatusChanged(@NonNull MPLocationSourceStatus prevStatus, @NonNull MPLocationSourceStatus newStatus) {
         for (int i = observers.size(); --i >= 0; ) {
             observers.get(i).onStatusChanged(newStatus, this);
         }
     }
-
 
     /***
       Sets the internal state and notifies a status changed message if applies
@@ -371,8 +365,6 @@ public class PeopleLocationDataSource implements MPLocationSource {
             notifyLocationStatusChanged(cStatus, newStatus);
         }
     }
-
-
 
     /***
      Implement the MPLocationSource method `getLocations`.
@@ -420,6 +412,4 @@ public class PeopleLocationDataSource implements MPLocationSource {
     public int getSourceId() {
         return LOCATION_SOURCE_ID;
     }
-
-
 }

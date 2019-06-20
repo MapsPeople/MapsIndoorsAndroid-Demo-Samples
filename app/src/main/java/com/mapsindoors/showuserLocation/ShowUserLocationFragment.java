@@ -26,7 +26,7 @@ import com.mapsindoors.mapssdk.MapsIndoors;
 
  This is part 2 of the tutorial of managing a blue dot on the map. [In Part 1 we created the position provider](showuserlocationdemopositionprovider). Now we will create a Fragment displaying a map that shows the users (mock) location.
 
- Create a class `ShowUserLocationFragment` that inherits from `Fragment`.
+ Create the class `ShowUserLocationFragment` that inherits from `Fragment`.
  ***/
 public class ShowUserLocationFragment extends Fragment {
 
@@ -42,7 +42,7 @@ public class ShowUserLocationFragment extends Fragment {
     SupportMapFragment mMapFragment;
 
     /***
-     The lat lng of the Venue
+     The Venue's coordinates
      ***/
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     //
@@ -96,7 +96,7 @@ public class ShowUserLocationFragment extends Fragment {
 
     private void setupView( View rootView )
     {
-        FragmentManager fm = getChildFragmentManager();
+        final FragmentManager fm = getChildFragmentManager();
 
         mMapFragment = (SupportMapFragment) fm.findFragmentById( R.id.mapfragment );
 

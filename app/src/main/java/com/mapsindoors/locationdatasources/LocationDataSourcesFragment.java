@@ -32,12 +32,12 @@ import java.util.Set;
 
 /***
  ---
- title: Creating your own Location Source - Part 3
+ title: Creating your own Location Data Source - Part 3
  ---
 
- This is part 3 of the tutorial of building a custom Location Source. [In Part 1 we created the People Location Source](locationdatasourcespeoplelocationdatasource) and [In Part 2 we created the Batteries Location Source](locationdatasourcesbatterieslocationdatasource). Now we will create a Fragment displaying a map that shows the mocked people locations and the batteries on top of a MapsIndoors map.
+ This is part 3 of the tutorial for building a custom Location Source. [In Part 1 we created the People Location Source](locationdatasourcespeoplelocationdatasource) and [In Part 2 we created the Batteries Location Source](locationdatasourcesbatterieslocationdatasource). Now we will create a Fragment displaying a map that shows the mocked people locations and the batteries on top of a MapsIndoors map.
 
- Create a class `LocationDataSourcesFragment` that extends `Fragment`.
+ Create the class `LocationDataSourcesFragment` that extends `Fragment`.
  ***/
 public class LocationDataSourcesFragment extends Fragment {
 
@@ -53,14 +53,14 @@ public class LocationDataSourcesFragment extends Fragment {
     SupportMapFragment mMapFragment;
 
     /***
-     The lat lng of the Venue
+     The Venue's coordinates
      ***/
     static final LatLng VENUE_LAT_LNG = new LatLng(57.05813067, 9.95058065);
     //****
 
 
     /***
-     Data sources objects
+     Location Data Sources objects
      ***/
     PeopleLocationDataSource peopleLocationDataSource;
     BatteriesLocationDataSource batteriesLocationDataSource;
@@ -73,7 +73,6 @@ public class LocationDataSourcesFragment extends Fragment {
     public static LocationDataSourcesFragment newInstance() {
         return new LocationDataSourcesFragment();
     }
-
 
     @Override
     @Nullable
@@ -89,36 +88,35 @@ public class LocationDataSourcesFragment extends Fragment {
         setupView(view);
     }
 
+    private void setupView( View rootView )
+    {
+        final FragmentManager fm = getChildFragmentManager();
 
+        mMapFragment = (SupportMapFragment) fm.findFragmentById( R.id.mapfragment );
 
-
-    private void setupView(View rootView) {
-        FragmentManager fm = getChildFragmentManager();
-
-        mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
-
-        mMapFragment.getMapAsync(mOnMapReadyCallback);
+        mMapFragment.getMapAsync( mOnMapReadyCallback );
     }
 
     /***
-     Once the map is ready move the camera to the venue location and call the setupMapsIndoors
+     Once the map is ready, move the camera to the venue's location and call setupMapsIndoors
      ***/
     OnMapReadyCallback mOnMapReadyCallback = new OnMapReadyCallback() {
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady( GoogleMap googleMap )
+        {
             mGoogleMap = googleMap;
-            mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(VENUE_LAT_LNG, 13.0f));
+            mGoogleMap.moveCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 13.0f ) );
 
             setupMapsIndoors();
         }
     };
 
     /***
-     Create a method `setupMapsIndoors`
-     * Init the MapsIndoors
-     * Set the google API key
-     * Attach a listener to listen to the status of the data sources
-     * Call setupMapControl
+     Create a method `setupMapsIndoors` and:
+     * Initialize MapsIndoors.
+     * Set the Google API Key (used by the routing provider).
+     * Set a listener on the internal location data source service. Location data is not available at the same time other data (building info, etc.) is
+     * Invoke the location sources and call `setupMapControl` when ready
      ***/
     void setupMapsIndoors() {
         final Activity context = getActivity();
@@ -127,30 +125,35 @@ public class LocationDataSourcesFragment extends Fragment {
             return;
         }
 
+        // Sets the SDK to a "clean" state. In most cases, this is not needed
         MapsIndoors.onApplicationTerminate();
-        MapsIndoors.initialize(DemoApplication.getInstance(), getString(R.string.mi_api_key));
-        MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
-        MapsIndoors.addLocationSourceOnStatusChangedListener(locationSourceOnStatusChangedListener);
 
-        setupLocationDataSources(error -> setupMapControl());
+        MapsIndoors.initialize( DemoApplication.getInstance(), getString( R.string.mi_api_key ) );
+        MapsIndoors.setGoogleAPIKey( getString( R.string.google_maps_key ) );
+
+        // Set a listener to observe for location source status changes. In this example, we need to know when locations are
+        // ready (MPLocationSourceStatus.AVAILABLE) so we can start updating/animating them
+        MapsIndoors.addLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
+
+        setupLocationDataSources( error -> setupMapControl() );
     }
 
     /***
      Create a method `setupLocationDataSources`
      * Instantiate `PeopleLocationDataSource` and `BatteriesLocationDataSource`
-     * Set the location sources to the MapsIndoors
+     * Set/register the location sources
      ***/
-    void setupLocationDataSources(@NonNull OnResultReadyListener listener) {
+    void setupLocationDataSources( @NonNull OnResultReadyListener listener ) {
 
-        Set<MPLocationSource> locationDataSources= new HashSet<>(2);
+        Set<MPLocationSource> locationDataSources = new HashSet<>( 2 );
 
         peopleLocationDataSource = new PeopleLocationDataSource();
-        locationDataSources.add(peopleLocationDataSource);
+        locationDataSources.add( peopleLocationDataSource );
 
         batteriesLocationDataSource = new BatteriesLocationDataSource();
-        locationDataSources.add(batteriesLocationDataSource);
+        locationDataSources.add( batteriesLocationDataSource );
 
-        MapsIndoors.setLocationSources(locationDataSources.toArray(new MPLocationSource[0]), error -> {
+        MapsIndoors.setLocationSources( locationDataSources.toArray( new MPLocationSource[0] ), error -> {
 
             final FragmentActivity context = getActivity();
             if (context != null) {
@@ -166,10 +169,10 @@ public class LocationDataSourcesFragment extends Fragment {
     }
 
     /***
-     Create a method 'setupMapControl'
-     * Instantiate and init the MapControl object which will sync data
-     * Add the location sources display rules to the map control.
-     * Init the MapControl object which will sync data
+     Create a method `setupMapControl`
+     * Instantiate MapControl.
+     * Add the custom display rules used by the location sources.
+     * Initialize the `MapControl.init()` object which will synchronize the data.
      ***/
     void setupMapControl() {
         final Activity activityContext = getActivity();
@@ -177,24 +180,24 @@ public class LocationDataSourcesFragment extends Fragment {
             return;
         }
 
-        mMapControl = new MapControl(activityContext);
-        mMapControl.setGoogleMap(mGoogleMap, mMapFragment.getView());
+        mMapControl = new MapControl( activityContext );
+        mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
-        mMapControl.addDisplayRule(PeopleLocationDataSource.DISPLAY_RULE);
-        mMapControl.addDisplayRule(BatteriesLocationDataSource.DISPLAY_RULE);
+        mMapControl.addDisplayRule( PeopleLocationDataSource.DISPLAY_RULE );
+        mMapControl.addDisplayRule( BatteriesLocationDataSource.DISPLAY_RULE );
 
-        mMapControl.init(null);
+        mMapControl.init( null );
     }
 
     /***
      Add `locationSourceOnStatusChangedListener`
-     * Once the status of the location sources is available we can start updating our locations
-     * Select the first floor and move the camera to the Venue position
+     * Once location data from our custom sources becomes available, start updating them
+     * Select the first floor and move the camera to the Venue's position
      ***/
     final MPLocationSourceOnStatusChangedListener locationSourceOnStatusChangedListener = new MPLocationSourceOnStatusChangedListener() {
         @Override
-        public void onStatusChanged(@NonNull MPLocationSourceStatus status, int sourceId) {
-            if (status == MPLocationSourceStatus.AVAILABLE) {
+        public void onStatusChanged( @NonNull MPLocationSourceStatus status, int sourceId ) {
+            if ( status == MPLocationSourceStatus.AVAILABLE ) {
                 final Activity context = getActivity();
                 if (context != null) {
                     context.runOnUiThread(() -> {
@@ -202,9 +205,9 @@ public class LocationDataSourcesFragment extends Fragment {
                         peopleLocationDataSource.startUpdatingPositions();
                         batteriesLocationDataSource.startUpdatingIcons();
 
-                        //Select a floor and animate the camera to the venue position
-                        mMapControl.selectFloor(1);
-                        mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(VENUE_LAT_LNG, 20f));
+                        // Select a floor and animate the camera to the venue's position
+                        mMapControl.selectFloor( 1 );
+                        mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
                     });
                 }
             }
@@ -212,7 +215,7 @@ public class LocationDataSourcesFragment extends Fragment {
     };
 
     /***
-     Implement the `onDestroyView` method to stop the updating of the location source
+     Implement the `onDestroyView` method to stop updating the location sources
      ***/
     @Override
     public void onDestroyView() {
@@ -221,13 +224,12 @@ public class LocationDataSourcesFragment extends Fragment {
             peopleLocationDataSource.stopUpdatingPositions();
             batteriesLocationDataSource.stopUpdatingIcons();
 
-            MapsIndoors.removeLocationSourceOnStatusChangedListener(locationSourceOnStatusChangedListener);
+            MapsIndoors.removeLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
 
             mMapControl.onDestroy();
 
             MapsIndoors.onApplicationTerminate();
-
-            MapsIndoors.initialize(DemoApplication.getInstance(), getString(R.string.mi_api_key));
+            MapsIndoors.initialize( DemoApplication.getInstance(), getString( R.string.mi_api_key ) );
         }
 
         super.onDestroyView();

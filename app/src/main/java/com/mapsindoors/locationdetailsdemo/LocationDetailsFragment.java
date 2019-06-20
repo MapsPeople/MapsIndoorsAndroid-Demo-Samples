@@ -49,7 +49,7 @@ public class LocationDetailsFragment extends Fragment
     TextView detailsTextView;
 
     /***
-     The lat lng of the Venue
+     The Venue's coordinates
      ***/
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     //
@@ -100,7 +100,7 @@ public class LocationDetailsFragment extends Fragment
      ***/
     private void setupView( View rootView )
     {
-        FragmentManager fm = getChildFragmentManager();
+        final FragmentManager fm = getChildFragmentManager();
 
         detailsTextView = rootView.findViewById( R.id.details_text_view );
 
