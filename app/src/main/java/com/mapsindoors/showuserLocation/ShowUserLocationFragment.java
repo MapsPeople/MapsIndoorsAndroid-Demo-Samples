@@ -83,8 +83,9 @@ public class ShowUserLocationFragment extends Fragment {
         {
             mMapControl.onDestroy();
         }
+
         /***
-         In the 'onDestroyView' method, we need to free the MapsIndoors PositionProvider
+         In the `onDestroyView` method, we need to free the MapsIndoors PositionProvider
          ***/
         MapsIndoors.setPositionProvider( null );
         //
@@ -135,7 +136,7 @@ public class ShowUserLocationFragment extends Fragment {
          Instantiate the mapControl object
          ***/
         mMapControl = new MapControl( context );
-        mMapControl.setGoogleMap(mGoogleMap, mMapFragment.getView());
+        mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
         /***
          * Create an instance of the 'DemoPositionProvider' that we defined previously
@@ -168,7 +169,7 @@ public class ShowUserLocationFragment extends Fragment {
                     /***
                      * Start positioning
                      ***/
-                    demoPositionProvider.startPositioning(null);
+                    demoPositionProvider.startPositioning( null );
                 }
             }
         });

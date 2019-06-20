@@ -55,11 +55,13 @@ public class SearchMapFragment extends Fragment
      A listener to report the click on the search Button to the activity
      ***/
     private OnFragmentInteractionListener mListener;
+
     /***
      The Venue's coordinates
      ***/
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     //
+
 
     public SearchMapFragment()
     {
@@ -160,8 +162,8 @@ public class SearchMapFragment extends Fragment
         MapsIndoors.addLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
 
         /***
-         * init the MapControl object which will sync data.
-         * When the init is done, if the 'locationToSelect' is not null we call the 'mMapControl.selectLocation()' to select the desired location otherwise select a floor
+         * Initialize the MapControl object which will sync data.
+         * When the init is done, if the 'locationToSelect' is not null we call the 'mMapControl.selectLocation()' to select the desired location, otherwise select a floor
          ***/
         mMapControl.init( miError -> {
 

@@ -161,7 +161,7 @@ public class SearchFragment extends Fragment {
         @Override
         public void afterTextChanged(Editable s) {
 
-            //Only start searching if the user wrote something to look for
+            // Only start searching if the user wrote something to look for
             if (!TextUtils.isEmpty(s)) {
 
                 mIsMenuCleared = false;
@@ -194,7 +194,7 @@ public class SearchFragment extends Fragment {
         return handled;
     };
 
-    //Close keyboard and search when user presses enter
+    // Close keyboard and search when user presses enter
     View.OnKeyListener mEditTextOnKeyListener = ( view, keyCode, keyEvent ) -> {
 
         if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
@@ -309,7 +309,7 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    //Only search after a second of delay. Any search requests before one sec should replace the search and restart the timer.
+    // Only search after a second of delay. Any search requests before one sec should replace the search and restart the timer.
     void startSearchTimer()
     {
         if( searchHandler != null ) {

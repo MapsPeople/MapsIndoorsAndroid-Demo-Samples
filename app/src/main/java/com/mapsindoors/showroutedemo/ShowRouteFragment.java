@@ -177,7 +177,7 @@ public class ShowRouteFragment extends Fragment
                 }
             } else
             {
-                // Can't get a route between the giving points
+                // Can't get a route between the given points
             }
         });
 

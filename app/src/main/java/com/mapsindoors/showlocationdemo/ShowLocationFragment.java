@@ -128,14 +128,14 @@ public class ShowLocationFragment extends Fragment
 
     void queryLocation()
     {
-        /*** Init the query builder and build a query, in this case we will query for coffee machines ***/
+        /*** Setup a query with the string "coffee machine" ***/
         MPQuery query = new MPQuery.Builder().
-                setQuery("coffee machine").
+                setQuery( "coffee machine" ).
                 build();
 
-        /*** Init the filter builder and build a filter, the criteria in this case we want 1 coffee machine from the 1st floor ***/
+        /*** Get only coffee machines from the first floor, from any building and venue ***/
         MPFilter filter = new MPFilter.Builder().
-                setFloorIndex(1).
+                setFloorIndex( 1 ).
                 build();
 
         /*** Query the data ***/

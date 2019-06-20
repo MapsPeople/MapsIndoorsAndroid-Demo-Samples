@@ -54,6 +54,7 @@ public class LocationDetailsFragment extends Fragment
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     //
 
+
     public LocationDetailsFragment()
     {
         // Required empty public constructor
@@ -136,7 +137,7 @@ public class LocationDetailsFragment extends Fragment
         }
 
         /***
-         Setting the API key to the desired solution
+         Setting the API key to the desired solution. Needed here as we are switching solutions.
          ***/
         if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
         {
