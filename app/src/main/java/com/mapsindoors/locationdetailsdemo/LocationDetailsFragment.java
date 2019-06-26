@@ -52,7 +52,7 @@ public class LocationDetailsFragment extends Fragment
      The lat lng of the Venue
      ***/
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
-    //
+    //****
 
     public LocationDetailsFragment()
     {

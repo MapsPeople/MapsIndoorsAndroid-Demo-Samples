@@ -44,7 +44,7 @@ import java.util.ArrayList;
  Declare a listener for our location selection with a `onUserSelectedLocation` method
  ***/
 public class SearchFragment extends Fragment {
-
+//****
     static final int VIEW_FLIPPER_ITEM_LIST    = 0;
     static final int VIEW_FLIPPER_PROGRESS_BAR = 1;
 
@@ -64,7 +64,7 @@ public class SearchFragment extends Fragment {
     IconTextListAdapter mListAdapter;
     ViewFlipper mViewFlipper;
     ImageButton mBackButton;
-    //
+    //****
 
     boolean mIsMenuCleared = false;
 
@@ -118,7 +118,7 @@ public class SearchFragment extends Fragment {
         /***
          Init and setup the view components for a better search experience.
          ***/
-        //
+        //****
         /*** Note: Creating a TextWatcher as it's needed for software keyboard support. ***/
         mSearchEditTextView.addTextChangedListener( mEditTextViewTextWatcher );
         mSearchEditTextView.setOnFocusChangeListener( mEditTextViewOnFocusChangeListener );
@@ -133,7 +133,7 @@ public class SearchFragment extends Fragment {
         mSearchClearBtn.setOnClickListener( mClearSearchButtonClickListener );
         mSearchClearBtn.setOnFocusChangeListener( mClearSearchButtonFocusChangeListener );
 
-        //
+        //****
 
         mBackButton.setOnClickListener( mBackButtonClickListener );
 
@@ -383,7 +383,7 @@ public class SearchFragment extends Fragment {
             }
         }
     };
-//
+//****
 
     @Override
     public void onAttach( Context context )
@@ -411,6 +411,6 @@ public class SearchFragment extends Fragment {
     /***
      In [Part 2](searchmapdemosearchmapfragment) we will create the map fragment that displays the search result.
      ***/
-    //
+    //****
 }
 

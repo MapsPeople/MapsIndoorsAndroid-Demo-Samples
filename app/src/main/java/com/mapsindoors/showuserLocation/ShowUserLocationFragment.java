@@ -45,7 +45,7 @@ public class ShowUserLocationFragment extends Fragment {
      The lat lng of the Venue
      ***/
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
-    //
+    //****
 
     public ShowUserLocationFragment()
     {
@@ -87,7 +87,7 @@ public class ShowUserLocationFragment extends Fragment {
          In the 'onDestroyView' method, we need to free the MapsIndoors PositionProvider
          ***/
         MapsIndoors.setPositionProvider( null );
-        //
+        //****
 
         super.onDestroyView();
     }
@@ -169,6 +169,7 @@ public class ShowUserLocationFragment extends Fragment {
                      * Start positioning
                      ***/
                     demoPositionProvider.startPositioning(null);
+                    //****
                 }
             }
         });

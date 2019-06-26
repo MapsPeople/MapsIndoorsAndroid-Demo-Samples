@@ -26,7 +26,7 @@ import java.util.TimerTask;
  Create a class `DemoPositionProvider` that implements `PositionProvider`.
  ***/
 public class DemoPositionProvider implements PositionProvider
-//
+//****
 {
     /***
      Add some member variables to `DemoPositionProvider`.
@@ -105,7 +105,7 @@ public class DemoPositionProvider implements PositionProvider
     public boolean isRunning() {
         return isRunning ;
     }
-    //
+    //****
     @Override
     public void addOnPositionUpdateListener(@Nullable OnPositionUpdateListener listener) {
 
@@ -173,6 +173,6 @@ public class DemoPositionProvider implements PositionProvider
     /***
      In [Part 2](showuserlocationshowuserlocationfragment) we will create the map fragment that displays the blue dot.
      ***/
-    //
+    //****
 
 }
