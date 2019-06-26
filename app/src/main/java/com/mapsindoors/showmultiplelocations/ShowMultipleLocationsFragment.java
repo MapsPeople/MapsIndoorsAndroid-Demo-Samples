@@ -36,14 +36,10 @@ public class ShowMultipleLocationsFragment extends Fragment {
     GoogleMap mGoogleMap;
 
     /***
-     The lat lng of the Venue
+     The Venue's coordinates
      ***/
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
-    /***
-     The query object and the query builder
-     ***/
-    /*LocationQuery mLocationQuery;
-    LocationQuery.Builder mLocationQueryBuilder;*/
+
 
     SupportMapFragment mMapFragment;
 
@@ -93,7 +89,7 @@ public class ShowMultipleLocationsFragment extends Fragment {
 
     private void setupView( View rootView )
     {
-        FragmentManager fm = getChildFragmentManager();
+        final FragmentManager fm = getChildFragmentManager();
 
         mMapFragment = (SupportMapFragment) fm.findFragmentById( R.id.mapfragment );
 
@@ -137,12 +133,13 @@ public class ShowMultipleLocationsFragment extends Fragment {
 
     void queryLocation()
     {
-        /*** Init the query builder and build a query, in this case we will query for all to toilets ***/
+        /*** Setup a query with the string "Toilet" ***/
         MPQuery query = new MPQuery.Builder().
-                setQuery("Toilet").
+                setQuery( "Toilet" ).
                 build();
 
         /*** Init the filter builder and build a filter, the criteria in this case we want maximum 50 toilets from the 1st floor ***/
+        /*** Get up to 50 toilets from the first floor, from any building and venue ***/
         MPFilter filter = new MPFilter.Builder().
                 setTake( 50 ).
                 setFloorIndex( 1 ).
@@ -176,8 +173,6 @@ public class ShowMultipleLocationsFragment extends Fragment {
 
                         //
                         queryLocation();
-
-                        //mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 21f ) );
                     } );
                 }
             }

@@ -19,18 +19,17 @@ import java.util.TimerTask;
  title: Show the Blue Dot with MapsIndoors - Part 1
  ---
 
- In this tutorial we will show how you can show a blue dot on the map, representing the users location. The position will be served from a mocked positioning provider and displayed on a map in a view controller.
+ In this tutorial we will show how you can show a blue dot on the map, representing the user's location. The position will be served from a mocked positioning provider and displayed on a map in a view controller.
 
  We will start by creating our implementation of a positioning provider.
 
- Create a class `DemoPositionProvider` that implements `PositionProvider`.
+ Create the class `DemoPositionProvider` that implements `PositionProvider`.
  ***/
 public class DemoPositionProvider implements PositionProvider
 //****
 {
     /***
-     Add some member variables to `DemoPositionProvider`.
-
+     Add some member variables to `DemoPositionProvider`:
      * `mPositionUpdateListener`: The listener object
      * `isRunning`: A running state boolean flag
      * `mLatestPosition`: The latest positioning result
@@ -49,8 +48,7 @@ public class DemoPositionProvider implements PositionProvider
     Timer mPositionUpdateTimer = new Timer();
 
     /***
-     Create a method called `updatePosition`. This will be our "loop" constantly posting a new position to the delegate.
-
+     Create a method called `updatePosition`. This will be our "loop" constantly posting a new position to the delegate:
      * Check if the provider has a running state
      * Assign the `fixedPosition` value to `mLatestPosition`
      * Notify the listener by calling `onPositionUpdate` passing the new position as argument
@@ -80,12 +78,13 @@ public class DemoPositionProvider implements PositionProvider
     public void startPositioning(@Nullable String arg) {
         isRunning = true;
 
-        //Set the schedule function and rate
-        mPositionUpdateTimer.scheduleAtFixedRate(new TimerTask() {
-        @Override
-        public void run() { updatePosition();}},
-                0,
-                3000);
+        // Set the schedule function and rate
+        mPositionUpdateTimer.scheduleAtFixedRate( new TimerTask() {
+            @Override
+            public void run() {
+                updatePosition();
+            }
+        }, 0, 3000 );
     }
 
     /***
@@ -95,11 +94,10 @@ public class DemoPositionProvider implements PositionProvider
     public void stopPositioning(@Nullable String arg) {
         isRunning = false;
         mPositionUpdateTimer.cancel();
-
     }
 
     /***
-     Implement the `isRunning` method. Return the value of `running`.
+     Implement the `isRunning` method. Return the value of `isRunning`.
      ***/
     @Override
     public boolean isRunning() {
@@ -107,39 +105,26 @@ public class DemoPositionProvider implements PositionProvider
     }
     //****
     @Override
-    public void addOnPositionUpdateListener(@Nullable OnPositionUpdateListener listener) {
-
+    public void addOnPositionUpdateListener( @Nullable OnPositionUpdateListener listener ) {
         mPositionUpdateListener = listener;
-
     }
 
     @Override
-    public void removeOnPositionUpdateListener(@Nullable OnPositionUpdateListener listener) {
+    public void removeOnPositionUpdateListener( @Nullable OnPositionUpdateListener listener ) {
         mPositionUpdateListener = null;
-
     }
 
     @Override
-    public void setProviderId(@Nullable String id) {
-
-    }
+    public void setProviderId( @Nullable String id ) {}
 
     @Override
-    public void addOnStateChangedListener(@Nullable OnStateChangedListener onStateChangedListener) {
-
-    }
+    public void addOnStateChangedListener( @Nullable OnStateChangedListener onStateChangedListener ) {}
 
     @Override
-    public void removeOnStateChangedListener(@Nullable OnStateChangedListener onStateChangedListener) {
-
-    }
-
-
+    public void removeOnStateChangedListener( @Nullable OnStateChangedListener onStateChangedListener ) {}
 
     @Override
-    public void checkPermissionsAndPSEnabled(PermissionsAndPSListener permissionAPSlist) {
-
-    }
+    public void checkPermissionsAndPSEnabled( PermissionsAndPSListener permissionAPSlist ) {}
 
     @Nullable
     @Override
@@ -153,16 +138,11 @@ public class DemoPositionProvider implements PositionProvider
         return null;
     }
 
+    @Override
+    public void startPositioningAfter( int delayInMs, @Nullable String arg ) {}
 
     @Override
-    public void startPositioningAfter(int delayInMs, @Nullable String arg) {
-
-    }
-
-    @Override
-    public void terminate() {
-
-    }
+    public void terminate() {}
 
     @NonNull
     @Override

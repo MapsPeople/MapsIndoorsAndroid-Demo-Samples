@@ -69,8 +69,7 @@ public class ShowVenueFragment extends Fragment {
     @Override
     public void onDestroyView()
     {
-        if( mMapControl != null )
-        {
+        if( mMapControl != null ) {
             mMapControl.onDestroy();
         }
 
@@ -79,13 +78,13 @@ public class ShowVenueFragment extends Fragment {
     //endregion
 
 
-    private void setupView( View rootView ) {
+    private void setupView( View rootView )
+    {
+        final FragmentManager fm = getChildFragmentManager();
 
-        FragmentManager fm = getChildFragmentManager();
+        mMapFragment = (SupportMapFragment) fm.findFragmentById( R.id.mapfragment );
 
-        mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
-
-        mMapFragment.getMapAsync(mOnMapReadyCallback);
+        mMapFragment.getMapAsync( mOnMapReadyCallback );
     }
 
     OnMapReadyCallback mOnMapReadyCallback = new OnMapReadyCallback() {
@@ -98,7 +97,6 @@ public class ShowVenueFragment extends Fragment {
             setupMapsIndoors();
         }
     };
-
 
     void setupMapsIndoors()
     {

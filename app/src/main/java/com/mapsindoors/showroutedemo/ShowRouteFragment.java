@@ -91,7 +91,7 @@ public class ShowRouteFragment extends Fragment
 
     private void setupView( View rootView) {
 
-        FragmentManager fm = getChildFragmentManager();
+        final FragmentManager fm = getChildFragmentManager();
 
         mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
 
@@ -168,7 +168,7 @@ public class ShowRouteFragment extends Fragment
             {
                 mRoutingRenderer.setRoute( route );
 
-                Activity activity  = getActivity();
+                final Activity activity  = getActivity();
                 if( activity != null )
                 {
                     activity.runOnUiThread( () -> {
@@ -177,7 +177,7 @@ public class ShowRouteFragment extends Fragment
                 }
             } else
             {
-                // Can't get a route between the giving points
+                // Can't get a route between the given points
             }
         });
 

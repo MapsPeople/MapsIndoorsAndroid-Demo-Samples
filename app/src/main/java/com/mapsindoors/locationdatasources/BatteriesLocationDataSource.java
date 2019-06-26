@@ -25,7 +25,7 @@ import java.util.TimerTask;
 
 /***
  ---
- title: Creating your own Location Source - Part 2
+ title: Creating your own Location Data Source - Part 2
  ---
 
  In this tutorial we will show how you can build a custom Location Source. In [Part 1](locationsourcespeoplelocationsource) we created a people location source that mocks locations of people.
@@ -34,41 +34,42 @@ import java.util.TimerTask;
 
  We will start by creating our implementation of a location source.
 
- Create a class `BatteriesLocationDataSource` that implements `MPLocationSource`.
+ Create the class `BatteriesLocationDataSource` that implements `MPLocationSource`.
  ***/
 public class BatteriesLocationDataSource implements MPLocationSource {
 
     /***
      First we need to predefine some attributes.
      * `BASE_POSITION`: We need a base position as a start for the Locations.
-     * `LOCATION_COUNT`: The number of locations desired.
+     * `LOCATIONS_COUNT`: The number of locations desired.
      * `LOCATION_SOURCE_ID`: a unique  location source ID.
      * `LOCATION_TYPE`: a type for the locations of this source.
      * `LOCATION_CLUSTER_ID`: A cluster ID that will let locations from this source cluster together on the map in case of overlap.
      * `DISPLAY_RULE`: The display rule for the locations of this source.
      ***/
-    private static final LatLng BASE_POSITION = new LatLng(57.0579814, 9.9504668);
-    private static final int LOCATION_COUNT = 20;
-    private int locationDataSourceId = 10000;
-    private static final String LOCATION_TYPE = "BatteryLocationType";
-    private static final int LOCATION_CLUSTER_ID = 2;
-    static final LocationDisplayRule DISPLAY_RULE = new LocationDisplayRule.Builder(LOCATION_TYPE).
-            setVectorDrawableIcon(R.drawable.ic_battery_60_black_24dp).
-            setVisible(true).
-            setShowLabel(false).
-            setZoomLevelOn(16).
-            setLocationClusterId(LOCATION_CLUSTER_ID).
-            setDisplayRank(1).
+    private static final LatLng BASE_POSITION       = new LatLng( 57.0579814, 9.9504668 );
+    private static final int    LOCATIONS_COUNT     = 20;
+    private static final int    LOCATION_SOURCE_ID  = 10000;
+    private static final String LOCATION_TYPE       = "BatteryLocationType";
+    private static final int    LOCATION_CLUSTER_ID = 2;
+
+    static final LocationDisplayRule DISPLAY_RULE = new LocationDisplayRule.Builder( LOCATION_TYPE ).
+            setVectorDrawableIcon( R.drawable.ic_battery_60_black_24dp ).
+            setVisible( true ).
+            setShowLabel( false ).
+            setZoomLevelOn( 16 ).
+            setLocationClusterId( LOCATION_CLUSTER_ID ).
+            setDisplayRank( 1 ).
             build();
 
     /***
      Then we need to add some variables.
      * `observers`: The observer objects that we will notify about changes.
      * `locationsList`: A list of MPLocation - Will have the list of the MPLocations up to date.
-     * `status`: will hold the status of the Datasource.
-     * `random`: It's gonna be used to generate some random values in the data creation and editing.
+     * `status`: holds the status of the location data source.
+     * `random`: Used to generate some random values in the data creation and editing.
      * `mDataUpdateTimer`: Timer that we will need to plan some recurrent updates.
-     * `iconCurrentIndex`: an index for icons so we can update the locations with the same icon each time.
+     * `iconCurrentIndex`: An index for icons so we can update the locations with the same icon each time.
      ***/
     @NonNull
     private List<MPLocationsObserver> observers;
@@ -82,14 +83,13 @@ public class BatteriesLocationDataSource implements MPLocationSource {
 
     BatteriesLocationDataSource() {
 
-        this.locationsList = new ArrayList<>(LOCATION_COUNT);
+        this.locationsList = new ArrayList<>( LOCATIONS_COUNT );
         this.observers = new ArrayList<>();
         this.status = MPLocationSourceStatus.NOT_INITIALIZED;
     }
 
-
     /***
-     Create a method called `startUpdatingIcons` that simply just calls `updateLocations` every half a second.
+     Create the `startUpdatingIcons` method that simply calls `updateLocations` every half a second.
      ***/
     void startUpdatingIcons() {
         if (!setup()) {
@@ -108,12 +108,12 @@ public class BatteriesLocationDataSource implements MPLocationSource {
             public void run() {
                 updateLocations();
             }
-        }, 2000, 500);
+        }, 2000, 500 );
     }
-    /***
-     Create a method `stopUpdatingIcons` that can stop the icons update at any time.
-     ***/
 
+    /***
+     Create a method that can stop the icons update at any time.
+     ***/
     void stopUpdatingIcons() {
         if (mDataUpdateTimer != null) {
             mDataUpdateTimer.cancel();
@@ -122,40 +122,34 @@ public class BatteriesLocationDataSource implements MPLocationSource {
     }
 
     /***
-     Create a metod called `setup` that will:
-     * Make sure that data source was not already initialized and data are loaded.
+     Create a method called `setup` that will:
+     * Make sure that data source was not already initialized and data is loaded.
      * Create the locations.
      * Make the first notification.
      * Change the status to available.
      ***/
-    private boolean setup() {
-        if (this.status != MPLocationSourceStatus.NOT_INITIALIZED) {
+    private boolean setup()
+    {
+        if( this.status != MPLocationSourceStatus.NOT_INITIALIZED ) {
             return true;
         }
 
         final BuildingCollection buildingCollection = MapsIndoors.getBuildings();
         final boolean gotBuildings = buildingCollection != null;
-        if (!gotBuildings) {
+        if( !gotBuildings ) {
             return false;
         }
 
         locationsList.clear();
-        locationsList.addAll(generateLocations(true));
+        locationsList.addAll( generateLocations( true ) );
 
-        notifyUpdateLocations(locationsList);
-        setStatus(MPLocationSourceStatus.AVAILABLE);
+        notifyUpdateLocations( locationsList );
+
+        setStatus( MPLocationSourceStatus.AVAILABLE );
 
         return true;
     }
 
-    /***
-     Create a method called `updateLocations`. Iterate number again and for each iteration:
-     * Get the corresponding MPLocation Builder
-     * Set a new position
-     * Generate MPLocation from the MPLocation.Builder
-     * Call the notifyUpdateLocations with the updated list.
-
-     ***/
     // Icons
     @DrawableRes
     final int[] icons = new int[]{
@@ -168,7 +162,14 @@ public class BatteriesLocationDataSource implements MPLocationSource {
             R.drawable.ic_battery_full_black_24dp
     };
 
-    private void updateLocations() {
+    /***
+     Create a method called `updateLocations`. Iterate number again and for each iteration:
+     * Get the corresponding MPLocation Builder
+     * Set a new position
+     * Generate an MPLocation from a MPLocation.Builder
+     * Call the notifyUpdateLocations with the updated list.
+     ***/
+    void updateLocations() {
         if (!MapsIndoors.isReady()) {
             return;
         }
@@ -186,31 +187,31 @@ public class BatteriesLocationDataSource implements MPLocationSource {
         currentIcon = icons[iconCurrentIndex];
         iconCurrentIndex = (iconCurrentIndex + 1) % availableIconsCount;
 
-
         for (int i = 0, LocationCount = locationsList.size(); i < LocationCount; i++) {
-            final MPLocation p = locationsList.get(i);
+            final MPLocation p = locationsList.get( i );
 
             // "Update" an MPLocation by using the copy/edit builder
-            final MPLocation.Builder updatedLoc = new MPLocation.Builder(p);
+            final MPLocation.Builder updatedLocation = new MPLocation.Builder( p );
 
             // Change the icon & tint color
-            updatedLoc.
+            updatedLocation.
                     // Specify a size
-                            setVectorDrawableIcon(currentIcon, 32, 32).
+                    setVectorDrawableIcon( currentIcon, 32, 32 ).
                     // Specify the tint color
-                            setTint(iColor);
-            updatedList.add(updatedLoc.build());
+                    setTint( iColor );
+
+            updatedList.add( updatedLocation.build() );
         }
 
         locationsList.clear();
-        locationsList.addAll(updatedList);
+        locationsList.addAll( updatedList );
 
-        notifyUpdateLocations(updatedList);
+        notifyUpdateLocations( updatedList );
     }
 
     /***
-     Create a method called `generateLocations` that takes a type string. Iterate numberOfPeople and for each iteration create:
-     * An MPLocation Builder with an id
+     Create a method called `generateLocations`:
+     * An MPLocation.Builder with an id
      * A random position
      * A name
      * A type - later used to style the location
@@ -218,13 +219,14 @@ public class BatteriesLocationDataSource implements MPLocationSource {
      * A building
      ***/
     @NonNull
-    private List<MPLocation> generateLocations(boolean randomizeStartingPosition) {
-        final List<MPLocation> peopleLocations = new ArrayList<>(LOCATION_COUNT);
+    private List<MPLocation> generateLocations( boolean randomizeStartingPosition )
+    {
+        final List<MPLocation> peopleLocations = new ArrayList<>( LOCATIONS_COUNT );
 
         final BuildingCollection buildingCollection = MapsIndoors.getBuildings();
         final boolean gotBuildingData = buildingCollection != null;
 
-        for (int i = 0; i < LOCATION_COUNT; i++) {
+        for ( int i = 0; i < LOCATIONS_COUNT; i++) {
 
             final LatLng personPosition;
             if (randomizeStartingPosition) {
@@ -233,10 +235,10 @@ public class BatteriesLocationDataSource implements MPLocationSource {
                 personPosition = BASE_POSITION;
             }
 
-            final MPLocation.Builder locBuilder = new MPLocation.Builder("" + locationDataSourceId + i);
-            locBuilder.setPosition(personPosition).
-                    setName("Battery" + i).
-                    setType(LOCATION_TYPE);
+            final MPLocation.Builder locBuilder = new MPLocation.Builder( "" + LOCATION_SOURCE_ID + i );
+            locBuilder.setPosition( personPosition ).
+                    setName( "Battery" + i ).
+                    setType( LOCATION_TYPE );
 
 
             if (gotBuildingData) {
@@ -254,24 +256,24 @@ public class BatteriesLocationDataSource implements MPLocationSource {
                     locBuilder.setFloor((floor != null) ? floor.getZIndex() : Floor.DEFAULT_GROUND_FLOOR_INDEX);
 
                     // Set the building name where this Location is in
-                    locBuilder.setBuilding(building.getName());
+                    locBuilder.setBuilding( building.getName() );
                 } else {
                     // If this location was outside a building, set its floor/z index to zero (ground floor)
-                    locBuilder.setFloor(Floor.DEFAULT_GROUND_FLOOR_INDEX);
+                    locBuilder.setFloor( Floor.DEFAULT_GROUND_FLOOR_INDEX );
                 }
             } else {
                 // If this location was outside a building, set its floor/z index to zero (ground floor)
-                locBuilder.setFloor(Floor.DEFAULT_GROUND_FLOOR_INDEX);
+                locBuilder.setFloor( Floor.DEFAULT_GROUND_FLOOR_INDEX );
             }
 
-            peopleLocations.add(locBuilder.build());
+            peopleLocations.add( locBuilder.build() );
         }
 
         return peopleLocations;
     }
 
     /***
-     Create a method called `getRandomPosition` that simply just returns a random LatLng (here within proximity of the demo venue)
+     Create a method called `getRandomPosition` that simply returns a random LatLng (here within proximity of the demo venue)
      ***/
     private LatLng getRandomPosition() {
         final double lat = BASE_POSITION.latitude + (-4 + random.nextInt(20)) * 0.000005;
@@ -280,34 +282,33 @@ public class BatteriesLocationDataSource implements MPLocationSource {
         return new LatLng(lat, lng);
     }
 
-
     /***
      Create a method called `notifyUpdateLocations` to loop all the observers and notify them with an update
      ***/
-    private void notifyUpdateLocations(List<MPLocation> updatedLocations) {
-        for (int i = observers.size(); --i >= 0; ) {
-            observers.get(i).onLocationsUpdated(updatedLocations, this);
+    private void notifyUpdateLocations( List<MPLocation> updatedLocations ) {
+        for( int i = observers.size(); --i >= 0; ) {
+            observers.get( i ).onLocationsUpdated( updatedLocations, this );
         }
     }
 
     /***
      The same thing for notifying observers with new status
      ***/
-    private void notifyLocationStatusChanged(@NonNull MPLocationSourceStatus prevStatus, @NonNull MPLocationSourceStatus newStatus) {
-        for (int i = observers.size(); --i >= 0; ) {
-            observers.get(i).onStatusChanged(newStatus, this);
+    private void notifyLocationStatusChanged( @NonNull MPLocationSourceStatus prevStatus, @NonNull MPLocationSourceStatus newStatus ) {
+        for( int i = observers.size(); --i >= 0; ) {
+            observers.get( i ).onStatusChanged( newStatus, this );
         }
     }
 
     /***
      Sets the internal state and notifies a status changed message if applies
      ***/
-    private void setStatus(@NonNull MPLocationSourceStatus newStatus) {
+    private void setStatus( @NonNull MPLocationSourceStatus newStatus ) {
         MPLocationSourceStatus cStatus = status;
 
         if (cStatus != newStatus) {
             status = newStatus;
-            notifyLocationStatusChanged(cStatus, newStatus);
+            notifyLocationStatusChanged( cStatus, newStatus );
         }
     }
 
@@ -355,8 +356,6 @@ public class BatteriesLocationDataSource implements MPLocationSource {
      ***/
     @Override
     public int getSourceId() {
-        return locationDataSourceId;
+        return LOCATION_SOURCE_ID;
     }
-
-
 }

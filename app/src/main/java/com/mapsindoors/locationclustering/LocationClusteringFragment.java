@@ -40,7 +40,7 @@ import java.util.List;
 
  This is an example of enabling and disabling location clustering on the map as well as providing custom cluster tapping behaviour and custom cluster images.
 
- Create a class `LocationClusteringFragment` that extends `Fragment`.
+ Create the class `LocationClusteringFragment` that extends `Fragment`.
  ***/
 public class LocationClusteringFragment extends Fragment {
 
@@ -60,7 +60,7 @@ public class LocationClusteringFragment extends Fragment {
     SupportMapFragment mMapFragment;
 
     /***
-     The lat lng of the Venue
+     The Venue's coordinates
      ***/
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     //****
@@ -110,9 +110,9 @@ public class LocationClusteringFragment extends Fragment {
 
     private void setupView( View rootView )
     {
-        FragmentManager fm = getChildFragmentManager();
+        final FragmentManager fm = getChildFragmentManager();
 
-        // Runtime Marker clustering enable/disable doesn't work yet in the current SDK version
+        // Note that runtime Marker clustering enable/disable doesn't work yet in the current SDK version
         //clusteringToggleButton = rootView.findViewById( R.id.clustering_toggle_button );
         //clusteringToggleButton.setOnCheckedChangeListener( onCheckedChangeListener );
 
@@ -122,7 +122,7 @@ public class LocationClusteringFragment extends Fragment {
     }
 
     /***
-     Once the map is ready move the camera to the venue location and call the setupMapsIndoors
+     Once the map is ready, move the camera to the venue location and call setupMapsIndoors
      ***/
     OnMapReadyCallback mOnMapReadyCallback = new OnMapReadyCallback() {
         @Override
@@ -136,9 +136,8 @@ public class LocationClusteringFragment extends Fragment {
     };
 
     /***
-     Add a `locationImageAdapter` to customize the cluster markers icons and provide their sizes
+     Add a `locationClusterImageAdapter` to customize the cluster marker icons and provide their sizes
      ***/
-
     MPLocationClusterImageAdapter locationClusterImageAdapter = new MPLocationClusterImageAdapter() {
         @Nullable
         @Override
@@ -164,11 +163,9 @@ public class LocationClusteringFragment extends Fragment {
         }
     };
 
-
     /***
      Create a method `getCircularImageWithText` that creates the custom bitmaps for our cluster icons
      ***/
-
     @NonNull
     public static Bitmap getCircularImageWithText( @NonNull String text, int textSize, int width, int height )
     {
@@ -208,15 +205,15 @@ public class LocationClusteringFragment extends Fragment {
     }
 
     /***
-     Create a method `SetupMapsIndoors` that :
-     * Setting the API key to the desired solution.
-     * Setting the Google API key.
-     * Instantiate and init the MapControl object which will sync data.
-     * Enable clustering.
-     * Set a OnLocationClusterListener so we can handle the cluster markers click
-     * Set the LocationClusterImageAdapter
-     * Init the MapControl object which will synchronize the data
-     * When the init is done select a floor and animate the camera to the venue position
+     Create a method `setupMapsIndoors` that:
+     * Sets the API key to the desired solution.
+     * Sets the Google API key (required by our routing provider).
+     * Instantiates MapControl.
+     * Enables clustering.
+     * Sets an OnLocationClusterListener so we can handle the cluster markers click events.
+     * Sets the LocationClusterImageAdapter.
+     * Initializes the MapControl object which will synchronize the data.
+     * When the MapControl's initialization is done, it selects a floor and animates the camera to the venue position.
      ***/
     void setupMapsIndoors()
     {
@@ -239,21 +236,19 @@ public class LocationClusteringFragment extends Fragment {
 
         // Currently, on Android, we can enable/disable clustering
         // - via our CMS
-        // - by calling MapControl.setLocationClusteringEnabled( true/false ) BEFORE MapControl.init()
+        // - by calling MapControl.setLocationClusteringEnabled( true/false ) BEFORE invoking MapControl.init()
         // Runtime clustering enable/disable is not currently supported
         mMapControl.setLocationClusteringEnabled( true );
 
+        // Set the custom cluster image adapter
         mMapControl.setLocationClusterImageAdapter( locationClusterImageAdapter );
 
-        // when clicking on a cluster marker zoom in to the maximum trying to break the cluster
+        // When clicking on a cluster marker zoom in to the maximum trying to break the cluster
         mMapControl.setOnLocationClusterClickListener( ( marker, locations ) -> {
 
             mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( marker.getPosition(), 22f  ) );
-
-
             return true;
         } );
-
 
         mMapControl.init( miError -> {
             if( miError == null ) {
@@ -277,6 +272,4 @@ public class LocationClusteringFragment extends Fragment {
             }
         }
     };
-
-
 }

@@ -25,14 +25,12 @@ import com.mapsindoors.mapssdk.MapsIndoors;
 
 public class CustomFloorSelectorFragment extends Fragment {
 
+    static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
 
     MapControl mMapControl;
     SupportMapFragment mMapFragment;
     GoogleMap mGoogleMap;
     MapFloorSelector mMapFloorSelector;
-
-    static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
-    //query objects
 
 
     public CustomFloorSelectorFragment()
@@ -79,7 +77,7 @@ public class CustomFloorSelectorFragment extends Fragment {
 
     private void setupView( View rootView )
     {
-        FragmentManager fm = getChildFragmentManager();
+        final FragmentManager fm = getChildFragmentManager();
 
         mMapFloorSelector = rootView.findViewById( R.id.mp_floor_selector );
 

@@ -49,10 +49,11 @@ public class LocationDetailsFragment extends Fragment
     TextView detailsTextView;
 
     /***
-     The lat lng of the Venue
+     The Venue's coordinates
      ***/
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
     //****
+
 
     public LocationDetailsFragment()
     {
@@ -100,7 +101,7 @@ public class LocationDetailsFragment extends Fragment
      ***/
     private void setupView( View rootView )
     {
-        FragmentManager fm = getChildFragmentManager();
+        final FragmentManager fm = getChildFragmentManager();
 
         detailsTextView = rootView.findViewById( R.id.details_text_view );
 
@@ -136,7 +137,7 @@ public class LocationDetailsFragment extends Fragment
         }
 
         /***
-         Setting the API key to the desired solution
+         Setting the API key to the desired solution. Needed here as we are switching solutions.
          ***/
         if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
         {

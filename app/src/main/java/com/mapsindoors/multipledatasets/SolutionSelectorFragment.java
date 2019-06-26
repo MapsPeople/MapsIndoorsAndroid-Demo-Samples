@@ -21,17 +21,14 @@ import com.mapsindoors.mapssdk.errors.MIError;
 import java.util.List;
 
 
-public class SolutionSelectorFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
+public class SolutionSelectorFragment extends Fragment
+{
 
     Button buttonMP;
     Button buttonAAU;
     View   mainView;
 
-
-    private OnFragmentInteractionListener mListener;
+    OnFragmentInteractionListener mListener;
 
 
     public SolutionSelectorFragment()
@@ -61,14 +58,6 @@ public class SolutionSelectorFragment extends Fragment {
         setupView();
 
         return mainView;
-    }
-
-    @Override
-    public void onDestroyView()
-    {
-        //MapsIndoors.removeLocationSourceOnStatusChangedListener( locationSourceOnStatusChangedListener );
-
-        super.onDestroyView();
     }
 
     void setupView()

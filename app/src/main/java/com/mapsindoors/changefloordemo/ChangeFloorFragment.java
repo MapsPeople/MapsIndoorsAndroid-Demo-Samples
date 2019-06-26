@@ -71,9 +71,9 @@ public class ChangeFloorFragment extends Fragment {
     //endregion
 
 
-    private void setupView( View rootView)
+    private void setupView( View rootView )
     {
-        FragmentManager fm = getChildFragmentManager();
+        final FragmentManager fm = getChildFragmentManager();
 
         mMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.mapfragment);
 
