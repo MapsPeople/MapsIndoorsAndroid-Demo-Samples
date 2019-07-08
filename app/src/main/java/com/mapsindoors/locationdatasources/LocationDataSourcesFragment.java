@@ -64,6 +64,7 @@ public class LocationDataSourcesFragment extends Fragment {
      ***/
     PeopleLocationDataSource peopleLocationDataSource;
     BatteriesLocationDataSource batteriesLocationDataSource;
+    @Nullable MPLocationSource              mpLocationSource;
     //****
 
     public LocationDataSourcesFragment() {
@@ -140,7 +141,7 @@ public class LocationDataSourcesFragment extends Fragment {
 
     /***
      Create a method `setupLocationDataSources`
-     * Instantiate `PeopleLocationDataSource` and `BatteriesLocationDataSource`
+     * Instantiate `PeopleLocationDataSource`, `BatteriesLocationDataSource` and `mpLocationSource`
      * Set/register the location sources
      ***/
     void setupLocationDataSources( @NonNull OnResultReadyListener listener ) {
@@ -152,6 +153,10 @@ public class LocationDataSourcesFragment extends Fragment {
 
         batteriesLocationDataSource = new BatteriesLocationDataSource();
         locationDataSources.add( batteriesLocationDataSource );
+        
+        // Data coming from MapsPeople's servers.
+        mpLocationSource = MapsIndoors.getMapsIndoorsLocationSource();
+        locationDataSources.add( mpLocationSource );
 
         MapsIndoors.setLocationSources( locationDataSources.toArray( new MPLocationSource[0] ), error -> {
 
