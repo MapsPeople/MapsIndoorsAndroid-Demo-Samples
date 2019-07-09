@@ -153,10 +153,11 @@ public class LocationDataSourcesFragment extends Fragment {
 
         batteriesLocationDataSource = new BatteriesLocationDataSource();
         locationDataSources.add( batteriesLocationDataSource );
-        
+
         // Data coming from MapsPeople's servers.
         mpLocationSource = MapsIndoors.getMapsIndoorsLocationSource();
         locationDataSources.add( mpLocationSource );
+
 
         MapsIndoors.setLocationSources( locationDataSources.toArray( new MPLocationSource[0] ), error -> {
 
