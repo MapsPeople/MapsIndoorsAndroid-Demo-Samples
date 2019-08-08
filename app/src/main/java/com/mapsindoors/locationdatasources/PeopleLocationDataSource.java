@@ -412,4 +412,14 @@ public class PeopleLocationDataSource implements MPLocationSource {
     public int getSourceId() {
         return LOCATION_SOURCE_ID;
     }
+
+    @Override
+    public void clearCache()
+    {
+    }
+
+    @Override
+    public void terminate()
+    {
+    }
 }
