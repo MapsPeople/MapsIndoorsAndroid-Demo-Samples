@@ -28,7 +28,7 @@ import java.util.TimerTask;
  title: Creating your own Location Data Source - Part 2
  ---
 
- In this tutorial we will show how you can build a custom Location Source. In [Part 1](locationsourcespeoplelocationsource) we created a people location source that mocks locations of people.
+ In this tutorial we will show how you can build a custom Location Source. In [Part 1](locationdatasourcesspeoplelocationdatasource) we created a people location source that mocks locations of people.
 
  Now we will create another location source that represents batteries. The power level of the batteries will be changing over time and it needs to be visible on the map realtime.
 
@@ -358,4 +358,9 @@ public class BatteriesLocationDataSource implements MPLocationSource {
     public int getSourceId() {
         return LOCATION_SOURCE_ID;
     }
+
+    /***
+     In [Part 3](locationdatasourceslocationdatadourcesfragment) we will create a data source that shows how we can use data sources to show different states of POIs on a map.
+     ***/
+    //****
 }

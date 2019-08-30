@@ -412,4 +412,9 @@ public class PeopleLocationDataSource implements MPLocationSource {
     public int getSourceId() {
         return LOCATION_SOURCE_ID;
     }
+
+    /***
+     In [Part 2](locationdatasourcesbatteriesLocationDataSource) we will create a data source that shows how we can use data sources to show different states of POIs on a map.
+     ***/
+    //****
 }
