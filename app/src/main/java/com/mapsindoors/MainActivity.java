@@ -171,18 +171,18 @@ public class MainActivity extends AppCompatActivity
                 break;
 
              // TODO: WILL BE ENABLED IN AN UPCOMING UPDATE
-//            case R.id.multiple_dataset_item:
-//                fragment  = SolutionSelectorFragment.newInstance();
-//                break;
+            case R.id.multiple_dataset_item:
+                fragment  = SolutionSelectorFragment.newInstance();
+                break;
 
             case R.id.search_map_item:
                 fragment = mSearchMapFragment = SearchMapFragment.newInstance();
                 break;
 
             // TODO: WILL BE ENABLED IN AN UPCOMING UPDATE
-//            case R.id.location_data_source_item:
-//                fragment  = LocationDataSourcesFragment.newInstance();
-//                break;
+            case R.id.location_data_source_item:
+                fragment  = LocationDataSourcesFragment.newInstance();
+                break;
 
             case R.id.clustering_item:
                 fragment = LocationClusteringFragment.newInstance();
