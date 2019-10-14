@@ -62,6 +62,7 @@ public class PeopleLocationDataSource implements MPLocationSource {
             setZoomLevelOn( 18 ).
             setLocationClusterId( LOCATION_CLUSTER_ID ).
             setDisplayRank( 1 ).
+            setShowIcon(true).
             build();
 
     // People avatar icons

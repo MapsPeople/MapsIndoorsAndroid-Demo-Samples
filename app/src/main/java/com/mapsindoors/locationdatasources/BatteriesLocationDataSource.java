@@ -60,6 +60,7 @@ public class BatteriesLocationDataSource implements MPLocationSource {
             setZoomLevelOn( 16 ).
             setLocationClusterId( LOCATION_CLUSTER_ID ).
             setDisplayRank( 1 ).
+            setShowIcon(true).
             build();
 
     /***
@@ -221,29 +222,29 @@ public class BatteriesLocationDataSource implements MPLocationSource {
     @NonNull
     private List<MPLocation> generateLocations( boolean randomizeStartingPosition )
     {
-        final List<MPLocation> peopleLocations = new ArrayList<>( LOCATIONS_COUNT );
+        final List<MPLocation> batteryLocations = new ArrayList<>( LOCATIONS_COUNT );
 
         final BuildingCollection buildingCollection = MapsIndoors.getBuildings();
         final boolean gotBuildingData = buildingCollection != null;
 
         for ( int i = 0; i < LOCATIONS_COUNT; i++) {
 
-            final LatLng personPosition;
+            final LatLng batteryPosition;
             if (randomizeStartingPosition) {
-                personPosition = getRandomPosition();
+                batteryPosition = getRandomPosition();
             } else {
-                personPosition = BASE_POSITION;
+                batteryPosition = BASE_POSITION;
             }
 
             final MPLocation.Builder locBuilder = new MPLocation.Builder( "" + LOCATION_SOURCE_ID + i );
-            locBuilder.setPosition( personPosition ).
+            locBuilder.setPosition( batteryPosition ).
                     setName( "Battery" + i ).
                     setType( LOCATION_TYPE );
 
 
             if (gotBuildingData) {
-                // Find a building at this location (personPosition)
-                final Building building = buildingCollection.getBuilding(personPosition);
+                // Find a building at this location (batteryPosition)
+                final Building building = buildingCollection.getBuilding(batteryPosition);
                 if (building != null) {
 
                     // Building found at this location, get the list of floors in it
@@ -266,10 +267,10 @@ public class BatteriesLocationDataSource implements MPLocationSource {
                 locBuilder.setFloor( Floor.DEFAULT_GROUND_FLOOR_INDEX );
             }
 
-            peopleLocations.add( locBuilder.build() );
+            batteryLocations.add( locBuilder.build() );
         }
 
-        return peopleLocations;
+        return batteryLocations;
     }
 
     /***
