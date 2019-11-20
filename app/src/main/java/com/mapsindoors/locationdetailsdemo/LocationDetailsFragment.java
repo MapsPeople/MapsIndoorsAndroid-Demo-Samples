@@ -160,10 +160,11 @@ public class LocationDetailsFragment extends Fragment
          ***/
         mMapControl.setOnMarkerClickListener( marker -> {
 
+
             final MPLocation loc = mMapControl.getLocation( marker );
             if( loc != null )
             {
-                marker.showInfoWindow();
+                mMapControl.selectLocation(loc);
 
                 if( detailsTextView.getVisibility() != View.VISIBLE )
                 {
