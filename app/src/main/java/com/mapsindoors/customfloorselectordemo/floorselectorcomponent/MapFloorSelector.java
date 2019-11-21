@@ -4,9 +4,13 @@ import android.animation.Animator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import android.support.annotation.RequiresApi;
+import android.support.annotation.StyleRes;
+import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -42,12 +46,34 @@ public class MapFloorSelector extends FrameLayout implements FloorSelectorInterf
     private FloorSelectorAdapter mFloorSelectorAdapter;
 
 
+
     /**
      * Required default constructor - just forwarding to private {@link #init()}
-     * @param context - Default Context.
+     *
+     * @param context Default Context.
      */
-    MapFloorSelector(@NonNull Context context) {
-        super(context);
+    public MapFloorSelector( @NonNull Context context )
+    {
+        super( context );
+        init();
+    }
+
+    public MapFloorSelector( @NonNull Context context, @Nullable AttributeSet attrs )
+    {
+        super( context, attrs );
+        init();
+    }
+
+    public MapFloorSelector( @NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr )
+    {
+        super( context, attrs, defStyleAttr );
+        init();
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    public MapFloorSelector( @NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes )
+    {
+        super( context, attrs, defStyleAttr, defStyleRes );
         init();
     }
 
