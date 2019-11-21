@@ -53,7 +53,7 @@ public class PeopleLocationDataSource implements MPLocationSource {
     private static final int    LOCATIONS_COUNT      = 20;
     private static final int    LOCATION_SOURCE_ID   = 2000;
     private static final String LOCATION_TYPE        = "PeopleLocationType";
-    public static final int     LOCATION_CLUSTER_ID  = 1;
+    public static final int     LOCATION_CLUSTER_ID  = LOCATION_TYPE.hashCode();
 
     static final LocationDisplayRule DISPLAY_RULE = new LocationDisplayRule.Builder( LOCATION_TYPE ).
             setBitmapDrawableIcon( R.drawable.generic_user ).
