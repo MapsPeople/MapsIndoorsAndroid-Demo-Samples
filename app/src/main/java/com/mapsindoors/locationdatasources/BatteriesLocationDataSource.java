@@ -51,7 +51,7 @@ public class BatteriesLocationDataSource implements MPLocationSource {
     private static final int    LOCATIONS_COUNT     = 20;
     private static final int    LOCATION_SOURCE_ID  = 10000;
     private static final String LOCATION_TYPE       = "BatteryLocationType";
-    private static final int    LOCATION_CLUSTER_ID = 2;
+    private static final int    LOCATION_CLUSTER_ID = LOCATION_TYPE.hashCode();
 
     static final LocationDisplayRule DISPLAY_RULE = new LocationDisplayRule.Builder( LOCATION_TYPE ).
             setVectorDrawableIcon( R.drawable.ic_battery_60_black_24dp ).
