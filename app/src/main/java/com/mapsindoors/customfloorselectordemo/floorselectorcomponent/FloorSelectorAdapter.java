@@ -72,12 +72,13 @@ class FloorSelectorAdapter extends ArrayAdapter<Floor> {
             unselectedTextColor = Color.parseColor("#89000000");
         }
 
+        textView.setTextColor(unselectedTextColor);
+
         if(position == mSelectedPosition){
             textView.setBackgroundColor(selectedColor);
             textView.setTypeface(null, Typeface.BOLD);
         } else {
             textView.setBackgroundColor(unselectedColor);
-            textView.setTextColor(unselectedTextColor);
             textView.setTypeface(null, Typeface.NORMAL);
         }
 
