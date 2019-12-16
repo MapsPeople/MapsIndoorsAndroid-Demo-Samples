@@ -1,7 +1,6 @@
 package com.mapsindoors.customfloorselectordemo.floorselectorcomponent;
 
 import android.animation.Animator;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.AttrRes;
@@ -12,7 +11,6 @@ import android.support.annotation.RequiresApi;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -133,7 +131,6 @@ public class MapFloorSelector extends FrameLayout implements FloorSelectorInterf
         }
         mFloors.addAll(floors);
 
-        Collections.sort(mFloors,Floor::compareTo);
         Collections.reverse(mFloors);
 
         mFloorSelectorAdapter.setFloors(mFloors);
