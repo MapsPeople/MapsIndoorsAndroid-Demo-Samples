@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.mapsindoors.showcaseapp"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 12
         versionName "3.1.0"
