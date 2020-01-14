@@ -59,8 +59,8 @@ class FloorSelectorAdapter extends ArrayAdapter<Floor> {
         int selectedText;
         int unselectedTextColor;
 
-        Resources res = mContext.getResources();
-        Resources.Theme appTheme = mContext.getTheme();
+        final Resources res = mContext.getResources();
+        final Resources.Theme appTheme = mContext.getTheme();
 
         selectedColor = ResourcesCompat.getColor(res, R.color.floorselector_background_btn_selected, appTheme);
         unselectedColor = ResourcesCompat.getColor(res, R.color.floorselector_background_btn_default, appTheme);
