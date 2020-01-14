@@ -17,7 +17,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.mapsindoors.R;
 import com.mapsindoors.customfloorselectordemo.floorselectorcomponent.MapFloorSelector;
-import com.mapsindoors.mapssdk.FloorSelectorType;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
 
@@ -115,7 +114,6 @@ public class CustomFloorSelectorFragment extends Fragment {
         mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
         mMapControl.setFloorSelector( mMapFloorSelector );
-        mMapControl.setFloorSelectorType( FloorSelectorType.ONLYCURRENTBUILDING );
 
         mMapControl.init( miError -> {
 

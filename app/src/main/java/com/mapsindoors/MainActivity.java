@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity
                 fragment = ShowUserLocationFragment.newInstance();
                 break;
 
+
             case R.id.multiple_dataset_item:
                 fragment  = SolutionSelectorFragment.newInstance();
                 break;

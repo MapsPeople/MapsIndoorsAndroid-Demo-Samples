@@ -1,403 +1,297 @@
 package com.mapsindoors.customfloorselectordemo.floorselectorcomponent;
 
-import android.annotation.TargetApi;
+import android.animation.Animator;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPropertyAnimatorCompat;
-import android.support.v4.view.ViewPropertyAnimatorListener;
+
+import android.support.annotation.RequiresApi;
+import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.mapsindoors.BuildConfig;
-import com.mapsindoors.R;
-import com.mapsindoors.mapssdk.IFloorSelector;
-import com.mapsindoors.mapssdk.OnFloorSelectedListener;
-import com.mapsindoors.mapssdk.dbglog;
-import com.mapsindoors.mapssdk.Building;
+import com.mapsindoors.mapssdk.FloorSelectorInterface;
+import com.mapsindoors.mapssdk.OnFloorSelectionChangedListener;
+
 import com.mapsindoors.mapssdk.Floor;
-import com.mapsindoors.mapssdk.FloorBase;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 
-public class MapFloorSelector extends FrameLayout implements IFloorSelector
+public class MapFloorSelector extends FrameLayout implements FloorSelectorInterface
 {
-	public final String TAG = MapFloorSelector.class.getSimpleName();
-
-	private static final int FADE_IN_ANIM_TIME_IN_MS  = 500;
-	private static final int FADE_OUT_ANIM_TIME_IN_MS = 500;
-
-	public static final int FLAG_PREVENT_SHOW_HIDE_FROM_CONTROL = (1 << 0);
-	public static final int FLAG_DISABLE_AUTO_POPULATE          = (1 << 1);
-	public static final int FLAG_DISABLE_AUTO_FLOOR_CHANGE      = (1 << 2);
-
-
-	OnFloorSelectedListener mFloorSelectedListener;
-	int mCurrentFloorIndex;
-	private ViewPropertyAnimatorCompat mAnimator;
-
-
-	private MapFloorSelectorAdapter mListAdapter;
-
-	private boolean mWillShowView = true;
-
-	private boolean mWillShowViewPrev, mShowViewCancelled;
-
-	/** Set in the populateList methods */
-	private boolean mHasFloorsToShow;
-
-	private int mFlags;
-
-	ListView mFloorSelectorListView;
-
-
-	float currentZoomLevel;
-
-	public MapFloorSelector( Context context )
-	{
-		super( context );
-		init( context );
-	}
-
-	public MapFloorSelector( Context context, @Nullable AttributeSet attrs )
-	{
-		super( context, attrs );
-		init( context );
-	}
-
-	public MapFloorSelector(Context context, @Nullable AttributeSet attrs, int defStyleAttr )
-	{
-		super( context, attrs, defStyleAttr );
-		init( context );
-	}
-
-	@TargetApi( Build.VERSION_CODES.LOLLIPOP )
-	public MapFloorSelector( Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes )
-	{
-		super( context, attrs, defStyleAttr, defStyleRes );
-		init( context );
-	}
-
-	private void init(Context context)
-	{
-		inflate( context, R.layout.control_mapsindoors_floor_selector, this );
-
-		mCurrentFloorIndex = Integer.MAX_VALUE;
-		mAnimator = null;
-		mFlags = 0;
-
-		mFloorSelectorListView = findViewById( R.id.mapspeople_floor_selector_list );
-		mListAdapter = new MapFloorSelectorAdapter( context, R.layout.control_mapsindoors_floor_selector_button );
-
-		mFloorSelectorListView.setAdapter( mListAdapter );
-
-		mFloorSelectorListView.setOnItemClickListener( ( parent, view, position, id ) -> {
-			final int newIndex = (int) view.getTag();
-			if( newIndex != mCurrentFloorIndex ) {
-
-				setFloorInternal( newIndex );
-
-				if( mFloorSelectedListener != null) {
-					mFloorSelectedListener.onFloorSelected( newIndex );
-				}
-			}
-		} );
-
-		show( false, false );
-	}
-
-
-	//region Implements IFloorSelector
-	@Override
-	public void setOnFloorSelectedListener( @Nullable OnFloorSelectedListener callback )
-	{
-		mFloorSelectedListener = callback;
-	}
-
-	@Override
-	public void populateList( @Nullable Building building ) {
-
-		int testVar = mFlags & FLAG_PREVENT_SHOW_HIDE_FROM_CONTROL;
-		if( building != null && building.getFloors() != null ) {
-			if( BuildConfig.DEBUG ) {
-				if( building.getFloors().isEmpty() ) {
-					dbglog.Log( TAG, "" );
-				}
-			}
-
-			populateListInternal( building.getFloors() );
-
-
-			if( testVar == 0 ) {
-				show( true, true );
-			}
-			mHasFloorsToShow = true;
-		}
-		else {
-		//	if( testVar == 0 ) {
-				show( false, true );
-		//	}
-			mHasFloorsToShow = false;
-
-		}
-	}
-
-	public void onMapZoomLevelChanged(float zoomLevel) {
-
-		currentZoomLevel = zoomLevel;
-
-		if(zoomLevel >= (18f )){
-
-			//setFlags(0);
-			if(mHasFloorsToShow)
-				show( true, true );
-		}
-		else{
-			//setFlags(1);
-			show( false, true );
-
-		}
-
-
-	}
-
-	@Override
-	public void setUserLocationFloor(int floorIndex) {//TODO implement this method
-	}
-
-	@Override
-	public void populateList(@Nullable Building building, @Nullable List<Building> buildingList )
-	{
-		List<FloorBase> floorSelectorEntries = new ArrayList<>();
-
-		if( buildingList != null )
-		{
-			for( Building b : buildingList )
-			{
-				for( Floor f : b.getFloors() )
-				{
-					boolean doAdd = true;
-					int cFloorIndex = f.getZIndex();
-
-					for( FloorBase fb : floorSelectorEntries ) {
-						if( fb.getZIndex() == cFloorIndex ) {
-							doAdd = false;
-							break;
-						}
-					}
-
-					if( doAdd ) {
-						floorSelectorEntries.add( f );
-					}
-				}
-			}
-		}
-
-		populateListInternal( floorSelectorEntries );
-
-		boolean gotFloors = building!=null;
-		if( (mFlags & FLAG_PREVENT_SHOW_HIDE_FROM_CONTROL) == 0 )
-		{
-			show( gotFloors, true );
-		}
-		else
-		{
-			//mHasFloorsToShow = gotFloors;
-		}
-	}
-
-	@Override
-	public void addToView( @NonNull ViewGroup view ){}
-
-	@Override
-	public void setFloor( int floorIndex ) {
-		setFloorInternal( floorIndex );
-	}
-
-	@Override
-	public int getCurrentFloorIndex()
-	{
-		return (mCurrentFloorIndex == Integer.MAX_VALUE) ? 0 : mCurrentFloorIndex;
-	}
-
-	@Override
-	public boolean isAutoPopulateEnabled() {
-		return (mFlags & FLAG_DISABLE_AUTO_POPULATE) == 0;
-	}
-
-	@Override
-	public boolean isAutoFloorChangeEnabled() {
-		return (mFlags & FLAG_DISABLE_AUTO_FLOOR_CHANGE) == 0;
-	}
-
-
-	/**
-	 * Note: isAutoPopulateEnabled() and isAutoFloorChangeEnabled() are always true now.
-	 *       Take them into account if that changes
-	 *
-	 * @param show       True to show, false to hide
-	 * @param animated
-	 */
-	@Override
-	public void show( boolean show, boolean animated ) {
-
-
-		// in case the floor selector is aleready in the wished state do nothing
-		if(mWillShowView == show || (currentZoomLevel < 18f && show))
-			return;
-
-		if( (((mFlags & FLAG_PREVENT_SHOW_HIDE_FROM_CONTROL) != 0) && show)) {
-			return;
-		}
-
-		float cAlpha = this.getAlpha();
-		mWillShowViewPrev = mWillShowView;
-		mWillShowView = show;
-
-		if( !animated ) {
-			if( show && (cAlpha < 0.1f) ) {
-				setAlpha( 1f );
-				setVisible( true );
-			}
-			else if( !show && (cAlpha > 0.9f) ) {
-				setAlpha( 0f );
-				setVisible( false );
-			}
-		}
-		else {
-			mAnimator = (mAnimator != null)
-					? mAnimator
-					: ViewCompat.animate( this );
-
-
-			if( show && (cAlpha < 0.1f) ) {
-				// Fade in anim setup
-				mAnimator.
-						alpha( 1f ).
-						setDuration( FADE_IN_ANIM_TIME_IN_MS ).
-						setListener( mVisAnimatorListener ).
-						start();
-			}
-			else if( !show && (cAlpha > 0.9f) ) {
-				// Fade out anim setup
-				mAnimator.
-						alpha( 0f ).
-						setDuration( FADE_OUT_ANIM_TIME_IN_MS ).
-						setListener( mVisAnimatorListener ).
-						start();
-			}
-		}
-	}
-
-	@Override
-	public boolean isVisible() {
-		return !((getAlpha() < 0.1) && (getVisibility() == GONE));
-	}
-	//endregion
-
-
-	private void setFloorInternal( int floorIndex )
-	{
-		if( mCurrentFloorIndex != floorIndex ) {
-			mCurrentFloorIndex = floorIndex;
-		}
-
-		refreshUI();
-	}
-
-	private void populateListInternal( List<?> floors )
-	{
-
-		ArrayList<FloorBase> fbList = new ArrayList<>();
-
-		int floorCount = floors.size();
-		for( int i = 0; i < floorCount; i++ ) {
-			fbList.add( (FloorBase)floors.get( i ) );
-		}
-
-		if( floorCount == 0 )
-		{
-			dbglog.Log( TAG,"");
-			return;
-		}
-
-		Collections.sort( fbList, FloorBase::compareTo );
-
-		mListAdapter.setList( fbList );
-
-		int fbLowestZIndex = fbList.get( 0 ).getZIndex();
-		int fbHighestZIndex = fbList.get( floorCount - 1 ).getZIndex();
-
-		if( getCurrentFloorIndex() < fbLowestZIndex )
-		{
-			//If the current floor is lower than the lowest existing floor in this new building, we need to select a new floor
-
-			//Selecting the lowest possible floor
-			setFloorInternal( fbLowestZIndex );
-			if( mFloorSelectedListener != null) {
-				mFloorSelectedListener.onFloorSelected( fbLowestZIndex );
-			}
-		}
-		else
-		{
-			//If the current floor is higher than the highest existing floor in this new building, we need to select a new floor
-			if( getCurrentFloorIndex() > fbHighestZIndex )
-			{
-				//Selecting the lowest possible floor
-				setFloorInternal( fbHighestZIndex );
-				if( mFloorSelectedListener != null) {
-					mFloorSelectedListener.onFloorSelected( fbHighestZIndex );
-				}
-			}
-			else
-			{
-				refreshUI();
-			}
-		}
-	}
-
-
-	//region UI
-	private void refreshUI() {
-//		if( isVisible() ) {
-			int pos = mListAdapter.setSelectedButtonWithFloorValue( getCurrentFloorIndex() );
-			mFloorSelectorListView.smoothScrollToPosition( pos );
-//		}
-	}
-
-	private ViewPropertyAnimatorListener mVisAnimatorListener = new ViewPropertyAnimatorListener() {
-		@Override
-		public void onAnimationStart( View view ) {
-			if( getVisibility() != View.VISIBLE ) {
-				setVisible( true );
-			}
-		}
-
-		@Override
-		public void onAnimationEnd( View view ) {
-			if( !mWillShowView && (getVisibility() == View.VISIBLE) ) {
-				setVisible( false );
-			}
-		}
-
-		@Override
-		public void onAnimationCancel( View view ) {
-			mShowViewCancelled = true;
-		}
-	};
-
-	private void setVisible( boolean visible ) {
-		setVisibility( visible ? View.VISIBLE : View.GONE );
-	}
-
+    boolean mWillShowView;
+
+    private static final int FADE_IN_TIME_MS = 500;
+    private static final int FADE_OUT_TIME_MS = 500;
+
+    public static final float SHOW_ON_ZOOM_LEVEL = 12;
+
+    OnFloorSelectionChangedListener mOnFloorSelectionChangedListener;
+    private ListView mLvFloorSelector;
+    ImageView mIvBottomGradient;
+    ImageView mIvTopGradient;
+
+    private List<Floor> mFloors;
+    private FloorSelectorAdapter mFloorSelectorAdapter;
+
+
+
+    /**
+     * Required default constructor - just forwarding to private {@link #init()}
+     *
+     * @param context Default Context.
+     */
+    public MapFloorSelector( @NonNull Context context )
+    {
+        super( context );
+        init();
+    }
+
+    public MapFloorSelector( @NonNull Context context, @Nullable AttributeSet attrs )
+    {
+        super( context, attrs );
+        init();
+    }
+
+    public MapFloorSelector( @NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr )
+    {
+        super( context, attrs, defStyleAttr );
+        init();
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    public MapFloorSelector( @NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr, @StyleRes int defStyleRes )
+    {
+        super( context, attrs, defStyleAttr, defStyleRes );
+        init();
+    }
+
+    /**
+     * Inflates the layout and does view finding as well as setting the adapter for the ListView
+     */
+    private void init(){
+        inflate(getContext(), com.mapsindoors.mapssdk.R.layout.misdk_control_floor_selector,this);
+
+        mFloors = new ArrayList<>();
+
+        mLvFloorSelector = findViewById(com.mapsindoors.mapssdk.R.id.misdk_floor_selector_list);
+        mIvBottomGradient = findViewById(com.mapsindoors.mapssdk.R.id.misdk_bottom_gradient);
+        mIvTopGradient = findViewById(com.mapsindoors.mapssdk.R.id.misdk_top_gradient);
+
+        mFloorSelectorAdapter = new FloorSelectorAdapter(getContext(), com.mapsindoors.mapssdk.R.layout.misdk_control_floor_selector_button);
+        mFloorSelectorAdapter.setCallback(mFloorSelectorAdapterListener);
+        mLvFloorSelector.setAdapter(mFloorSelectorAdapter);
+        mLvFloorSelector.getViewTreeObserver().addOnGlobalLayoutListener(mGlobalLayoutListener);
+        mLvFloorSelector.setOnItemClickListener((parent, view, position, id) -> {
+            mOnFloorSelectionChangedListener.onFloorSelectionChanged(mFloors.get(position));
+            mFloorSelectorAdapter.setSelectedListPosition(position);
+            mFloorSelectorAdapter.notifyDataSetChanged();
+        });
+    }
+
+    //region IMPLEMENTS FloorSelectorInterface
+    /**
+     * Returns the floor selector View, if any
+     */
+    @Nullable
+    @Override
+    public View getView()
+    {
+        return this;
+    }
+
+    /**
+     * Sets the {@link OnFloorSelectionChangedListener} to invoke when changes occur in this view.
+     * I.e. a new floor has been selected.
+     * @param onFloorSelectionChangedListener - Listener to be invoked
+     */
+    @Override
+    public void setOnFloorSelectionChangedListener(@Nullable OnFloorSelectionChangedListener onFloorSelectionChangedListener) {
+        mOnFloorSelectionChangedListener = onFloorSelectionChangedListener;
+    }
+
+    /**
+     * Sets the list of {@link Floor} to show in the FloorSelector
+     * @param floors - List of Floors to show.
+     */
+    @Override
+    public void setList(@Nullable List<Floor> floors) {
+        mFloors.clear();
+        if(floors == null){
+            return;
+        }
+        mFloors.addAll(floors);
+
+        Collections.reverse(mFloors);
+
+        mFloorSelectorAdapter.setFloors(mFloors);
+        mFloorSelectorAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Shows or hides the view, with/without animation, based on the implementation
+     * @param show - Should the view be shown?
+     * @param animated - Should the transition be animated?
+     */
+    @Override
+    public void show(boolean show, boolean animated){
+        mWillShowView = show;
+        float currentAlpha = this.getAlpha();
+        if(animated){
+            if(show && (currentAlpha < 1.0f)){
+                this.animate()
+                        .alpha(1f)
+                        .setDuration(FADE_IN_TIME_MS)
+                        .setListener(mAnimationListener)
+                        .start();
+            } else if(!show && (currentAlpha > 0.1)){
+                this.animate()
+                        .alpha(0f)
+                        .setDuration(FADE_OUT_TIME_MS)
+                        .setListener(mAnimationListener)
+                        .start();
+            }
+        } else {
+            if(show && (currentAlpha < 1.0f)){
+                this.setVisibility(VISIBLE);
+                this.setAlpha(1.0f);
+            } else {
+                this.setVisibility(INVISIBLE);
+                this.setAlpha(0.0f);
+            }
+        }
+    }
+
+    /**
+     * Sets the floor selected and forwards it to the {@link FloorSelectorAdapter}
+     * @param floor  Floor selected
+     */
+    @Override
+    public void setSelectedFloor(@NonNull Floor floor){
+        mFloorSelectorAdapter.setSelectedFloor(floor);
+    }
+
+    /**
+     * Sets the selected floor based on a Z-index
+     * @param zIndex - Z index of the new Floor to be selected
+     */
+    @Override
+    public void setSelectedFloorByZIndex(int zIndex) {
+        if((mFloors == null) || mFloors.isEmpty()){
+            return;
+        }
+        for(Floor floor : mFloors){
+            if(floor.getZIndex() == zIndex){
+                setSelectedFloor(floor);
+                return;
+            }
+        }
+    }
+
+    /**
+     * Invoked when the Zoom level changes - Checks if there is a reason to show the FloorSelector
+     * @param newZoomLevel - Zoom Level received by  FloorSelectorManager
+     */
+    @Override
+    public void zoomLevelChanged(float newZoomLevel) {
+        show(newZoomLevel >= SHOW_ON_ZOOM_LEVEL && !mFloors.isEmpty(), true);
+    }
+
+    /**
+     * Should the floor selection change automatically
+     * @return - true if the floor should change automatically, false if not.
+     */
+    @Override
+    public boolean isAutoFloorChangeEnabled() {
+        return true;
+    }
+
+    @Override
+    public void setUserPositionFloor(int zIndex) {
+        mFloorSelectorAdapter.setUserPositionFloor(zIndex);
+        mFloorSelectorAdapter.notifyDataSetChanged();
+    }
+    //endregion
+
+
+    /**
+     * Measures the total height of children in the List
+     * @return true if the combined height exceeds the height of the view itself, false if not
+     */
+    boolean isListScrollable(){
+        View listViewChild = mLvFloorSelector.getChildAt(0);
+        if(listViewChild != null){
+            int totalHeightOfChildren = listViewChild.getHeight() * mFloors.size();
+            int heightOfView = mLvFloorSelector.getHeight();
+
+            return totalHeightOfChildren > heightOfView;
+        }
+        return false;
+    }
+
+    /**
+     * Private Adapter.Callback - Basically just forwarding messages from the {@link FloorSelectorAdapter}
+     * to any {@link OnFloorSelectionChangedListener} registered
+     */
+    private FloorSelectorAdapterListener mFloorSelectorAdapterListener = new FloorSelectorAdapterListener() {
+        @Override
+
+        public void onFloorSelectionChanged(@NonNull Floor newFloor) {
+            if(mOnFloorSelectionChangedListener != null) {
+                mOnFloorSelectionChangedListener.onFloorSelectionChanged(newFloor);
+            }
+        }
+    };
+
+    /**
+     * GlobalLayoutListener used to check if the ListView in the FloorSelector is scrollable
+     * and thereby should have gradient scroll indicators
+     */
+    private ViewTreeObserver.OnGlobalLayoutListener mGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override
+        public void onGlobalLayout() {
+            mIvTopGradient.setVisibility(isListScrollable() ? VISIBLE : INVISIBLE);
+            mIvBottomGradient.setVisibility(isListScrollable() ? VISIBLE : INVISIBLE);
+        }
+    };
+
+    /**
+     * AnimationListener used to set properties of the view before/after the animation.
+     */
+    private Animator.AnimatorListener mAnimationListener = new Animator.AnimatorListener() {
+        @Override
+        public void onAnimationStart(Animator animation) {
+            if(getVisibility() != View.VISIBLE){
+                setVisibility(VISIBLE);
+            }
+        }
+
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            if(!mWillShowView && !(getVisibility() == VISIBLE)){
+                setVisibility(INVISIBLE);
+            }
+        }
+
+        @Override
+        public void onAnimationCancel(Animator animation) {
+            //Auto generated method stub
+        }
+
+        @Override
+        public void onAnimationRepeat(Animator animation) {
+            //Auto generated method stub
+        }
+    };
 
 	//endregion
 }

@@ -28,7 +28,7 @@ import java.util.TimerTask;
  title: Creating your own Location Data Source - Part 2
  ---
 
- In this tutorial we will show how you can build a custom Location Source. In [Part 1](locationsourcespeoplelocationsource) we created a people location source that mocks locations of people.
+ In this tutorial we will show how you can build a custom Location Source. In [Part 1](locationdatasourcesspeoplelocationdatasource) we created a people location source that mocks locations of people.
 
  Now we will create another location source that represents batteries. The power level of the batteries will be changing over time and it needs to be visible on the map realtime.
 
@@ -51,7 +51,7 @@ public class BatteriesLocationDataSource implements MPLocationSource {
     private static final int    LOCATIONS_COUNT     = 20;
     private static final int    LOCATION_SOURCE_ID  = 10000;
     private static final String LOCATION_TYPE       = "BatteryLocationType";
-    private static final int    LOCATION_CLUSTER_ID = 2;
+    private static final int    LOCATION_CLUSTER_ID = LOCATION_TYPE.hashCode();
 
     static final LocationDisplayRule DISPLAY_RULE = new LocationDisplayRule.Builder( LOCATION_TYPE ).
             setVectorDrawableIcon( R.drawable.ic_battery_60_black_24dp ).
@@ -60,6 +60,7 @@ public class BatteriesLocationDataSource implements MPLocationSource {
             setZoomLevelOn( 16 ).
             setLocationClusterId( LOCATION_CLUSTER_ID ).
             setDisplayRank( 1 ).
+            setShowIcon(true).
             build();
 
     /***
@@ -221,29 +222,29 @@ public class BatteriesLocationDataSource implements MPLocationSource {
     @NonNull
     private List<MPLocation> generateLocations( boolean randomizeStartingPosition )
     {
-        final List<MPLocation> peopleLocations = new ArrayList<>( LOCATIONS_COUNT );
+        final List<MPLocation> batteryLocations = new ArrayList<>( LOCATIONS_COUNT );
 
         final BuildingCollection buildingCollection = MapsIndoors.getBuildings();
         final boolean gotBuildingData = buildingCollection != null;
 
         for ( int i = 0; i < LOCATIONS_COUNT; i++) {
 
-            final LatLng personPosition;
+            final LatLng batteryPosition;
             if (randomizeStartingPosition) {
-                personPosition = getRandomPosition();
+                batteryPosition = getRandomPosition();
             } else {
-                personPosition = BASE_POSITION;
+                batteryPosition = BASE_POSITION;
             }
 
             final MPLocation.Builder locBuilder = new MPLocation.Builder( "" + LOCATION_SOURCE_ID + i );
-            locBuilder.setPosition( personPosition ).
+            locBuilder.setPosition( batteryPosition ).
                     setName( "Battery" + i ).
                     setType( LOCATION_TYPE );
 
 
             if (gotBuildingData) {
-                // Find a building at this location (personPosition)
-                final Building building = buildingCollection.getBuilding(personPosition);
+                // Find a building at this location (batteryPosition)
+                final Building building = buildingCollection.getBuilding(batteryPosition);
                 if (building != null) {
 
                     // Building found at this location, get the list of floors in it
@@ -266,10 +267,10 @@ public class BatteriesLocationDataSource implements MPLocationSource {
                 locBuilder.setFloor( Floor.DEFAULT_GROUND_FLOOR_INDEX );
             }
 
-            peopleLocations.add( locBuilder.build() );
+            batteryLocations.add( locBuilder.build() );
         }
 
-        return peopleLocations;
+        return batteryLocations;
     }
 
     /***
@@ -360,12 +361,17 @@ public class BatteriesLocationDataSource implements MPLocationSource {
     }
 
     @Override
-    public void clearCache()
-    {
+    public void clearCache() {
+
     }
 
     @Override
-    public void terminate()
-    {
+    public void terminate() {
+
     }
+
+    /***
+     In [Part 3](locationdatasourceslocationdatadourcesfragment) we will create a data source that shows how we can use data sources to show different states of POIs on a map.
+     ***/
+    //****
 }

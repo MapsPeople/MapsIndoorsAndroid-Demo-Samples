@@ -53,7 +53,7 @@ public class PeopleLocationDataSource implements MPLocationSource {
     private static final int    LOCATIONS_COUNT      = 20;
     private static final int    LOCATION_SOURCE_ID   = 2000;
     private static final String LOCATION_TYPE        = "PeopleLocationType";
-    public static final int     LOCATION_CLUSTER_ID  = 1;
+    public static final int     LOCATION_CLUSTER_ID  = LOCATION_TYPE.hashCode();
 
     static final LocationDisplayRule DISPLAY_RULE = new LocationDisplayRule.Builder( LOCATION_TYPE ).
             setBitmapDrawableIcon( R.drawable.generic_user ).
@@ -62,6 +62,7 @@ public class PeopleLocationDataSource implements MPLocationSource {
             setZoomLevelOn( 18 ).
             setLocationClusterId( LOCATION_CLUSTER_ID ).
             setDisplayRank( 1 ).
+            setShowIcon(true).
             build();
 
     // People avatar icons
@@ -414,12 +415,17 @@ public class PeopleLocationDataSource implements MPLocationSource {
     }
 
     @Override
-    public void clearCache()
-    {
+    public void clearCache() {
+
     }
 
     @Override
-    public void terminate()
-    {
+    public void terminate() {
+
     }
+
+    /***
+     In [Part 2](locationdatasourcesbatteriesLocationDataSource) we will create a data source that shows how we can use data sources to show different states of POIs on a map.
+     ***/
+    //****
 }
