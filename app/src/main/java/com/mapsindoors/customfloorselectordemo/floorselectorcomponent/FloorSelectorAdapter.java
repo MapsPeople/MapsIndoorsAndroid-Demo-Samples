@@ -44,7 +44,7 @@ class FloorSelectorAdapter extends ArrayAdapter<Floor> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View view;
+        final View view;
 
         if (convertView == null) {
             view = LayoutInflater.from(getContext()).inflate(R.layout.control_mapsindoors_floor_selector_button, parent, false);
@@ -54,18 +54,13 @@ class FloorSelectorAdapter extends ArrayAdapter<Floor> {
 
         TextView textView = view.findViewById(R.id.mapspeople_floor_selector_btn);
 
-        int selectedColor;
-        int unselectedColor;
-        int selectedText;
-        int unselectedTextColor;
-
         final Resources res = mContext.getResources();
         final Resources.Theme appTheme = mContext.getTheme();
 
-        selectedColor = ResourcesCompat.getColor(res, R.color.floorselector_background_btn_selected, appTheme);
-        unselectedColor = ResourcesCompat.getColor(res, R.color.floorselector_background_btn_default, appTheme);
-        selectedText = ResourcesCompat.getColor(res, R.color.blueGray, appTheme);
-        unselectedTextColor = ResourcesCompat.getColor(res, R.color.grey, appTheme);
+        final int selectedColor = ResourcesCompat.getColor(res, R.color.floorselector_background_btn_selected, appTheme);
+        final int unselectedColor = ResourcesCompat.getColor(res, R.color.floorselector_background_btn_default, appTheme);
+        final int selectedText = ResourcesCompat.getColor(res, R.color.blueGray, appTheme);
+        final int unselectedTextColor = ResourcesCompat.getColor(res, R.color.grey, appTheme);
 
         textView.setTextColor(unselectedTextColor);
 
@@ -78,11 +73,13 @@ class FloorSelectorAdapter extends ArrayAdapter<Floor> {
             textView.setTypeface(null, Typeface.NORMAL);
         }
 
-        if ((mItems.get(position).getZIndex() == mUserLocationListPosition) && (mUserLocationListPosition != Floor.NO_FLOOR_INDEX)) {
+        final Floor floor = mItems.get( position );
+
+        if ((floor.getZIndex() == mUserLocationListPosition) && (mUserLocationListPosition != Floor.NO_FLOOR_INDEX)) {
             textView.setTextColor(selectedText);
         }
 
-        textView.setText(mItems.get(position).getDisplayName());
+        textView.setText(floor.getDisplayName());
 
         return view;
     }
@@ -143,7 +140,8 @@ class FloorSelectorAdapter extends ArrayAdapter<Floor> {
      * @param selectedFloor Floor to select.
      */
     void setSelectedFloor(@NonNull Floor selectedFloor) {
-        selectFloorByZIndex(selectedFloor.getZIndex());
+        final int zIndex = selectedFloor.getZIndex();
+        selectFloorByZIndex(zIndex);
     }
 
     /**
