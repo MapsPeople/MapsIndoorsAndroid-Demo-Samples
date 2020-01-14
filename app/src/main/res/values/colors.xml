@@ -16,4 +16,7 @@
 
     <color name="search_edittext_hint">#BDBDBD</color>
 
+    <color name="floorselector_background_btn_default">@android:color/white</color>
+    <color name="floorselector_background_btn_selected">@color/secondaryButtonColor</color>
+
 </resources>
