@@ -54,10 +54,10 @@ public class MainActivity extends AppCompatActivity
     public static final int DEMO_ITEM_CHANGE_DISPLAY_SETTING  = 7;
     public static final int DEMO_ITEM_CUSTOM_FLOOR_SELECTOR   = 8;
     public static final int DEMO_ITEM_SHOW_MY_LOCATION        = 9;
-    //public static final int DEMO_ITEM_MULTIPLE_DATASETS       = 10;
-    public static final int DEMO_ITEM_SEARCH_MAP              = 10;
-    //public static final int DEMO_ITEM_LOCATIONS_DATA_SOURCES  = 12;
-    public static final int DEMO_ITEM_MARKER_CLUSTERING       = 11;
+    public static final int DEMO_ITEM_MULTIPLE_DATASETS       = 10;
+    public static final int DEMO_ITEM_SEARCH_MAP              = 11;
+    public static final int DEMO_ITEM_LOCATIONS_DATA_SOURCES  = 12;
+    public static final int DEMO_ITEM_MARKER_CLUSTERING       = 13;
 
 
 
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity
                 fragment = ShowUserLocationFragment.newInstance();
                 break;
 
-             // TODO: WILL BE ENABLED IN AN UPCOMING UPDATE
+
             case R.id.multiple_dataset_item:
                 fragment  = SolutionSelectorFragment.newInstance();
                 break;
@@ -179,7 +179,6 @@ public class MainActivity extends AppCompatActivity
                 fragment = mSearchMapFragment = SearchMapFragment.newInstance();
                 break;
 
-            // TODO: WILL BE ENABLED IN AN UPCOMING UPDATE
             case R.id.location_data_source_item:
                 fragment  = LocationDataSourcesFragment.newInstance();
                 break;
