@@ -8,7 +8,7 @@ Clone the project and open it in Android Studio.
 
 ## Requirements
 
-First, you need to generate a google maps key for android (follow the instructions here [link](https://developers.google.com/maps/documentation/android-sdk/signup)). Once you get the key, open the file "[google_maps_api.xml](./app/src/main/res/values/google_maps_api.xml)" (under  "res/values"), then replace __"YOUR_KEY_HERE"__ with it.
+First, you need to generate a google maps key for android (follow the instructions here [link](https://developers.google.com/maps/documentation/android-sdk/signup)). Once you get the key, open the file "[strings.xml](./app/src/main/res/values/strings.xml)" (under  "res/values"), then add your key as a string resource named "google_maps_key".
 
 ## Authors
 
