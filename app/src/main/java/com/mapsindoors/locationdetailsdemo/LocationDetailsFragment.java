@@ -197,7 +197,7 @@ public class LocationDetailsFragment extends Fragment
                 /***
                  Select a floor and animate the camera to the venue position
                  ***/
-                mMapControl.selectFloor( 1 );
+                mMapControl.selectFloor( 20 );
                 mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
             }
         });

@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.mapsindoors.changedisplayruledemo.ChangeDisplayRuleFragment;
 import com.mapsindoors.changedisplaysettingdemo.ChangeDisplaySettingsFragment;
 import com.mapsindoors.changefloordemo.ChangeFloorFragment;
 import com.mapsindoors.customfloorselectordemo.CustomFloorSelectorFragment;
@@ -185,6 +186,9 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.clustering_item:
                 fragment = LocationClusteringFragment.newInstance();
+                break;
+            case R.id.change_display_rules:
+                fragment = ChangeDisplayRuleFragment.newInstance();
                 break;
         }
 

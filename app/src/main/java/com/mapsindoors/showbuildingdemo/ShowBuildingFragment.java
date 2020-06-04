@@ -124,7 +124,7 @@ public class ShowBuildingFragment extends Fragment {
                 final Activity _context = getActivity();
                 if( _context != null )
                 {
-                    mMapControl.selectFloor( 1 );
+                    mMapControl.selectFloor( 20 );
 
                     final Building currentBuilding = mMapControl.getCurrentBuilding();
 

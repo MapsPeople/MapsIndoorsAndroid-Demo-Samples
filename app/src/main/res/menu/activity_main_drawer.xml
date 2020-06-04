@@ -61,5 +61,10 @@
 			android:id="@+id/clustering_item"
 			android:icon="@drawable/ic_whatshot_black_24dp"
 			android:title="@string/clustering_item_title"/>
+
+		<item
+			android:id="@+id/change_display_rules"
+			android:icon="@drawable/ic_whatshot_black_24dp"
+			android:title="Change DisplayRules" />
 	</group>
 </menu>

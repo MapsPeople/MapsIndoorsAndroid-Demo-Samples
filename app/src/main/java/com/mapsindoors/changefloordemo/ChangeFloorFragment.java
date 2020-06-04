@@ -116,7 +116,7 @@ public class ChangeFloorFragment extends Fragment {
                 if( _context != null )
                 {
                     // Set the floor level programmatically
-                    mMapControl.selectFloor( 1 );
+                    mMapControl.selectFloor( 20 );
 
                     mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
                 }
