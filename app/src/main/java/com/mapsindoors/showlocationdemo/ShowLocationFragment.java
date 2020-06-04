@@ -162,7 +162,7 @@ public class ShowLocationFragment extends Fragment
 //                        }
 
                         //
-                        mMapControl.selectFloor( 1 );
+                        mMapControl.selectFloor( 20 );
 
                         //
                         queryLocation();

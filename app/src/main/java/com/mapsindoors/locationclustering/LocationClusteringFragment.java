@@ -254,7 +254,7 @@ public class LocationClusteringFragment extends Fragment {
             if( miError == null ) {
                 final Activity _context = getActivity();
                 if( _context != null ) {
-                    mMapControl.selectFloor( 1 );
+                    mMapControl.selectFloor( 20 );
                     mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
                 }
             }

@@ -181,7 +181,7 @@ public class SearchMapFragment extends Fragment
                     }
                     else
                     {
-                        mMapControl.selectFloor( 1 );
+                        mMapControl.selectFloor( 20 );
                     }
                 }
             }

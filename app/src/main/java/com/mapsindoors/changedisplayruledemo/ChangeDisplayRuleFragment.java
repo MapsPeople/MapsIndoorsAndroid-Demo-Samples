@@ -1,4 +1,4 @@
-package com.mapsindoors.showuserLocation;
+package com.mapsindoors.changedisplayruledemo;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -16,46 +16,31 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.mapsindoors.R;
+import com.mapsindoors.mapssdk.LocationDisplayRule;
+import com.mapsindoors.mapssdk.MPLocation;
+import com.mapsindoors.mapssdk.MPQuery;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
 
-/***
- ---
- title: Show the Blue Dot with MapsIndoors - Part 2
- ---
 
- This is part 2 of the tutorial of managing a blue dot on the map. [In Part 1 we created the position provider](showuserlocationdemopositionprovider). Now we will create a Fragment displaying a map that shows the users (mock) location.
+public class ChangeDisplayRuleFragment extends Fragment {
 
- Create the class `ShowUserLocationFragment` that inherits from `Fragment`.
- ***/
-public class ShowUserLocationFragment extends Fragment {
-
-    /***
-     Add a `GoogleMap` and a `MapControl` to the class
-     ***/
-    GoogleMap mGoogleMap;
-    MapControl mMapControl;
-
-    /***
-     Add a map fragment
-     ***/
-    SupportMapFragment mMapFragment;
-
-    /***
-     The Venue's coordinates
-     ***/
     static final LatLng VENUE_LAT_LNG = new LatLng( 57.05813067, 9.95058065 );
-    //****
 
-    public ShowUserLocationFragment()
+    MapControl mMapControl;
+    SupportMapFragment mMapFragment;
+    GoogleMap mGoogleMap;
+
+
+    public ChangeDisplayRuleFragment()
     {
         // Required empty public constructor
     }
 
     @NonNull
-    public static ShowUserLocationFragment newInstance()
+    public static ChangeDisplayRuleFragment newInstance()
     {
-        return new ShowUserLocationFragment();
+        return new ChangeDisplayRuleFragment();
     }
 
 
@@ -83,12 +68,6 @@ public class ShowUserLocationFragment extends Fragment {
         {
             mMapControl.onDestroy();
         }
-
-        /***
-         In the `onDestroyView` method, we need to free the MapsIndoors PositionProvider
-         ***/
-        MapsIndoors.setPositionProvider( null );
-        //****
 
         super.onDestroyView();
     }
@@ -124,56 +103,52 @@ public class ShowUserLocationFragment extends Fragment {
             return;
         }
 
-        /***
-         Set the API key to the MI solution
-         ***/
         if( !MapsIndoors.getAPIKey().equalsIgnoreCase( getString( R.string.mi_api_key ) ) )
         {
             MapsIndoors.setAPIKey( getString( R.string.mi_api_key ) );
         }
 
-        /***
-         Instantiate the mapControl object
-         ***/
         mMapControl = new MapControl( context );
         mMapControl.setGoogleMap( mGoogleMap, mMapFragment.getView() );
 
-        /***
-         * Create an instance of the 'DemoPositionProvider' that we defined previously
-         ***/
-        DemoPositionProvider demoPositionProvider = new DemoPositionProvider();
 
-        /***
-         * Assign the `DemoPositionProvider` instance to the `MapsIndoors.positionProvider` by calling the 'MapsIndoors.setPositionProvider'
-         ***/
-        MapsIndoors.setPositionProvider( demoPositionProvider );
 
-        /***
-         * Tell the mapControl to show the users location
-         ***/
-        mMapControl.showUserPosition( true );
-
-        /***
-         Init the mapControl object
-         ***/
         mMapControl.init( miError -> {
 
             if( miError == null )
             {
+
                 final Activity _context = getActivity();
                 if( _context != null )
                 {
-                    mMapControl.selectFloor( 20 );
+                    mMapControl.selectFloor( 0 );
                     mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 20f ) );
-
-                    /***
-                     * Start positioning
-                     ***/
-                    demoPositionProvider.startPositioning(null);
-                    //****
-
                 }
+                changeDisplayRules();
             }
         });
+    }
+
+    /**
+     * Shows how to query a specific location and applying a {@link LocationDisplayRule} to it.
+     * This example changes the south-west "Wrist meeting room 1"s icon to a "flame" instead of the
+     * default meeting room icon.
+     */
+    void changeDisplayRules()
+    {
+        final LocationDisplayRule rule = new LocationDisplayRule.Builder( "MeetingRoomRule" ).
+                setBitmapDrawableIcon( R.drawable.ic_whatshot_black_24dp, 20, 20 ).
+                setZoomLevelOn( 16 ).
+                setVisible( true ).
+                build();
+
+        MPQuery query = new MPQuery.Builder().setQuery("Wrist meeting room 1").build();
+        MapsIndoors.getLocationsAsync(query, null, (list, miError) -> {
+            if(list != null && list.size() > 0) {
+                MPLocation location = list.get(0);
+                mMapControl.setDisplayRule(rule, location);
+            }
+        });
+
     }
 }

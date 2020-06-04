@@ -138,7 +138,7 @@ public class ShowRouteFragment extends Fragment
                 if( _context != null )
                 {
                     // Setting the floor level programmatically
-                    mMapControl.selectFloor( 1 );
+                    mMapControl.selectFloor( 20 );
 
                     // Make the route
                     //mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 19f ) );
