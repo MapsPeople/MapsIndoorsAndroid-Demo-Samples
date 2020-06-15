@@ -20,10 +20,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.mapsindoors.R;
+import com.mapsindoors.mapssdk.Building;
+import com.mapsindoors.mapssdk.CategoryCollection;
 import com.mapsindoors.mapssdk.MPDirectionsRenderer;
 import com.mapsindoors.mapssdk.MPRoutingProvider;
 import com.mapsindoors.mapssdk.MapControl;
 import com.mapsindoors.mapssdk.MapsIndoors;
+import com.mapsindoors.mapssdk.OnFloorUpdateListener;
 import com.mapsindoors.mapssdk.RoutingProvider;
 import com.mapsindoors.mapssdk.Point;
 import com.mapsindoors.mapssdk.TravelMode;
@@ -138,7 +141,7 @@ public class ShowRouteFragment extends Fragment
                 if( _context != null )
                 {
                     // Setting the floor level programmatically
-                    mMapControl.selectFloor( 20 );
+                    mMapControl.selectFloor( 10 );
 
                     // Make the route
                     //mGoogleMap.animateCamera( CameraUpdateFactory.newLatLngZoom( VENUE_LAT_LNG, 19f ) );
@@ -159,6 +162,7 @@ public class ShowRouteFragment extends Fragment
         mRoutingRenderer.setTextColor( ContextCompat.getColor( context, R.color.white ) );
 
         mRoutingRenderer.setAnimated( true );
+
     }
 
     void routing()
@@ -169,8 +173,7 @@ public class ShowRouteFragment extends Fragment
                 mRoutingRenderer.setRoute( route );
 
                 final Activity activity  = getActivity();
-                if( activity != null )
-                {
+                if( activity != null ) {
                     activity.runOnUiThread( () -> {
                         mRoutingRenderer.setRouteLegIndex( 0 );
                     });
@@ -181,8 +184,8 @@ public class ShowRouteFragment extends Fragment
             }
         });
 
-        final Point origin = new Point( 57.057917, 9.950361, 1 );
-        final Point destination = new Point( 57.058038, 9.950509, 1 );
+        final Point origin = new Point( 57.05801448239073, 9.950422458350658, 10 );
+        final Point destination = new Point( 57.0580728, 9.9507263, 10 );
 
         mRoutingProvider.setTravelMode( TravelMode.WALKING );
         mRoutingProvider.query( origin, destination );
